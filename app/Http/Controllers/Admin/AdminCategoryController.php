@@ -50,29 +50,7 @@ class AdminCategoryController extends Controller
      */
     public function store(CategoryRequest $request)
     {
-        if ($request->isMethod('post')) {
-            $categoryData = [
-                'category_name' => $request->category_name,
-                'created_at' => now()
-            ];
-            $category = $this->categories->createNewCategory($categoryData);
-            if ($category) {
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Add new category successfully',
-                    'data' => $category
-                ], 200);
-            } else {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Add new category field',
-                ], 500);
-            }
-        }
-        return response()->json([
-            'status' => 'error',
-            'message' => 'The method not post',
-        ], 500);
+        //
     }
 
     /**
@@ -87,21 +65,7 @@ class AdminCategoryController extends Controller
      */
     public function edit(string $id)
     {
-        if (!empty($id)) {
-            $categoryDetail = $this->categories->getCategoryById($id);
-            if (!empty($categoryDetail)) {
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Category retrieved successfully',
-                    'data' => $categoryDetail
-                ], 200);
-            } else {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Failed to retrieve category',
-                ], 500);
-            }
-        }
+       //
     }
 
     /**
@@ -109,38 +73,7 @@ class AdminCategoryController extends Controller
      */
     public function update(CategoryRequest $request, string $id)
     {
-        if ($request->isMethod('put')) {
-            $categoryDetail = $this->categories->getCategoryById($id);
-            if (!empty($categoryDetail)) {
-                $categoryData = [
-                    'category_name' => $request->category_name,
-                    'updated_at' => now()
-                ];
-                $categoryUpdated = $this->categories->updateCategory($id, $categoryData);
-                if ($categoryUpdated) {
-                    return response()->json([
-                        'status' => 'success',
-                        'message' => 'Add new category successfully',
-                        'data' => $categoryUpdated
-                    ], 200);
-                } else {
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Add new category failed',
-                    ], 500);
-                }
-            } else {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Category not found',
-                ], 404);
-            }
-        }
-        
-        return response()->json([
-            'status' => 'error',
-            'message' => 'The method not update',
-        ], 500);
+       //
     }
 
     /**
