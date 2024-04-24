@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('title');
-            $table->string('sub_title');
             $table->longText('content');
             $table->string('image_name')->nullable();
             $table->string('image_url')->nullable();

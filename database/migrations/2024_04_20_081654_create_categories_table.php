@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('category_name')->unique();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->nullable()->default(null)->onUpdate(\Illuminate\Support\Facades\DB::raw('CURRENT_TIMESTAMP'));
+            $table->softDeletes(); 
         });
     }
 
