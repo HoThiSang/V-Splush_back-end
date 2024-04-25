@@ -34,5 +34,7 @@ Route::delete('/categories-delete/{id}', [AdminCategoryController::class, 'destr
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-Route::get('/admin-product',[AdminProductController::class,'index']);
+Route::get('/admin-product',[AdminProductController::class,'index'])->name('get-all-product');
+Route::post('/admin-add-product',[AdminProductController::class,'store'])->name('create-product');
+             
 
