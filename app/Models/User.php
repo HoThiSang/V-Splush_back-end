@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -20,9 +21,10 @@ class User extends Authenticatable
     protected $table = 'users';
     
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
+        'role_id'
     ];
 
     /**
@@ -45,6 +47,18 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function getAllUsers()
+    {
+        $users = DB::table('users')->get();
+        // if (!empty($keyword)) {
+        //     $users = $users->orderBy('users.' . $orderBy, $keyword);
+        //     $users = $users->where(function ($query) use ($keyword) {
+        //         $query->orwhere('name', 'like', '%' . $keyword . '%');
+        //         $query->orwhere('email', 'like', '%' . $keyword . '%');
+        //     });
+        // }
+        return $users;
+    }
     
     public function cart(){
         return $this->hasOne('App\Models\Cart', 'user_id','id');
