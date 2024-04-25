@@ -50,7 +50,30 @@ class AdminCategoryController extends Controller
      */
     public function store(CategoryRequest $request)
     {
-        //
+        if ($request->isMethod('post')) {
+            $categoryData = [
+                'category_name' => $request->category_name,
+                'created_at' => now()
+            ];
+            $category = $this->categories->createNewCategory($categoryData);
+            if ($category) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Add new category successfully',
+                    'data' => $category
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Add new category field',
+                ], 500);
+            }
+        }
+        return response()->json([
+            'status' => 'error',
+            'message' => 'The method not post',
+        ], 500);
+
     }
 
     /**
