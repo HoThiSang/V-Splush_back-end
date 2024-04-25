@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminCommentController;
 use App\Http\Controllers\Admin\AdminCategoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,5 +27,9 @@ Route::post('/categories-create', [AdminCategoryController::class, 'store'])->na
 Route::put('/categories-update/{id}', [AdminCategoryController::class, 'update'])->name('update-category');
 
 // Route::resource('/categories', [AdminCategoryController::class, 'index'])->name('get-all-category');
-
-
+// Comments
+Route::get('/show-all-comments',[AdminCommentController::class,'index']);
+Route::post('/add-comment',[AdminCommentController::class,'store']);
+Route::put('update-comment/{id}',[AdminCommentController::class,'update']);
+Route::delete('delete-comment/{id}',[AdminCommentController::class,'destroy']);
+Route::get('/show-detail-comment/{id}',[AdminCommentController::class,'show']);
