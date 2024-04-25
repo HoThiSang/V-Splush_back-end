@@ -28,6 +28,8 @@ Route::get('/categories/{id}', [AdminCategoryController::class, 'edit'])->name('
 Route::post('/categories-create', [AdminCategoryController::class, 'store'])->name('create-category');
 Route::put('/categories-update/{id}', [AdminCategoryController::class, 'update'])->name('update-category');
 
+Route::delete('/categories-delete/{id}', [AdminCategoryController::class, 'destroy'])->name('update-category');
+
 // Route::resource('/categories', [AdminCategoryController::class, 'index'])->name('get-all-category');
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();

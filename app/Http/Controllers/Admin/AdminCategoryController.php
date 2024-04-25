@@ -151,6 +151,20 @@ class AdminCategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if (!empty($id)) {
+            $product = $this->categories->deleteCategoryById($id);
+            if ($product) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Deleted category successfully',
+                    'data' => $product
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Category not found',
+                ], 404);
+            }
+        }
     }
 }
