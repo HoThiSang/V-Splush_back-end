@@ -29,6 +29,8 @@ Route::get('/categories/{id}', [AdminCategoryController::class, 'edit'])->name('
 Route::post('/categories-create', [AdminCategoryController::class, 'store'])->name('create-category');
 Route::put('/categories-update/{id}', [AdminCategoryController::class, 'update'])->name('update-category');
 
+Route::delete('/categories-delete/{id}', [AdminCategoryController::class, 'destroy'])->name('update-category');
+
 // Route::resource('/categories', [AdminCategoryController::class, 'index'])->name('get-all-category');
 // Comments
 Route::get('/show-all-comments',[AdminCommentController::class,'index']);
