@@ -3,7 +3,7 @@
 use App\Http\Controllers\Admin\AdminCategoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\AdminProductController;
 
 
 
@@ -32,6 +32,5 @@ Route::put('/categories-update/{id}', [AdminCategoryController::class, 'update']
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-Route::get('/admin-product',[ProductController::class,'index']);
-Route::post('/add-product',[ProductController::class,'store']);
+Route::get('/admin-product',[AdminProductController::class,'index']);
 
