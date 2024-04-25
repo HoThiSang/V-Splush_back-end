@@ -46,4 +46,19 @@ class Category extends Model
             ->update($data);
     }
 
+    public function deleteCategoryById($id)
+    {
+        $product = $this->findOrFail($id);
+        return $product->softDelete();
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function softDelete()
+    {
+
+        return $this->update(['deleted_at' => Carbon::now()]);
+    }
 }
