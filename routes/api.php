@@ -37,3 +37,5 @@ Route::delete('/categories-delete/{id}', [AdminCategoryController::class, 'destr
 // });
 Route::get('/admin-product',[AdminProductController::class,'index']);
 
+Route::get('admin-user', [AdminUserController::class, 'index'])->name('admin-user');
+
