@@ -51,7 +51,73 @@ class AdminProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
-       
+        if ($request->isMethod('post')) {
+            if (
+                isset($request->product_name) && isset($request->price) && isset($request->discount)
+                && isset($request->quantity) && isset($request->description) && isset($request->ingredient)
+                && isset($request->category_id) && isset($request->category_id)
+            ) {
+                if ($request->hasFile('image_url')) {
+                    $dataInsert = [
+                        'product_name' => $request->product_name,
+                        'quantity' => $request->quantity,
+                        'price' => $request->price,
+                        'ingredient' => $request->ingredient,
+                        'description' => $request->description,
+                        'brand' => $request->brand,
+                        'discount' => $request->discount,
+                        'category_id' => $request->category_id,
+                        'created_at' => now()
+                    ];
+                    $product_id = $this->products->creatNewProduct($dataInsert);
+                    if ($product_id > 0) {
+                        $file = $request->file('image_url');
+                        $uploadedFileUrl = Cloudinary::upload($request->file('image_url')->getRealPath(), [
+                            'folder' => 'upload_image'
+                        ])->getSecurePath();
+                        $publicId = Cloudinary::getPublicId();
+                        $extension = $file->getClientOriginalName();
+                        $filename = time() . '_' . $extension;
+                            
+                        $dataImage = [
+                            'image_name' => $request->product_name,
+                            'image_url' =>  $uploadedFileUrl,
+                            'product_id' => $product_id,
+                            'publicId' => $publicId,
+                            'created_at' => now()
+                        ];
+                        $imageSuccess = $this->image->createImageByProductId($dataImage);
+                        if ($imageSuccess) {
+                            return response()->json([
+                                'status' => 'success',
+                                'message' => 'Add new  product successfully',
+                                'data' => $imageSuccess
+                            ], 200);
+                        } else {
+                            return response()->json([
+                                'status' => 'error',
+                                'message' => 'Add image product field',
+                            ], 500);
+                        }
+                    } else {
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => 'Failed to add product',
+                        ], 500);
+                    }
+                } else {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Missing image fields',
+                    ], 500);
+                }
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Missing required fields',
+                ], 500);
+            }
+        }
     }
 
     public function saveImage(Request $request, $product_id, $url)
