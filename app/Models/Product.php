@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Product extends Model
 {
@@ -19,20 +20,41 @@ class Product extends Model
         'discount',
         'quantity'
     ];
-   
-    public function images(){
-        return $this->hasMany('App\Models\Image', 'product_id','id');
+    public function images()
+    {
+        return $this->hasMany('App\Models\Image', 'product_id', 'id');
+    }
+    public function getAllProduct()
+    {
+        $products = DB::table('products')
+            ->leftJoin('images', 'products.id', '=', 'images.product_id')
+            ->whereNull('products.deleted_at')
+            ->select('products.*', 'images.image_url')
+            ->get();
+        return $products;
+    }
+    public function getProductById($id)
+    {
+        $productDetail = DB::table($this->table)->where('id', $id)->first();
+        return $productDetail;
     }
 
-    public function category(){
-        return $this->belongsTo('App\Models\Category', 'category_id','id');
+    public function creatNewProduct($data)
+    {
+        return DB::table($this->table)->insertGetId($data);
+    }
+    public function category()
+    {
+        return $this->belongsTo('App\Models\Category', 'category_id', 'id');
     }
 
-    public function comments(){
-        return $this->hasMany('App\Models\Comment', 'product_id','id');
+    public function comments()
+    {
+        return $this->hasMany('App\Models\Comment', 'product_id', 'id');
     }
 
-    public function wishLists(){
-        return $this->hasMany('App\Models\Product', 'product_id','id');
+    public function wishLists()
+    {
+        return $this->hasMany('App\Models\Product', 'product_id', 'id');
     }
 }
