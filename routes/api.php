@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\Admin\AdminCommentController;
 use App\Http\Controllers\Admin\AdminCategoryController;
+use App\Http\Controllers\Admin\AdminUserController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminProductController;
-
 
 
 /*
@@ -42,3 +43,5 @@ Route::get('/show-detail-comment/{id}',[AdminCommentController::class,'show']);
 //     return $request->user();
 // });
 Route::get('/admin-product',[AdminProductController::class,'index']);
+
+Route::get('admin-user', [AdminUserController::class, 'index'])->name('admin-user');
