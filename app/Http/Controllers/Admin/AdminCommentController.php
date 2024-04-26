@@ -28,22 +28,18 @@ class AdminCommentController extends Controller
             return response()->json([
                 'satus'=>'success',
                 'message'=>'Show all comments sucessfully',
-                'data'=>$comments,200]);
+                'data'=>$comments],200);
         }
         else{
             return response()->json([
                 'status'=>'error',
-                'message'=>'show all comment',],500
+                'message'=>'Failed show all comment',],404
             );
         }
-        return response()->json([
-            'status' =>'error',
-            'message'=> 'show all comment',
-        ],500);
     }
     return response()->json([
         'status' => 'error',
         'message' => 'The method not get',
-    ], 500);
+    ], 405);
     }
 }
