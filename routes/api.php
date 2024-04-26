@@ -3,7 +3,6 @@
 use App\Http\Controllers\Admin\AdminCommentController;
 use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminUserController;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminProductController;
@@ -23,8 +22,6 @@ use App\Http\Controllers\Admin\AdminProductController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-
 Route::get('/categories', [AdminCategoryController::class, 'index'])->name('get-all-category');
 Route::get('/categories/{id}', [AdminCategoryController::class, 'edit'])->name('get-all-category-id');
 Route::post('/categories-create', [AdminCategoryController::class, 'store'])->name('create-category');
@@ -43,5 +40,4 @@ Route::get('/show-detail-comment/{id}',[AdminCommentController::class,'show']);
 //     return $request->user();
 // });
 Route::get('/admin-product',[AdminProductController::class,'index']);
-
 Route::get('admin-user', [AdminUserController::class, 'index'])->name('admin-user');
