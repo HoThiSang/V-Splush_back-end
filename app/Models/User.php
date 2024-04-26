@@ -50,13 +50,6 @@ class User extends Authenticatable
     public function getAllUsers()
     {
         $users = DB::table('users')->get();
-        // if (!empty($keyword)) {
-        //     $users = $users->orderBy('users.' . $orderBy, $keyword);
-        //     $users = $users->where(function ($query) use ($keyword) {
-        //         $query->orwhere('name', 'like', '%' . $keyword . '%');
-        //         $query->orwhere('email', 'like', '%' . $keyword . '%');
-        //     });
-        // }
         return $users;
     }
     
