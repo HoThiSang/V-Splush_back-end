@@ -10,6 +10,7 @@ class AdminUserController extends Controller
 {
     protected $users;
 
+    
     public function __construct()
     {
         $this->users = new User();
