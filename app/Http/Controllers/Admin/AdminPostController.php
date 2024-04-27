@@ -21,9 +21,10 @@ class AdminPostController extends Controller
     public function index()
     {
         $posts = $this->posts->getAllPost();
-        if (!empty($posts)) { 
-            return response()->json(['status' => 'success', 'message' => 'Show all post successfully!', 'data' => $posts], 200);
-        } else {       
+        if (!empty($posts)) {
+            return response()->json(['status' => 'success', 'message' => 'Show all post'], 200);
+        } else {
+      
             return response()->json(['status' =>'error' , 'message' => 'Not found any post '], 404);
         }
 
