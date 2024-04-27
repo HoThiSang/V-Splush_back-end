@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminCommentController;
 use App\Http\Controllers\Admin\AdminCategoryController;
+use App\Http\Controllers\Admin\AdminPostController;
 use App\Http\Controllers\Admin\AdminUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -42,3 +43,5 @@ Route::get('/show-detail-comment/{id}',[AdminCommentController::class,'show']);
 Route::get('/admin-product',[AdminProductController::class,'index'])->name('get-all-product');
 Route::post('/admin-add-product',[AdminProductController::class,'store'])->name('create-product');
 Route::get('admin-user', [AdminUserController::class, 'index'])->name('admin-user');
+
+Route::get('admin-show-all-post', [AdminPostController::class, 'index'])->name('admin-show-all-post');

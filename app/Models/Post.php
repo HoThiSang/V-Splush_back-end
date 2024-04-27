@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Post extends Model
 {
@@ -14,5 +15,12 @@ class Post extends Model
         'title',
        
     ];
+
+    public function getAllPost()
+    {
+        $posts  = DB::table($this->table)->get();
+        return $posts;
+    }
+
 
 }
