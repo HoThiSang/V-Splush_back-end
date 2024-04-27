@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Image;
-use Illuminate\Http\Request;
+// use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ProductRequest;
@@ -55,8 +55,9 @@ class AdminProductController extends Controller
             if (
                 isset($request->product_name) && isset($request->price) && isset($request->discount)
                 && isset($request->quantity) && isset($request->description) && isset($request->ingredient)
-                && isset($request->category_id) && isset($request->category_id)
+                && isset($request->brand) && isset($request->category_id)
             ) {
+                
                 if ($request->hasFile('image_url')) {
                     $dataInsert = [
                         'product_name' => $request->product_name,
@@ -71,23 +72,29 @@ class AdminProductController extends Controller
                     ];
                     $product_id = $this->products->creatNewProduct($dataInsert);
                     if ($product_id > 0) {
-                        $file = $request->file('image_url');
-                        $uploadedFileUrl = Cloudinary::upload($request->file('image_url')->getRealPath(), [
-                            'folder' => 'upload_image'
-                        ])->getSecurePath();
-                        $publicId = Cloudinary::getPublicId();
-                        $extension = $file->getClientOriginalName();
-                        $filename = time() . '_' . $extension;
-                            
-                        $dataImage = [
-                            'image_name' => $request->product_name,
-                            'image_url' =>  $uploadedFileUrl,
-                            'product_id' => $product_id,
-                            'publicId' => $publicId,
-                            'created_at' => now()
-                        ];
-                        $imageSuccess = $this->image->createImageByProductId($dataImage);
+                        $files = $request->file('image_url');
+                        $uploadedImages = [];
+                        foreach ($files as $file) {
+                            $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
+                                'folder' => 'upload_image'
+                            ])->getSecurePath();
+                            $publicId = Cloudinary::getPublicId();
+                            $extension = $file->getClientOriginalName();
+                            $filename = time() . '_' . $extension;
+
+                            $dataImage = [
+                                'image_name' => $request->product_name,
+                                'image_url' =>  $uploadedFileUrl,
+                                'product_id' => $product_id,
+                                'publicId' => $publicId,
+                                'created_at' => now()
+                            ];
+
+                            $imageSuccess = $this->image->createImageByProductId($dataImage);
+                           
+                        }
                         if ($imageSuccess) {
+                            $uploadedImages[] = $imageSuccess;
                             return response()->json([
                                 'status' => 'success',
                                 'message' => 'Add new  product successfully',
@@ -118,9 +125,13 @@ class AdminProductController extends Controller
                 ], 500);
             }
         }
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Add new category field',
+        ], 500);
     }
 
-    public function saveImage(Request $request, $product_id, $url)
+    public function saveImage(ProductRequest $request, $product_id, $url)
     {
         $request->validate([
             'url' => 'required|url',
@@ -169,5 +180,4 @@ class AdminProductController extends Controller
         }
         return redirect()->back()->with('error', 'Product deleted fields');
     }
-
 }

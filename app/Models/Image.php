@@ -32,4 +32,5 @@ class Image extends Model
         $image = DB::table($this->table)->insertGetId($data);
         return $image;
     }
+    
 }
