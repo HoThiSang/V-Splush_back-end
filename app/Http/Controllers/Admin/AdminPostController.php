@@ -43,62 +43,7 @@ class AdminPostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    // public function store(PostRequest $request)
-    // {
-    //     if ($request->isMethod('post')) {
-    //         if ($request->hasFile('image_url')) {
-    //             $file = $request->file('image_url');
-    //             $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
-    //                 'folder' => 'upload_image'
-    //             ])->getSecurePath();
-    //             $publicId = Cloudinary::getPublicId();
-    //             $extension = $file->getClientOriginalName();
-    //             $filename = time() . '_' . $extension;
-    //             $postData = [
-    //                 'title' => $request->title,
-    //                 'content' => $request->content,
-    //                 'image_name' => $request->image_name,
-    //                 'image_url' => $uploadedFileUrl,
-    //                 'publicId' => $publicId
-    //             ];
-    //             $postInserted = $this->posts->createNewPost($postData);
-    //             if ($postInserted) {
-    //                 return response()->json([
-    //                     'status' => 'success',
-    //                     'message' => 'Add new  post successfully',
-    //                     'data' => $postInserted
-    //                 ], 200);
-    //             } else {
-    //                 return response()->json([
-    //                     'status' => 'error',
-    //                     'message' => 'Failed to add new post',
-    //                 ], 500);
-    //             }
-    //         } else {
-    //             $postData = [
-    //                 'title' => $request->title,
-    //                 'content' => $request->content,
-    //             ];
-    //             $postInserted = $this->posts->createNewPost($postData);
-    //             if ($postInserted) {
-    //                 return response()->json([
-    //                     'status' => 'success',
-    //                     'message' => 'Add new  post successfully',
-    //                     'data' => $postInserted
-    //                 ], 200);
-    //             } else {
-    //                 return response()->json([
-    //                     'status' => 'error',
-    //                     'message' => 'Failed to add new post',
-    //                 ], 500);
-    //             }
-    //         }
-    //     }
-    //     return response()->json([
-    //         'status' => 'error',
-    //         'message' => 'Method is not supported',
-    //     ], 405);
-    // }
+   
     public function store(PostRequest $request)
     {
         if ($request->isMethod('post')) {
