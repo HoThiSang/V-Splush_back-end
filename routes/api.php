@@ -7,7 +7,7 @@ use App\Http\Controllers\Admin\AdminUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminProductController;
-
+use App\Http\Controllers\Admin\AdminWishListControllor;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +29,8 @@ Route::post('/categories-create', [AdminCategoryController::class, 'store'])->na
 Route::put('/categories-update/{id}', [AdminCategoryController::class, 'update'])->name('update-category');
 
 Route::delete('/categories-delete/{id}', [AdminCategoryController::class, 'destroy'])->name('update-category');
+Route::get('/show-allwishlist', [AdminWishListControllor::class, 'index'])->name('show-allwishlist');
+
 
 // Route::resource('/categories', [AdminCategoryController::class, 'index'])->name('get-all-category');
 // Comments
@@ -45,3 +47,4 @@ Route::post('/admin-add-product',[AdminProductController::class,'store'])->name(
 Route::get('admin-user', [AdminUserController::class, 'index'])->name('admin-user');
 
 Route::get('admin-show-all-post', [AdminPostController::class, 'index'])->name('admin-show-all-post');
+Route::get('/admin-product', [AdminProductController::class, 'index']);
