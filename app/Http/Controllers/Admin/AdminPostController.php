@@ -46,7 +46,7 @@ class AdminPostController extends Controller
    
     public function store(PostRequest $request)
     {
-        if ($request->isMethod('post')) {
+        if ($request->isMethod('POST')) {
             if ($request->hasFile('image_url')) {
                 $file = $request->file('image_url');
                 $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
