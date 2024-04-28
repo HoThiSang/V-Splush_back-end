@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use App\Models\Slide;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class AdminPostController extends Controller
 {
-    protected $posts ;
+    protected $posts;
 
 
     public function __construct()
@@ -21,12 +25,11 @@ class AdminPostController extends Controller
     public function index()
     {
         $posts = $this->posts->getAllPost();
-        if (!empty($posts)) { 
+        if (!empty($posts)) {
             return response()->json(['status' => 'success', 'message' => 'Show all post successfully!', 'data' => $posts], 200);
-        } else {       
-            return response()->json(['status' =>'error' , 'message' => 'Not found any post '], 404);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Not found any post '], 404);
         }
-
     }
 
     /**
@@ -40,11 +43,53 @@ class AdminPostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+   
+    public function store(PostRequest $request)
     {
-        //
+        if ($request->isMethod('POST')) {
+            if ($request->hasFile('image_url')) {
+                $file = $request->file('image_url');
+                $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
+                    'folder' => 'upload_image'
+                ])->getSecurePath();
+                $publicId = Cloudinary::getPublicId();
+                $extension = $file->getClientOriginalName();
+                $filename = time() . '_' . $extension;
+                $postData = [
+                    'title' => $request->title,
+                    'content' => $request->content,
+                    'image_name' => $request->image_name,
+                    'image_url' => $uploadedFileUrl,
+                    'publicId' => $publicId
+                ];
+            } else {
+                $postData = [
+                    'title' => $request->title,
+                    'content' => $request->content,
+                ];
+            }
+    
+            $postInserted = $this->posts->createNewPost($postData);
+    
+            if ($postInserted) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Add new post successfully',
+                    'data' => $postInserted
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Failed to add new post',
+                ], 422);
+            }
+        }
+    
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Method is not supported',
+        ], 405);
     }
-
     /**
      * Display the specified resource.
      */

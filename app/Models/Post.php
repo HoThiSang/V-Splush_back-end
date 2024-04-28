@@ -22,5 +22,14 @@ class Post extends Model
         return $posts;
     }
 
+    public function createNewPost($data)
+    {
+        $postId = DB::table($this->table)->insertGetId($data);       
+        if ($postId) {
+            $post = DB::table($this->table)->find($postId);
+            return $post;
+        } 
+        return null;
+    }
 
 }

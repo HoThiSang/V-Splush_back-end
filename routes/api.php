@@ -39,12 +39,13 @@ Route::post('/add-comment',[AdminCommentController::class,'store']);
 Route::put('update-comment/{id}',[AdminCommentController::class,'update']);
 Route::delete('delete-comment/{id}',[AdminCommentController::class,'destroy']);
 Route::get('/show-detail-comment/{id}',[AdminCommentController::class,'show']);
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+
 Route::get('/admin-product',[AdminProductController::class,'index'])->name('get-all-product');
 Route::post('/admin-add-product',[AdminProductController::class,'store'])->name('create-product');
 Route::get('admin-user', [AdminUserController::class, 'index'])->name('admin-user');
 
 Route::get('admin-show-all-post', [AdminPostController::class, 'index'])->name('admin-show-all-post');
 Route::get('/admin-product', [AdminProductController::class, 'index']);
+
+Route::post('/admin-create-post', [AdminPostController::class, 'store'])->name('admin-create-post');
+
