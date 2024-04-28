@@ -31,5 +31,16 @@ class Post extends Model
         } 
         return null;
     }
+    public function getPostById($id)
+    {
+        $post  = DB::table($this->table)->where('id', $id)->first();
+        return $post;
+    }
 
+    public function updatePost($id, $data)
+    {
+        return DB::table($this->table)
+            ->where('id', $id)
+            ->update($data);
+    }
 }

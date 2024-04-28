@@ -105,15 +105,59 @@ class AdminPostController extends Controller
     {
         //
     }
-
     /**
      * Update the specified resource in storage.
-     */
+    */
     public function update(Request $request, string $id)
     {
-        //
+        if ($request->method() === 'PUT') {
+            $post = $this->posts->getPostById($id);
+            if (!empty($post)) {
+                $postData = [
+                    'title' => $request->title,
+                    'content' => $request->content,
+                ];
+    
+                if ($request->hasFile('image_url')) {
+                    $file = $request->file('image_url');
+                    $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
+                        'folder' => 'upload_image'
+                    ])->getSecurePath();
+                    $publicId = Cloudinary::getPublicId();
+                    
+                    $postData['image_name'] = $request->title;
+                    $postData['image_url'] = $uploadedFileUrl;
+                    $postData['publicId'] = $publicId;
+                }
+    
+                $postInserted = $this->posts->updatePost($id, $postData);
+    
+                if ($postInserted) {
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Update post successfully',
+                        'data' => $postInserted
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Failed to update post',
+                    ], 422);
+                }
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Post not found',
+                ], 404);
+            }
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid request method',
+            ], 405);
+        }
     }
-
+    
     /**
      * Remove the specified resource from storage.
      */
