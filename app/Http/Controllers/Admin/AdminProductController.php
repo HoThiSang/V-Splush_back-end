@@ -160,9 +160,101 @@ class AdminProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ProductRequest $request, $id)
+    public function update(Request $request, $productId)
     {
+        if (!$request->isMethod('post')) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid request method. Must use PUT method for updating.',
+            ], 405);
+        }
+        $product = $this->products->findById($productId);
+        if (!$product) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Product not found',
+            ], 404);
+        }
+    
+        // Lấy danh sách các ảnh cũ của sản phẩm
+        $oldImages = $this->image->getAllImageByProductId($productId);
+        $oldImageUrls = [];
+        foreach ($oldImages as $oldImage) {
+            $oldImageUrls[] = $oldImage->image_url;
+        }
+        
+        // Xóa tất cả các ảnh cũ của sản phẩm
+        $this->image->deleteImagesByProductId($productId);
+    
+        $uploadedImages = [];
+    
+        if ($request->hasFile('image_url')) {
+            // Tải lên và lưu ảnh mới
+            foreach ($request->file('image_url') as $file) {
+                $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
+                    'folder' => 'upload_image'
+                ])->getSecurePath();
+                $publicId = Cloudinary::getPublicId();
+                $extension = $file->getClientOriginalName();
+                $filename = time() . '_' . $extension;
+    
+                $dataImage = [
+                    'image_name' => $request->product_name,
+                    'image_url' => $uploadedFileUrl,
+                    'product_id' => $productId,
+                    'publicId' => $publicId,
+                    'created_at' => now()
+                ];
+                $imageSuccess = $this->image->createImageByProductId($dataImage);
+    
+                if (!$imageSuccess) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Failed to upload product image',
+                    ], 500);
+                }
+                $uploadedImages[] = $imageSuccess;
+            }
+        } else {
+            // Sử dụng lại đường dẫn của các ảnh cũ
+            $uploadedImages = $oldImageUrls;
+        }
+    
+        // Cập nhật thông tin sản phẩm
+        $dataUpdate = [
+            'product_name' => $request->product_name,
+            'quantity' => $request->quantity,
+            'price' => $request->price,
+            'ingredient' => $request->ingredient,
+            'description' => $request->description,
+            'brand' => $request->brand,
+            'discount' => $request->discount,
+            'category_id' => $request->category_id,
+            'updated_at' => now()
+        ];
+        $updated = $this->products->updateProduct($productId, $dataUpdate);
+    
+        if ($updated) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Product updated successfully',
+                'data' => $uploadedImages
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to update product',
+            ], 500);
+        }
     }
+    
+    
+    
+    
+    
+    
+
+    
 
     /**
      * Remove the specified resource from storage.
@@ -172,6 +264,7 @@ class AdminProductController extends Controller
      */
     public function destroy($id)
     {
+        
         if (!empty($id)) {
             $product = $this->products->getProductById($id);
             if (!$product) {
