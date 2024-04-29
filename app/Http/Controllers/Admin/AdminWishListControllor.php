@@ -90,6 +90,34 @@ class AdminWishListControllor extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if (!empty($id)) {
+            $wishList = WishList::find($id);
+            if ($wishList) {
+                $deleted = $wishList->deleteWishListById($id);
+
+                if ($deleted) {
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Deleted wish list successfully',
+                        'data' => $wishList
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Failed to delete wish list',
+                    ], 500);
+                }
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Wish list not found',
+                ], 404);
+            }
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid wish list ID',
+            ], 400);
+        }
     }
 }

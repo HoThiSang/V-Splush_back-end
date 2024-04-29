@@ -38,4 +38,10 @@ class WishList extends Model
         }
     }
 
+    public function deleteWishListById($id)
+    {
+        $wishList = $this->findOrFail($id);
+        return $wishList->softDelete();
+    }
+
 }
