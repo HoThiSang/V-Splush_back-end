@@ -30,6 +30,7 @@ Route::put('/categories-update/{id}', [AdminCategoryController::class, 'update']
 
 Route::delete('/categories-delete/{id}', [AdminCategoryController::class, 'destroy'])->name('update-category');
 Route::get('/show-allwishlist', [AdminWishListControllor::class, 'index'])->name('show-allwishlist');
+Route::delete('/delete-wish-list/{id}', [AdminWishListControllor::class, 'index'])->name('delete-wish-list');
 
 
 // Route::resource('/categories', [AdminCategoryController::class, 'index'])->name('get-all-category');
