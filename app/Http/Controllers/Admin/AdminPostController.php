@@ -68,7 +68,6 @@ class AdminPostController extends Controller
                     'content' => $request->content,
                 ];
             }
-    
             $postInserted = $this->posts->createNewPost($postData);
     
             if ($postInserted) {
@@ -108,7 +107,7 @@ class AdminPostController extends Controller
     /**
      * Update the specified resource in storage.
     */
-    public function update(PostRequest $request, string $id)
+    public function update(Request $request, string $id)
     {
         if ($request->method() === 'PUT') {
             $post = $this->posts->getPostById($id);
@@ -117,8 +116,7 @@ class AdminPostController extends Controller
                     'title' => $request->title,
                     'content' => $request->content,
                 ];
-             
-             
+                         
                 if ($request->hasFile('image_url')) {
                     $file = $request->file('image_url');
                     $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
