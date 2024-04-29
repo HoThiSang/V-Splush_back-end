@@ -42,4 +42,35 @@ class AdminCommentController extends Controller
         'message' => 'The method not get',
     ], 405);
     }
+      /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Request $request,string $id)
+    {
+        //
+        if ($request->isMethod('delete')) {
+        $comment=$this->comments->deleteCommentById($id);
+        if($comment){
+            return response()->json([
+                'status' =>'success',
+                'message'=>'Delete comment successfully',
+                'data'=>$comment,200
+            ]);
+        }
+    else{
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Failed delete comment',
+        ], 500);
+    }
+    return response()->json([
+        'status' => 'error',
+        'message' => 'not delete comment',
+    ], 500);
+}
+return response()->json([
+    'status' => 'error',
+    'message' => 'The method not delete',
+], 500);
+}
 }
