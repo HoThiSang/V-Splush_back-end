@@ -50,4 +50,4 @@ Route::get('/admin-product', [AdminProductController::class, 'index']);
 Route::post('/admin-create-post', [AdminPostController::class, 'store'])->name('admin-create-post');
 
 Route::get('/admin-show-post/{id}', [AdminPostController::class, 'show'])->name('admin-show-post');
-Route::put('/admin-update-post/{id}', [AdminPostController::class, 'update'])->name('admin-update-post');
+Route::patch('/admin-update-post/{id}', [AdminPostController::class, 'update'])->name('admin-update-post');
