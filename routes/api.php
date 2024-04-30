@@ -44,9 +44,10 @@ Route::get('/show-detail-comment/{id}',[AdminCommentController::class,'show']);
 Route::get('/admin-product',[AdminProductController::class,'index'])->name('get-all-product');
 Route::post('/admin-add-product',[AdminProductController::class,'store'])->name('create-product');
 Route::get('admin-user', [AdminUserController::class, 'index'])->name('admin-user');
-
-Route::get('admin-show-all-post', [AdminPostController::class, 'index'])->name('admin-show-all-post');
 Route::get('/admin-product', [AdminProductController::class, 'index']);
 
+Route::get('admin-show-all-post', [AdminPostController::class, 'index'])->name('admin-show-all-post');
 Route::post('/admin-create-post', [AdminPostController::class, 'store'])->name('admin-create-post');
+Route::delete('/admin-delete-post/{id}', [AdminPostController::class, 'destroy'])->name('admin-delete-post');
+Route::get('/admin-show-post/{id}', [AdminPostController::class, 'show'])->name('admin-show-post');
 
