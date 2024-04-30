@@ -138,8 +138,6 @@ class AdminProductController extends Controller
         ]);
         $this->image->url = $request->url;
     }
-
-
     /**
      * Display the specified resource.
      *
@@ -175,9 +173,35 @@ class AdminProductController extends Controller
     public function destroy($id)
     {
         if (!empty($id)) {
-            $product = $this->products->deleteProductById($id);
-            return redirect()->route('product-index')->with('success', 'Product deleted successfully');
+            $product = $this->products->getProductById($id);
+            if (!$product) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Product not found'
+                ], 404);
+            }
+            $images = $this->image->getAllImageByProductId($id);
+            foreach ($images as $image) {
+                Cloudinary::destroy($image->publicId);
+            }
+            $this->image->deleteImagesByProductId($id);
+            $deleted = $this->products->deleteProductById($id);
+            if ($deleted) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Product deleted successfully'
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Failed to delete product'
+                ], 500);
+            }
         }
-        return redirect()->back()->with('error', 'Product deleted fields');
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Product ID is required'
+        ], 400);
     }
+    
 }

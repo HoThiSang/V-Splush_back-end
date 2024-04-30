@@ -43,6 +43,12 @@ class Product extends Model
     {
         return DB::table($this->table)->insertGetId($data);
     }
+    
+    public function deleteProductById($id)
+    {
+        $product = $this->findOrFail($id);
+        return $product->delete();
+    }
     public function category()
     {
         return $this->belongsTo('App\Models\Category', 'category_id', 'id');
