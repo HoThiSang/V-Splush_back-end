@@ -43,7 +43,7 @@ Route::get('/show-detail-comment/{id}',[AdminCommentController::class,'show']);
 
 Route::get('/admin-product',[AdminProductController::class,'index'])->name('get-all-product');
 Route::post('/admin-add-product',[AdminProductController::class,'store'])->name('create-product');
-Route::delete('/admin-delete-product/{id}',[AdminProductController::class,'destroy'])->name('delete-product');
+Route::delete('/admin-product-delete/{id}',[AdminProductController::class,'destroy'])->name('delete-product');
 
 Route::get('admin-user', [AdminUserController::class, 'index'])->name('admin-user');
 
