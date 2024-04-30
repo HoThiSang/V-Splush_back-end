@@ -32,4 +32,17 @@ class Post extends Model
         return null;
     }
 
+    public function getPostById($id)
+    {
+        return DB::table($this->table)->where('id', $id)->first();
+   
+    }
+
+    public function deletePostById($id)
+    {
+    $deletedPost = DB::table($this->table)->where('id', $id)->first();
+    DB::table($this->table)->where('id', $id)->delete();
+    return $deletedPost;
+}
+
 }

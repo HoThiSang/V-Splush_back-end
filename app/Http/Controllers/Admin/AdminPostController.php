@@ -95,7 +95,20 @@ class AdminPostController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $post = $this->posts->getPostById($id);
+        if(!empty($post)){
+          
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Get one post successfully!',
+                'data'=>$post
+            ], 200);
+        }else{
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Not found post with id !'. $id,
+            ], 404);
+        }
     }
 
     /**
@@ -119,6 +132,19 @@ class AdminPostController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $post = $this->posts->getPostById($id);
+        if(!empty($post)){
+            $post = $this->posts->deletePostById($id);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Get one post successfully!',
+                'data'=>$post
+            ], 200);
+        }else{
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Not found post with id !'. $id,
+            ], 404);
+        }
     }
 }
