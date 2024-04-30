@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use App\Http\Requests\CommentRequest;
+
+
 
 class AdminCommentController extends Controller
 {
@@ -86,7 +89,7 @@ return response()->json([
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CommentRequest $request)
     {
         //
         if ($request->isMethod('post')) {
