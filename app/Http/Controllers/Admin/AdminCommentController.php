@@ -7,8 +7,6 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Http\Requests\CommentRequest;
 
-
-
 class AdminCommentController extends Controller
 {
     /**
@@ -122,6 +120,82 @@ return response()->json([
 return response()->json([
     'status' => 'error',
     'message' => 'The method not post',
+], 500);
+}
+/**
+     * Display the specified resource.
+     */
+    public function show(Request $request,string $id)
+    {
+        //
+        if ($request->isMethod('get')) {
+        $comment=$this->comments->getCommentById($id);
+        if($comment){
+            return response()->json([
+                'status' =>'success',
+                'message'=>'Show detail comment successfully',
+                'data'=>$comment,200
+            ]);
+        }
+    else{
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Show detail comment',
+        ], 500);
+    }
+    return response()->json([
+        'status' => 'error',
+        'message' => 'Show detail comment',
+    ], 500);
+}
+return response()->json([
+    'status' => 'error',
+    'message' => 'The method not get',
+], 500);
+}
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(CommentRequest $request, string $id)
+    {
+        //
+        if ($request->isMethod('put')) {
+        $dataUpdate=[
+            'content'=>$request->content,
+            'updated_at'=>now()
+        ];
+
+        $comment=$this->comments->updateComment($id,$dataUpdate);
+        if($comment){
+            return response()->json([
+                'status' =>'success',
+                'message'=>'Update comment successfully',
+                'data'=>$comment,200
+            ]);
+        }
+    else{
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Update comment',
+        ], 500);
+    }
+    return response()->json([
+        'status' => 'error',
+        'message' => 'Update comment',
+    ], 500);
+}
+return response()->json([
+    'status' => 'error',
+    'message' => 'The method not put',
 ], 500);
 }
 
