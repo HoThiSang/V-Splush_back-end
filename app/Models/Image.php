@@ -24,13 +24,14 @@ class Image extends Model
         $images = DB::table($this->table)->where('product_id', $product_id)->get();
         return $images;
     }
-
-
     public function createImageByProductId($data)
     {
-
         $image = DB::table($this->table)->insertGetId($data);
         return $image;
+    }
+    public function deleteImagesByProductId($productId)
+    {
+        return $this->where('product_id', $productId)->delete();
     }
     
 }
