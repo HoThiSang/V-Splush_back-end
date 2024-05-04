@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\AdminCommentController;
 use App\Http\Controllers\Admin\AdminCategoryController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminPostController;
 use App\Http\Controllers\Admin\AdminUserController;
 use Illuminate\Http\Request;
@@ -13,6 +15,7 @@ use App\Http\Controllers\Admin\AdminWishListControllor;
 use App\Http\Controllers\Admin\AdminBannerController;
 use App\Http\Controllers\User\UserController;
 
+use Cloudinary\Api\Admin\AdminApi;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +74,7 @@ Route::delete('/admin-delete-banner/{id}', [AdminBannerController::class, 'destr
 
 Route::post('/admin-create-banner', [AdminBannerController::class, 'store'])->name('admin-create-banner');
 Route::post('/admin-update-banner/{id}', [AdminBannerController::class, 'update'])->name('admin-update-banner');
+Route::get('/test', [AdminCategoryController::class, 'test']);
 
 Route::get('admin-show-all-post', [AdminPostController::class, 'index'])->name('admin-show-all-post');
 
@@ -85,3 +89,5 @@ Route::post('user-send-contact', [UserSendMailController::class, 'sendEmail'])->
 Route::post('/admin-reply-contact/{id}', [UserSendMailController::class, 'replyEmail'])->name('admin-reply-contact');
 Route::put('/update-contact/{id}', [AdminContactController::class, 'update']);
 Route::delete('/delete-contact/{id}', [AdminContactController::class, 'destroy']);
+Route::get('/admin-show-all-orders',[AdminOrderController::class,'index'])->name('admin-show-all-order');
+Route::put('/admin-update-status-order/{id}',[AdminOrderController::class,'update'])->name('admin-update-status-order');
