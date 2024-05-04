@@ -43,7 +43,7 @@ class AdminPostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-   
+
     public function store(PostRequest $request)
     {
         if ($request->isMethod('POST')) {
@@ -68,9 +68,8 @@ class AdminPostController extends Controller
                     'content' => $request->content,
                 ];
             }
-    
             $postInserted = $this->posts->createNewPost($postData);
-    
+
             if ($postInserted) {
                 return response()->json([
                     'status' => 'success',
@@ -84,7 +83,7 @@ class AdminPostController extends Controller
                 ], 422);
             }
         }
-    
+
         return response()->json([
             'status' => 'error',
             'message' => 'Method is not supported',
@@ -96,17 +95,17 @@ class AdminPostController extends Controller
     public function show(string $id)
     {
         $post = $this->posts->getPostById($id);
-        if(!empty($post)){
-          
+        if (!empty($post)) {
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Get one post successfully!',
-                'data'=>$post
+                'data' => $post
             ], 200);
-        }else{
+        } else {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Not found post with id !'. $id,
+                'message' => 'Not found post with id !' . $id,
             ], 404);
         }
     }
@@ -118,32 +117,76 @@ class AdminPostController extends Controller
     {
         //
     }
-
     /**
      * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    */
+    public function update(PostRequest $request, string $id)
     {
-        //
+        if ($request->method() === 'PUT') {
+            $post = $this->posts->getPostById($id);
+            if (!empty($post)) {
+                $postData = [
+                    'title' => $request->title,
+                    'content' => $request->content,
+                ];
+                         
+                if ($request->hasFile('image_url')) {
+                    $file = $request->file('image_url');
+                    $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
+                        'folder' => 'upload_image'
+                    ])->getSecurePath();
+                    $publicId = Cloudinary::getPublicId();
+                    
+                    $postData['image_name'] = $request->title;
+                    $postData['image_url'] = $uploadedFileUrl;
+                    $postData['publicId'] = $publicId;
+                }
+    
+                $postInserted = $this->posts->updatePost($id, $postData);
+               
+                if ($postInserted) {
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Update post successfully',
+                        'data' => $postInserted
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Failed to update post',
+                    ], 422);
+                }
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Post not found',
+                ], 404);
+            }
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid request method',
+            ], 405);
+        }
     }
-
+    
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
         $post = $this->posts->getPostById($id);
-        if(!empty($post)){
+        if (!empty($post)) {
             $post = $this->posts->deletePostById($id);
             return response()->json([
                 'status' => 'success',
                 'message' => 'Get one post successfully!',
-                'data'=>$post
+                'data' => $post
             ], 200);
-        }else{
+        } else {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Not found post with id !'. $id,
+                'message' => 'Not found post with id !' . $id,
             ], 404);
         }
     }

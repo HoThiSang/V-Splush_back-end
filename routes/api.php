@@ -51,4 +51,4 @@ Route::get('admin-show-all-post', [AdminPostController::class, 'index'])->name('
 Route::post('/admin-create-post', [AdminPostController::class, 'store'])->name('admin-create-post');
 Route::delete('/admin-delete-post/{id}', [AdminPostController::class, 'destroy'])->name('admin-delete-post');
 Route::get('/admin-show-post/{id}', [AdminPostController::class, 'show'])->name('admin-show-post');
-
+Route::put('/admin-update-post/{id}', [AdminPostController::class, 'update'])->name('admin-update-post');
