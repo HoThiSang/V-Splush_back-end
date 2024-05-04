@@ -23,7 +23,6 @@ class Banner extends Model
         ->whereNull('deleted_at')
         ->orWhere('deleted_at', '>', now())
         ->get();
-
         return $banners;
     }
     
