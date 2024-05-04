@@ -79,6 +79,33 @@ class AdminBannerController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if (!empty($id)) {
+            $banner = Banner::find($id);
+            if ($banner) {
+                $deleted = $banner->deleteBannerById($id);
+                if ($deleted) {
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Deleted banner successfully',
+                        'data' => $banner
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Failed to delete banner',
+                    ], 500);
+                }
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'banner not found',
+                ], 404);
+            }
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid banner ID',
+            ], 400);
+        }
     }
 }

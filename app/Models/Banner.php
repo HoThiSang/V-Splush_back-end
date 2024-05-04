@@ -5,10 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Banner extends Model
 {
-    use HasFactory;
+    
+    use HasFactory, SoftDeletes;
     protected $table = 'banners';
     protected $fillable = [
         'title',
@@ -24,6 +27,12 @@ class Banner extends Model
         ->orWhere('deleted_at', '>', now())
         ->get();
         return $banners;
+    }
+
+    public function deleteBannerById($id)
+    {
+        $banner = $this->findOrFail($id);
+        return $banner->delete();
     }
     
 }
