@@ -18,7 +18,6 @@ class AdminBannerController extends Controller
     {
         $this->banner = $banner;
     }
-
     public function index()
     {
         $allBanner = $this->banner->getAllBanner();
