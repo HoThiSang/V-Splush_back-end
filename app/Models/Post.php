@@ -31,6 +31,7 @@ class Post extends Model
         }
         return null;
     }
+ 
 
     public function getPostById($id)
     {

@@ -68,7 +68,6 @@ class AdminPostController extends Controller
                     'content' => $request->content,
                 ];
             }
-
             $postInserted = $this->posts->createNewPost($postData);
 
             if ($postInserted) {
@@ -118,10 +117,9 @@ class AdminPostController extends Controller
     {
         //
     }
-
     /**
      * Update the specified resource in storage.
-     */
+    */
     public function update(PostRequest $request, string $id)
     {
         if ($request->method() === 'PUT') {
@@ -170,9 +168,8 @@ class AdminPostController extends Controller
                 'message' => 'Invalid request method',
             ], 405);
         }
-      
     }
-
+    
     /**
      * Remove the specified resource from storage.
      */
