@@ -44,6 +44,7 @@ class AdminPostController extends Controller
      * Store a newly created resource in storage.
      */
 
+
     public function store(PostRequest $request)
     {
         if ($request->isMethod('POST')) {
@@ -68,6 +69,7 @@ class AdminPostController extends Controller
                     'content' => $request->content,
                 ];
             }
+
             $postInserted = $this->posts->createNewPost($postData);
 
             if ($postInserted) {
