@@ -80,7 +80,7 @@ class AdminOrderController extends Controller
             } else {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Failed show detail comment',
+                    'message' => 'Failed show detail order',
                 ], 500);
             }
         } else {
@@ -123,11 +123,12 @@ class AdminOrderController extends Controller
                     'message' => 'This order does not exist'
                 ]);
             }
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'The method not put',
+            ], 500);
         }
-        return response()->json([
-            'status' => 'error',
-            'message' => 'The method not put',
-        ], 500);
     }
 
     /**
