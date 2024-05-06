@@ -34,5 +34,10 @@ class Banner extends Model
         $banner = $this->findOrFail($id);
         return $banner->delete();
     }
+
+    public function creatNewBanner($data)
+    {
+        return DB::table($this->table)->insertGetId($data);
+    }
     
 }

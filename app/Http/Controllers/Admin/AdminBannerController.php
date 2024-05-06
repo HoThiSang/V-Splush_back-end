@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Banner;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use App\Models\Image;
 
 class AdminBannerController extends Controller
 {
@@ -13,10 +15,12 @@ class AdminBannerController extends Controller
      */
 
     protected $banner;
+    protected $image;
 
-    public function __construct(Banner $banner)
+    public function __construct(Banner $banner, Image $image)
     {
         $this->banner = $banner;
+        $this->image = $image;
     }
     public function index()
     {
@@ -47,8 +51,47 @@ class AdminBannerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'title' => 'required',
+            'sub_title' => 'required',
+            'content' => 'required',
+            'image_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ], [
+            'image_url.required' => 'The image field is required.',
+            'image_url.image' => 'The file must be an image.',
+            'image_url.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif.',
+            'image_url.max' => 'The image may not be greater than 2048 kilobytes.',
+        ]);
+
+        $dataInsert = [
+            'title' => $validatedData['title'],
+            'sub_title' => $validatedData['sub_title'],
+            'content' => $validatedData['content'],
+            'created_at' => now()
+        ];
+
+        $banner = $this->banner->create($dataInsert);
+
+        if ($request->hasFile('image_url')) {
+            $file = $request->file('image_url');
+            $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
+                'folder' => 'upload_image'
+            ])->getSecurePath();
+
+            $banner->image_url = $uploadedFileUrl;
+            $banner->image_name = $file->getClientOriginalName(); // Assuming you want to store the original name of the image
+            $banner->save();
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Add new banner successfully',
+            'data' => $banner
+        ], 200);
     }
+
+
+
 
     /**
      * Display the specified resource.
