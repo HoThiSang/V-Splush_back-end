@@ -7,6 +7,20 @@ use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
+
+/**
+ * @OA\Info(
+ *    title="Swagger with Laravel",
+ *    version="1.0.0",
+ * )
+ * @OA\SecurityScheme(
+ *     type="http",
+ *     securityScheme="bearerAuth",
+ *     scheme="bearer",
+ *     bearerFormat="JWT"
+ * )
+
+ */
 class AdminCategoryController extends Controller
 {
     protected $categories;
@@ -18,24 +32,25 @@ class AdminCategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $allCategories = $this->categories->getAllCategories();
 
-        if (!empty($allCategories)) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Categories retrieved successfully',
-                'data' => $allCategories
-            ], 200);
-        } else {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Failed to retrieve categories',
-            ], 500);
-        }
+    
+public function index()
+{
+    $allCategories = $this->categories->getAllCategories();
+
+    if (!empty($allCategories)) {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Categories retrieved successfully',
+            'data' => $allCategories
+        ], 200);
+    } else {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Failed to retrieve categories',
+        ], 500);
     }
-
+}
 
     /**
      * Show the form for creating a new resource.
@@ -166,5 +181,20 @@ class AdminCategoryController extends Controller
                 ], 404);
             }
         }
+    }
+
+  /**
+     * @OA\Get(
+     *     path="/api/test",
+     *     summary="Get all posts",
+     *     tags={"Posts"},
+     *     @OA\Response(response="200", description="Success"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+    public function test()
+    {
+        $data = 'We are CodeQeens team';
+        return response()->json($data);
     }
 }
