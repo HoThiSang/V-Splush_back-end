@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Banner;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use App\Models\Image;
@@ -17,10 +18,9 @@ class AdminBannerController extends Controller
     protected $banner;
     protected $image;
 
-    public function __construct(Banner $banner, Image $image)
+    public function __construct(Banner $banner)
     {
         $this->banner = $banner;
-        $this->image = $image;
     }
     public function index()
     {
@@ -51,44 +51,48 @@ class AdminBannerController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'title' => 'required',
-            'sub_title' => 'required',
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|min:3',
             'content' => 'required',
-            'image_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ], [
-            'image_url.required' => 'The image field is required.',
-            'image_url.image' => 'The file must be an image.',
-            'image_url.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif.',
-            'image_url.max' => 'The image may not be greater than 2048 kilobytes.',
+            'sub_title' => 'required',
+            'image_url' => 'image|mimes:jpeg,png,jpg,webp|max:5000'
         ]);
-
-        $dataInsert = [
-            'title' => $validatedData['title'],
-            'sub_title' => $validatedData['sub_title'],
-            'content' => $validatedData['content'],
-            'created_at' => now()
-        ];
-
-        $banner = $this->banner->create($dataInsert);
-
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+        $banner = new Banner;
+        $banner->title = $request->input('title');
+        $banner->content = $request->input('content');
+        $banner->sub_title = $request->input('sub_title');
+        $banner->image_name = $request->input('image_name');
         if ($request->hasFile('image_url')) {
             $file = $request->file('image_url');
             $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
                 'folder' => 'upload_image'
             ])->getSecurePath();
-
+            $publicId = Cloudinary::getPublicId();
+            $filename = time() . '_' . $file->getClientOriginalName();
             $banner->image_url = $uploadedFileUrl;
-            $banner->image_name = $file->getClientOriginalName(); // Assuming you want to store the original name of the image
-            $banner->save();
+            $banner->image_name = $filename;
+            $banner->publicId = $publicId;
+        }else{
+            return response()->json([
+                'status' => 'Fail',
+                'message' => 'Add new banner fail',
+            ], 500);
         }
-
+        $banner->save();
         return response()->json([
             'status' => 'success',
             'message' => 'Add new banner successfully',
-            'data' => $banner
         ], 200);
     }
+
+
+
+
+
+
 
 
 
