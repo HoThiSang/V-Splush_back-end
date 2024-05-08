@@ -25,40 +25,44 @@ class UserSendMailController extends Controller
     }
     public function sendEmail(Request $request)
     {
-        if(Auth()->check()){
-
-     
+        // if(Auth()->check()){
         $request->validate([
-            'user_name' => 'required',
+            'name' => 'required',
             'email' => 'required|email|',
-            'title' => 'required',
+            'subject' => 'required',
             'message' => 'required',
         ]);
-
         $data = [
             'email' => $request->input('email'),
-            'title' => $request->input('title'),
+            'subject' => $request->input('subject'),
             'message' => $request->input('message'),
-            'user_name' => $request->input('user_name'),
-            'status' => 'No contact yet',
+            'name' => $request->input('name'),
+            'user_id'=>2,
+            'contact_status' => 'No contact yet',
             'created_at' => now(),
         ];
-
-        Mail::to(getenv('MAIL_USERNAME'))->send(new UserSendMail($data));
-
-        if (Mail::failures()) {
-            return redirect()->back()->with('error', 'Send the email is failed !');
+        try {
+            Mail::to(getenv('MAIL_USERNAME'))->send(new UserSendMail($data));
+            $this->contacts->creatNewContact($data);
+            return response()->json([
+                'success' => true, 
+                'message' => 'The email has been successfully sent to the system'
+            ], 200);
+        } 
+        catch (\Exception $e) {
+            return response()->json([
+                'success' => false, 
+                'message' => 'Send the email failed! ' . $e->getMessage()
+            ], 500);
         }
-        $this->contacts->creatNewContact($data);
-        return redirect()->back()->with('success', 'The email has been successfully sent to the system');
     }
-        return redirect()->route('login');
-    }
+    // return response()->json([
+    //     'message' => 'You must to login'
+    // ], 401);}
 
     public function replyEmail(Request $request, $id)
     {
         if(Auth()->user()){
-     
         if ($request->isMethod('post')) {
             $cart = $this->contacts->getContactById($id);
             if (!empty($cart)) {
@@ -67,10 +71,10 @@ class UserSendMailController extends Controller
                 ]);
                 $dataSend = [
                     'email' => $cart->email,
-                    'title' => $cart->title,
-                    'user_name' => $cart->user_name,
+                    'subject' => $cart->subject,
+                    'name' => $cart->name,
                     'message'=>$request->message,
-                    'status'=> 'Contacted',
+                    'contact_status'=> 'Contacted',
                     'updated_at'=>now()
                 ];
                 $cartdata= [
@@ -79,13 +83,17 @@ class UserSendMailController extends Controller
                     'updated_at' => now()
                 ];
                 Mail::to($cart->email)->send(new AdminReplyMail($dataSend));
-               
                 if (Mail::failures()) {
-                    return redirect()->back()->with('error', 'Email sending failed');
+                    return response()->json([
+                        'success' => false, 
+                        'message' => 'Email sending failed'
+                    ], 500);
                 }
                 $this->contacts->updateContact($id, $cartdata);
-                
-                return redirect()->route('admin-contact')->with('success', 'The email has been successfully sent to the system');
+                return response()->json([
+                    'success' => true, 
+                    'message' => 'The email has been successfully sent to the system'
+                ], 200);
             }
         }
     }

@@ -28,10 +28,10 @@ class UserSendMail extends Mailable
      */
     public function build()
     {
-        return $this->view('mails.send-mail')
+        return $this->view('mail.send-mail')
             ->with([
-                'userName' => $this->sendData['user_name'],
-                'title' => $this->sendData['title'],
+                'userName' => $this->sendData['name'],
+                'title' => $this->sendData['subject'],
                 'content' => $this->sendData['message'],
             ]);
     }

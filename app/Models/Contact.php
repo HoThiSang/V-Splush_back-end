@@ -12,14 +12,23 @@ class Contact extends Model
     protected $table = 'contacts';
 
     protected $fillable = ['email', 'name', 'subject','contact_status'];
+    public function getAllContact()
+    {
+        return DB::table($this->table)->get();
+    }
     public function creatNewContact($data)
     {
         return DB::table($this->table)->insert($data);
     }
     public function getContactById($id)
     {
-        return DB::table($this->table)->where('id', $id)->first();
-     
+        return DB::table($this->table)->where('id', $id)->first(); 
+    }
+    public function updateContact($id, $data)
+    {
+        return DB::table($this->table)
+            ->where('id', $id)
+            ->update($data);
     }
 
 }

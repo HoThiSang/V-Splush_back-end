@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\AdminContactController;
+use App\Http\Controllers\Mail\UserSendMailController;
 use App\Http\Controllers\Admin\AdminWishListControllor;
 use App\Http\Controllers\Admin\AdminBannerController;
 use App\Http\Controllers\User\UserController;
@@ -66,7 +67,6 @@ Route::get('/admin-show-post/{id}', [AdminPostController::class, 'show'])->name(
 Route::put('/admin-update-post/{id}', [AdminPostController::class, 'update'])->name('admin-update-post');
 Route::get('admin-show-all-banner', [AdminBannerController::class, 'index'])->name('admin-show-all-banner');
 Route::delete('/admin-delete-banner/{id}', [AdminBannerController::class, 'destroy'])->name('admin-delete-banner');
-
 Route::get('/test', [AdminCategoryController::class, 'test']);
 
 Route::get('admin-show-all-post', [AdminPostController::class, 'index'])->name('admin-show-all-post');
@@ -78,3 +78,7 @@ Route::middleware('auth:sanctum')->group( function () {
 });
 Route::get('/admin-contact/{id}', [AdminContactController::class, 'show'])->name('admin-view-contact');
 Route::post('/admin-reply-contact/{id}', [AdminContactController::class, 'replyEmail'])->name('admin-reply-contact');
+Route::get('/admin-contact', [AdminContactController::class, 'index'])->name('admin-contact');
+Route::get('/admin-view-contact/{id}', [AdminContactController::class, 'show'])->name('admin-view-contact');
+Route::post('user-send-contact', [UserSendMailController::class, 'sendEmail'])->name('user-create-contact');
+Route::post('/admin-reply-contact/{id}', [UserSendMailController::class, 'replyEmail'])->name('admin-reply-contact');
