@@ -50,7 +50,7 @@ Route::delete('/admin-product-delete/{id}',[AdminProductController::class,'destr
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-Route::get('/admin-product',[AdminProductController::class,'index']);
+
 Route::post('/admin-product-update/{id}', [AdminProductController::class, 'update'])->name('admin-product-update');
 Route::get('/admin-product-delete/{id}', [AdminProductController::class, 'destroy'])->name('admin-product-delete');
 
