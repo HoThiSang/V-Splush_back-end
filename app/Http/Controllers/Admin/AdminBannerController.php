@@ -87,16 +87,6 @@ class AdminBannerController extends Controller
             'message' => 'Add new banner successfully',
         ], 200);
     }
-
-
-
-
-
-
-
-
-
-
     /**
      * Display the specified resource.
      */
