@@ -54,6 +54,8 @@ Route::delete('/admin-product-delete/{id}',[AdminProductController::class,'destr
 Route::post('/admin-product-update/{id}', [AdminProductController::class, 'update'])->name('admin-product-update');
 Route::get('/admin-product-delete/{id}', [AdminProductController::class, 'destroy'])->name('admin-product-delete');
 
+Route::delete('/admin-product-delete/{id}',[AdminProductController::class,'destroy'])->name('delete-product');
+
 Route::get('admin-user', [AdminUserController::class, 'index'])->name('admin-user');
 
 Route::get('admin-show-all-post', [AdminPostController::class, 'index'])->name('admin-show-all-post');
