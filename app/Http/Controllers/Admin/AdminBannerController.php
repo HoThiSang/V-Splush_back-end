@@ -121,17 +121,17 @@ class AdminBannerController extends Controller
         $banner->sub_title = $request->input('sub_title');
         $banner->image_name = $request->input('image_name');
 
-        // if ($request->hasFile('image_url')) {
-        //     $file = $request->file('image_url');
-        //     $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
-        //         'folder' => 'upload_image'
-        //     ])->getSecurePath();
-        //     $publicId = Cloudinary::getPublicId();
-        //     $filename = time() . '_' . $file->getClientOriginalName();
-        //     $banner->image_url = $uploadedFileUrl;
-        //     $banner->image_name = $filename;
-        //     $banner->publicId = $publicId;
-        // }
+        if ($request->hasFile('image_url')) {
+            $file = $request->file('image_url');
+            $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
+                'folder' => 'upload_image'
+            ])->getSecurePath();
+            $publicId = Cloudinary::getPublicId();
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $banner->image_url = $uploadedFileUrl;
+            $banner->image_name = $filename;
+            $banner->publicId = $publicId;
+        }
 
         if ($request->hasFile('image_url')) {
             $file = $request->file('image_url');
