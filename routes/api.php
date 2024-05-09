@@ -60,3 +60,5 @@ Route::delete('/admin-delete-banner/{id}', [AdminBannerController::class, 'destr
 Route::patch('/update-banner/{id}', [AdminBannerController::class, 'update'])->name('update-banner');
 
 Route::get('/test', [AdminCategoryController::class, 'test']);
+
+Route::post('/admin-create-banner', [AdminBannerController::class, 'store'])->name('admin-create-banner');
