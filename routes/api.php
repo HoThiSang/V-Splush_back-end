@@ -57,5 +57,6 @@ Route::put('/admin-update-post/{id}', [AdminPostController::class, 'update'])->n
 
 Route::get('admin-show-all-banner', [AdminBannerController::class, 'index'])->name('admin-show-all-banner');
 Route::delete('/admin-delete-banner/{id}', [AdminBannerController::class, 'destroy'])->name('admin-delete-banner');
+Route::post('/admin-create-banner', [AdminBannerController::class, 'store'])->name('admin-create-banner');
 
 Route::get('/test', [AdminCategoryController::class, 'test']);
