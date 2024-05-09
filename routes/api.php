@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\AdminWishListControllor;
 use App\Http\Controllers\Admin\AdminBannerController;
 use App\Http\Controllers\User\UserController;
 
+use App\Http\Controllers\User\UserCheckoutController;
 use Cloudinary\Api\Admin\AdminApi;
 
 /*

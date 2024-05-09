@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+
 
 class OrderItem extends Model
 {
@@ -19,5 +21,4 @@ class OrderItem extends Model
     public function order(){
         return $this->belongsTo('App\Models\Order', 'order_id','id');
     }
-    
 }
