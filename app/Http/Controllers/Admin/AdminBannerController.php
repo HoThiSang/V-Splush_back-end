@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Banner;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Illuminate\Support\Facades\Validator;
 
 class AdminBannerController extends Controller
 {
@@ -69,10 +71,41 @@ class AdminBannerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        // $validator = Validator::make($request->all(), [
+        //     'title' => 'required|min:3',
+        //     'content' => 'required',
+        //     'image_url' => 'image|mimes:jpeg,png,jpg|max:5000'
+        // ]);
+        // if ($validator->fails()) {
+        //     return back()->withErrors($validator)->withInput();
+        // }
+
+        $banner = Banner::find($id);
+        $banner->title = $request->input('title');
+        
+
+        $banner->content = $request->input('content');
+        $banner->sub_title = $request->input('sub_title');
+        $banner->image_name = $request->input('image_name');
+        if ($request->hasFile('image_url')) {
+
+            $file = $request->file('image_url');
+            $uploadedFileUrl = Cloudinary::upload($request->file('image_url')->getRealPath(), [
+                'folder' => 'upload_image'
+            ])->getSecurePath();
+            $publicId = Cloudinary::getPublicId();
+            $extension = $file->getClientOriginalName();
+            $filename = time() . '_' . $extension;
+            $banner->image_url = $uploadedFileUrl;
+            $banner->image_name = $filename;
+            $banner->publicId = $publicId;
+        }
+        $banner->update();
+        // return redirect()->route('admin-banner')->with('success', 'Update successfully');
     }
+
 
     /**
      * Remove the specified resource from storage.
