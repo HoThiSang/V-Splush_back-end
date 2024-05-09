@@ -164,7 +164,7 @@ class AdminProductController extends Controller
     {
         $product = $this->products->findById($id);
         if (!empty($product)) {
-            if ($request->isMethod('put')) {
+            if ($request->isMethod('post')) {
                 if (
                     isset($request->product_name) && isset($request->price) && isset($request->discount)
                     && isset($request->quantity) && isset($request->description) && isset($request->ingredient)
