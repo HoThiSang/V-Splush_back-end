@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class AdminUserController extends Controller
@@ -75,9 +76,25 @@ class AdminUserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+        $order = Order::where('user_id', $user->id)->first();
+        if (!$order) {
+            $user->status = 'disabled';
+            $user->save();
+            return response()->json(['message' => 'User disabled successfully', 'user' => $user]);
+        }
+        if ($order->status === 'delivered') {
+            $user->status = 'disabled';
+            $user->save();
+            return response()->json(['message' => 'User disabled successfully', 'user' => $user]);
+        } else {
+            return response()->json(['error' => 'Cannot disable user. Order not delivered'], 400);
+        }
     }
 
     /**
