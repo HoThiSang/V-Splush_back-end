@@ -22,7 +22,7 @@ class BannerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|min:3',
+            'title' => 'required',
             'content' => 'required',
             'sub_title' => 'required',
             'image_url' => 'image|mimes:jpeg,png,jpg,webp|max:5000'
