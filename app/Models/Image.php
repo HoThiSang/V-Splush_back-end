@@ -29,9 +29,20 @@ class Image extends Model
         $image = DB::table($this->table)->insertGetId($data);
         return $image;
     }
-    public function deleteImagesByProductId($productId)
+    public function updateImage($id, $data)
     {
-        return $this->where('product_id', $productId)->delete();
+        return DB::table($this->table)
+            ->where('id', $id)
+            ->update($data);
+    }
+    public static function deleteImagesByProductId($productId)
+    {
+        self::where('product_id', $productId)->delete();
+    }
+
+    public function getImageByIdProduct($product_id) {
+        return DB::table($this->table)
+            ->where('product_id', $product_id)->get();
     }
     
 }
