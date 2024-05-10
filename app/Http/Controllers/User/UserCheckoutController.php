@@ -179,7 +179,8 @@ class UserCheckoutController extends Controller
                 $inputData[$key] = $value;
             }
         }
-
+        
+        return response()->json($inputData);
 
         unset($inputData['vnp_SecureHash']);
         ksort($inputData);
