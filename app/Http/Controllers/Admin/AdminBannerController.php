@@ -42,13 +42,14 @@ class AdminBannerController extends Controller
 
     public function store(BannerRequest $request)
     {
-        dd($request->all());
-        $banner = $this->banner;
-
-        $banner->title = $request->input('title');
-        $banner->content = $request->input('content');
-        $banner->sub_title = $request->input('sub_title');
-
+        // dd($request->all());
+        // return response()->json('hellll');
+        // $banner = $this->banner;
+        $banner = [
+            'title' => $request->input('title'),
+            'content' => $request->input('content'),
+            'sub_title' => $request->input('sub_title')
+        ];
         if ($request->hasFile('image_url')) {
             $file = $request->file('image_url');
             $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
@@ -56,23 +57,29 @@ class AdminBannerController extends Controller
             ])->getSecurePath();
             $publicId = Cloudinary::getPublicId();
             $filename = time() . '_' . $file->getClientOriginalName();
-            $banner->image_url = $uploadedFileUrl;
-            $banner->image_name = $filename;
-            $banner->publicId = $publicId;
+            $banner['image_url'] = $uploadedFileUrl;
+            $banner['image_name'] = $filename;
+            $banner['publicId'] = $publicId;
         } else {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Please upload an image',
             ], 422);
         }
-
-        $banner->save();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Banner created successfully',
-            'data' => $banner
-        ], 201);
+        $banners = $this->banner->creatNewBanner($banner);
+        if ($banners > 0) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Banner created successfully',
+                'data' => $banner
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Banner created fail',
+                'data' => $banner
+            ], 400);
+        }
     }
 
 
@@ -90,43 +97,86 @@ class AdminBannerController extends Controller
     /**
      * Update the specified resource in storage.
      */
+    // public function update(BannerRequest $request, $id)
+    // {
+    //     $banner = Banner::find($id);
+    //     if (!$banner) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Banner not found',
+    //         ], 404);
+    //     }
+    //     $banner = [
+    //         'title' => $request->input('title'),
+    //         'content' => $request->input('content'),
+    //         'sub_title' => $request->input('sub_title')
+    //     ];
+    //     if ($request->hasFile('image_url')) {
+    //         $file = $request->file('image_url');
+    //         $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
+    //             'folder' => 'upload_image'
+    //         ])->getSecurePath();
+    //         $publicId = Cloudinary::getPublicId();
+    //         $filename = time() . '_' . $file->getClientOriginalName();
+    //         $banner['image_url'] = $uploadedFileUrl;
+    //         $banner['image_name'] = $filename;
+    //         $banner['publicId'] = $publicId;
+    //     }
+    //     $bannerUpdated = $this->$banner->updateBanner($id,$banner); 
+
+    //     if ($bannerUpdated) {
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'message' => 'Update banner successfully',
+    //             'data' => $bannerUpdated
+    //         ], 200);
+    //     } else {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Failed to update banner',
+    //         ], 422);
+    //     }
+
+    // }
+
     public function update(BannerRequest $request, $id)
     {
-        $banner = Banner::find($id);
-
-        if (!$banner) {
+        $banner = $this->banner->getbannerById($id);
+        if (!empty($banner)) {
+            $bannerData = [
+                'title' => $request->input('title'),
+                'content' => $request->input('content'),
+                'sub_title' => $request->input('sub_title')
+            ];
+            if ($request->hasFile('image_url')) {
+                $file = $request->file('image_url');
+                $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
+                    'folder' => 'upload_image'
+                ])->getSecurePath();
+                $publicId = Cloudinary::getPublicId();
+                $bannerData['image_name'] = $request->title;
+                $bannerData['image_url'] = $uploadedFileUrl;
+                $bannerData['publicId'] = $publicId;
+            }
+            $bannerInserted = $this->banner->updatebanner($id, $bannerData);
+            if ($bannerInserted) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Update banner successfully',
+                    'data' => $bannerInserted
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Failed to update banner',
+                ], 422);
+            }
+        } else {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Banner not found',
+                'message' => 'banner not found',
             ], 404);
         }
-
-        $banner->title = $request->input('title');
-        $banner->content = $request->input('content');
-        $banner->sub_title = $request->input('sub_title');
-        $banner->image_name = $request->input('image_name');
-
-        if ($request->hasFile('image_url')) {
-            $file = $request->file('image_url');
-            $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
-                'folder' => 'upload_image'
-            ])->getSecurePath();
-            $publicId = Cloudinary::getPublicId();
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $banner->image_url = $uploadedFileUrl;
-            $banner->image_name = $filename;
-            $banner->publicId = $publicId;
-        }
-
-
-
-        $banner->save();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Banner updated successfully',
-            'data' => $banner
-        ], 200);
     }
 
 

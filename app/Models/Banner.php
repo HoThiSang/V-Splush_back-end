@@ -39,5 +39,17 @@ class Banner extends Model
     {
         return DB::table($this->table)->insertGetId($data);
     }
+
+    public function updateBanner($id, $data)
+    {
+        return DB::table($this->table)
+            ->where('id', $id)
+            ->update($data);
+    }
+
+    public function getBannerById($id)
+    {
+        return DB::table($this->table)->where('id', $id)->first();
+    }
     
 }
