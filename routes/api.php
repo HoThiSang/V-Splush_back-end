@@ -49,6 +49,7 @@ Route::post('/admin-add-product',[AdminProductController::class,'store'])->name(
 Route::delete('/admin-product-delete/{id}',[AdminProductController::class,'destroy'])->name('delete-product');
 
 Route::get('admin-user', [AdminUserController::class, 'index'])->name('admin-user');
+Route::post('update-user/{id}', [AdminUserController::class, 'update'])->name('update-user');
 
 Route::get('admin-show-all-post', [AdminPostController::class, 'index'])->name('admin-show-all-post');
 Route::post('/admin-create-post', [AdminPostController::class, 'store'])->name('admin-create-post');
