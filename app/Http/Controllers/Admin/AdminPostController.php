@@ -122,7 +122,7 @@ class AdminPostController extends Controller
     */
     public function update(PostRequest $request, string $id)
     {
-        if ($request->method() === 'PUT') {
+        if ($request->method() === 'POST') {
             $post = $this->posts->getPostById($id);
             if (!empty($post)) {
                 $postData = [
