@@ -42,4 +42,6 @@ class UserController extends Controller
             'status' => 'success'
         ], 201);
     }
+
+    
 }
