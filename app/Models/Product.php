@@ -49,6 +49,17 @@ class Product extends Model
         $product = $this->findOrFail($id);
         return $product->delete();
     }
+    public function updateProduct($id, $data)
+    {
+        return DB::table($this->table)
+            ->where('id', $id)
+            ->update($data);
+    }
+
+    public static function findById($id)
+    {
+        return self::find($id);
+    }
     public function category()
     {
         return $this->belongsTo('App\Models\Category', 'category_id', 'id');
