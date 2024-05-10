@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\AdminWishListControllor;
 use App\Http\Controllers\Admin\AdminBannerController;
+use App\Http\Controllers\User\UserController;
 
 
 /*
@@ -22,9 +23,9 @@ use App\Http\Controllers\Admin\AdminBannerController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 Route::get('/categories', [AdminCategoryController::class, 'index'])->name('get-all-category');
 Route::get('/categories/{id}', [AdminCategoryController::class, 'edit'])->name('get-all-category-id');
 Route::post('/categories-create', [AdminCategoryController::class, 'store'])->name('create-category');
@@ -59,3 +60,7 @@ Route::get('admin-show-all-banner', [AdminBannerController::class, 'index'])->na
 Route::delete('/admin-delete-banner/{id}', [AdminBannerController::class, 'destroy'])->name('admin-delete-banner');
 
 Route::get('/test', [AdminCategoryController::class, 'test']);
+
+Route::get('admin-show-all-post', [AdminPostController::class, 'index'])->name('admin-show-all-post');
+
+Route::post('register', [UserController::class, 'register'])->name('register'); 
