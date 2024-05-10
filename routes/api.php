@@ -65,3 +65,6 @@ Route::get('admin-show-all-post', [AdminPostController::class, 'index'])->name('
 
 Route::post('register', [UserController::class, 'register'])->name('register');
 Route::post('login', [UserController::class, 'login'])->name('login');
+Route::middleware('auth:sanctum')->group( function () {
+    Route::post('logout', [UserController::class, 'logout'])->name('logout');
+});
