@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\AdminWishListControllor;
 use App\Http\Controllers\Admin\AdminBannerController;
 use App\Http\Controllers\User\UserController;
 
+use App\Http\Controllers\User\UserCartController;
 use App\Http\Controllers\User\UserCheckoutController;
 use Cloudinary\Api\Admin\AdminApi;
 
@@ -92,3 +93,7 @@ Route::put('/update-contact/{id}', [AdminContactController::class, 'update']);
 Route::delete('/delete-contact/{id}', [AdminContactController::class, 'destroy']);
 Route::get('/admin-show-all-orders',[AdminOrderController::class,'index'])->name('admin-show-all-order');
 Route::put('/admin-update-status-order/{id}',[AdminOrderController::class,'update'])->name('admin-update-status-order');
+
+Route::post('/user-create-checkout',[UserCheckoutController::class,'checkout']);
+Route::get('/user-is-checkout',[UserCheckoutController::class,'isCheckout']);
+Route::post('/user-add-to-cart',[UserCartController::class,'store']);

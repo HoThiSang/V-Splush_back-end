@@ -21,4 +21,8 @@ class OrderItem extends Model
     public function order(){
         return $this->belongsTo('App\Models\Order', 'order_id','id');
     }
+    public function creatNewOrderItem($data)
+    {
+        return DB::table($this->table)->insert($data);
+    }
 }
