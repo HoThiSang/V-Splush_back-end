@@ -76,8 +76,6 @@ Route::post('login', [UserController::class, 'login'])->name('login');
 Route::middleware('auth:sanctum')->group( function () {
     Route::post('logout', [UserController::class, 'logout'])->name('logout');
 });
-Route::get('/admin-contact/{id}', [AdminContactController::class, 'show'])->name('admin-view-contact');
-Route::post('/admin-reply-contact/{id}', [AdminContactController::class, 'replyEmail'])->name('admin-reply-contact');
 Route::get('/admin-contact', [AdminContactController::class, 'index'])->name('admin-contact');
 Route::get('/admin-view-contact/{id}', [AdminContactController::class, 'show'])->name('admin-view-contact');
 Route::post('user-send-contact', [UserSendMailController::class, 'sendEmail'])->name('user-create-contact');
