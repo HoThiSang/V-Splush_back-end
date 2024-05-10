@@ -57,7 +57,7 @@ class AdminProductController extends Controller
                 && isset($request->quantity) && isset($request->description) && isset($request->ingredient)
                 && isset($request->brand) && isset($request->category_id)
             ) {
-                
+
                 if ($request->hasFile('image_url')) {
                     $dataInsert = [
                         'product_name' => $request->product_name,
@@ -91,7 +91,6 @@ class AdminProductController extends Controller
                             ];
 
                             $imageSuccess = $this->image->createImageByProductId($dataImage);
-                           
                         }
                         if ($imageSuccess) {
                             $uploadedImages[] = $imageSuccess;
@@ -163,76 +162,78 @@ class AdminProductController extends Controller
     public function update(ProductRequest $request, $id)
     {
         $product = $this->products->findById($id);
-        if (!empty($product)) {
-            if ($request->isMethod('post')) {
-                if (
-                    isset($request->product_name) && isset($request->price) && isset($request->discount)
-                    && isset($request->quantity) && isset($request->description) && isset($request->ingredient)
-                    && isset($request->brand) && isset($request->category_id)
-                ) {
-                    $dataUpdate = [
-                        'product_name' => $request->product_name,
-                        'quantity' => $request->quantity,
-                        'price' => $request->price,
-                        'ingredient' => $request->ingredient,
-                        'description' => $request->description,
-                        'brand' => $request->brand,
-                        'discount' => $request->discount,
-                        'category_id' => $request->category_id,
-                        'updated_at' => now()
-                    ];
-                    $updatedProduct = $this->products->updateProduct($id, $dataUpdate);
-                    if ($updatedProduct) {
-                        if ($request->hasFile('image_url')) {
-                            $files = $request->file('image_url');
-                            foreach ($files as $file) {
-                                $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
-                                    'folder' => 'upload_image'
-                                ])->getSecurePath();
-                                $publicId = Cloudinary::getPublicId();
-                                $extension = $file->getClientOriginalName();
-                                $filename = time() . '_' . $extension;
-    
-                                $dataImage = [
-                                    'image_name' => $request->product_name,
-                                    'image_url' =>  $uploadedFileUrl,
-                                    'product_id' => $id,
-                                    'publicId' => $publicId,
-                                    'created_at' => now()
-                                ];
-                                $imageSuccess = $this->image->createImageByProductId($dataImage);
-                            }
-                        }
-                        return response()->json([
-                            'status' => 'success',
-                            'message' => 'Product updated successfully',
-                        ], 200);
-                    } else {
-                        return response()->json([
-                            'status' => 'error',
-                            'message' => 'Failed to update product',
-                        ], 500);
-                    }
-                } else {
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Missing required fields',
-                    ], 500);
-                }
-            } else {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Invalid request method',
-                ], 405);
-            }
-        } else {
+        
+        if (empty($product)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Product not found',
             ], 404);
         }
-    }
+    
+        if (!$request->isMethod('post')) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid request method',
+            ], 405);
+        }
+    
+        $dataUpdate = [
+            'product_name' => $request->product_name,
+            'quantity' => $request->quantity,
+            'price' => $request->price,
+            'ingredient' => $request->ingredient,
+            'description' => $request->description,
+            'brand' => $request->brand,
+            'discount' => $request->discount,
+            'category_id' => $request->category_id,
+            'updated_at' => now()
+        ];
+        $updatedProduct = $this->products->updateProduct($id, $dataUpdate);
+    
+        if (!$updatedProduct) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to update product',
+            ], 500);
+        }
+        $uploadedImages = [];
+    
+        if ($request->hasFile('image_url')) {
+            $images = $this->image->getImageByIdProduct($id);
+            
+            $i=0;
+            foreach ($request->file('image_url') as $file) {
+                $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
+                    'folder' => 'upload_image'
+                ])->getSecurePath();
+    
+                $publicId = Cloudinary::getPublicId();
+    
+                $dataImage = [
+                    'image_name' => $request->product_name,
+                    'image_url' =>  $uploadedFileUrl,
+                    'product_id' => $id, 
+                    'publicId' => $publicId,
+                    'created_at' => now()
+                ];
+                $imageId = $images[$i]->id;
+                $uploadedImages[] = $dataImage;
 
+                $this->image->updateImage($imageId , $dataImage);
+                $i++;
+            }
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Product updated successfully',
+            ], 200);
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Product updated successfully',
+        ], 200);
+    }
+    
+    
     /**
      * Remove the specified resource from storage.
      *
@@ -272,5 +273,4 @@ class AdminProductController extends Controller
             'message' => 'Product ID is required'
         ], 400);
     }
-    
 }
