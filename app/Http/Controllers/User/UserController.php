@@ -43,5 +43,32 @@ class UserController extends Controller
         ], 201);
     }
 
+    public function login(Request $request){
+        $request->validate([
+            'email' =>'required|email',
+            'password' => 'required',
+        ]);
+        $user = User::where('email', $request->email)->first();
+        if ($user && Hash::check($request->password, $user->password)){
+            $accessToken = $user->createToken($request->email)->plainTextToken;
+            return response()->json([
+                'token' => $accessToken,
+               'message' => 'Login Success',
+               'status' =>'success'
+            ], 200);
+        }
+        return response()->json([
+           'message' => 'Invalid Credentials',
+           'status' => 'failed'
+        ], 401);
+    }
+
+    public function logout(){
+        auth()->user()->tokens()->delete();
+        return response()->json([
+           'message' => 'Logout Success',
+           'status' =>'success'
+        ], 200);
+    }
     
 }
