@@ -49,7 +49,7 @@ Route::get('/show-detail-comment/{id}', [AdminCommentController::class, 'show'])
 Route::get('/admin-product',[AdminProductController::class,'index'])->name('get-all-product');
 Route::post('/admin-add-product',[AdminProductController::class,'store'])->name('create-product');
 Route::post('/admin-product-update/{id}', [AdminProductController::class, 'update'])->name('admin-product-update');
-Route::get('/admin-product-delete/{id}', [AdminProductController::class, 'destroy'])->name('admin-product-delete');
+Route::delete('/admin-product-delete/{id}', [AdminProductController::class, 'destroy'])->name('admin-product-delete');
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });

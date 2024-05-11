@@ -192,7 +192,6 @@ class AdminPostController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Delete post successfully!',
-                'data' => $post
             ], 200);
         } else {
             return response()->json([

@@ -244,7 +244,6 @@ public function index()
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Deleted category successfully',
-                    'data' => $product
                 ], 200);
             } else {
                 return response()->json([

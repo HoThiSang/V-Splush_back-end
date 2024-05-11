@@ -107,7 +107,7 @@ class AdminProductController extends Controller
                             return response()->json([
                                 'status' => 'success',
                                 'message' => 'Add new  product successfully',
-                                'data' => $imageSuccess
+                                'data' => $product_id
                             ], 200);
                         } else {
                             return response()->json([
