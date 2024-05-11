@@ -84,4 +84,4 @@ Route::get('/admin-view-contact/{id}', [AdminContactController::class, 'show'])-
 Route::post('user-send-contact', [UserSendMailController::class, 'sendEmail'])->name('user-create-contact');
 Route::post('/admin-reply-contact/{id}', [UserSendMailController::class, 'replyEmail'])->name('admin-reply-contact');
 Route::put('/update-contact/{id}', [AdminContactController::class, 'update']);
-
+Route::delete('/delete-contact/{id}', [AdminContactController::class, 'destroy']);
