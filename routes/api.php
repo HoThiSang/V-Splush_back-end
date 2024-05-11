@@ -83,7 +83,5 @@ Route::get('/admin-contact', [AdminContactController::class, 'index'])->name('ad
 Route::get('/admin-view-contact/{id}', [AdminContactController::class, 'show'])->name('admin-view-contact');
 Route::post('user-send-contact', [UserSendMailController::class, 'sendEmail'])->name('user-create-contact');
 Route::post('/admin-reply-contact/{id}', [UserSendMailController::class, 'replyEmail'])->name('admin-reply-contact');
-Route::get('/contacts', [AdminContactController::class, 'index']);
-Route::get('/contacts/{id}',[AdminContactController::class, 'show']);
-Route::put('/contacts/{id}', [AdminContactController::class, 'update']);
+Route::put('/update-contact/{id}', [AdminContactController::class, 'update']);
 
