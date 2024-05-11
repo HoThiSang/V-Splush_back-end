@@ -33,4 +33,12 @@ public function getAllContact()
             ->where('id', $id)
             ->update($data);
     }
-}
+    public function deleteContactId($id)
+    {
+        $deleted = Contact::destroy($id);
+        if ($deleted > 0) {
+            return true;
+        } else {
+            return false; 
+        }
+}}

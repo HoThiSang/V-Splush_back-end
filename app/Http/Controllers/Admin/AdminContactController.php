@@ -45,30 +45,46 @@ class AdminContactController extends Controller
                     $cartUpdate = $this->contact->updateContact($id, $updateData);
                     if ($cartUpdate) {
                         return response()->json([
-                            'status' => 'success', 
+                            'status' => 'success',
                             'message' => 'Updated contact status successfully!'
                         ], 200);
                     }
                     return response()->json([
-                        'status' => 'error', 
+                        'status' => 'error',
                         'message' => 'Failed to update contact status!'
                     ], 500);
                 } else {
                     return response()->json([
-                        'status' => 'error', 
+                        'status' => 'error',
                         'message' => 'Contact status cannot be null!'
                     ], 400);
                 }
             }
             return response()->json([
-                'status' => 'error', 
+                'status' => 'error',
                 'message' => 'Not found contact with id : ' . $id
             ], 404);
         } else {
             return response()->json([
-                'status' => 'error', 
+                'status' => 'error',
                 'message' => 'ID is required'
             ], 400);
+        }
+    }
+    public function destroy($id)
+    {
+        if (!empty($id)) {
+            $cart = $this->contact->getContactById($id);
+            if (!empty($cart)) {
+                $cartDelete = $this->contact->deleteContactId($id);
+                if ($cartDelete) {
+                    return response()->json(['success' => 'Deleted contact successfully!'], 200);
+                }
+                return response()->json(['error' => 'Failed to delete contact!'], 500);
+            }
+            return response()->json(['error' => 'Not found contact with id : ' . $id], 404);
+        } else {
+            return response()->json(['error' => 'ID is required'], 400);
         }
     }
 }
