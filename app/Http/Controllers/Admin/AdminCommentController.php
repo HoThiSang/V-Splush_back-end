@@ -103,8 +103,8 @@ return response()->json([
             return response()->json([
                 'status' =>'success',
                 'message'=>'Add new comment successfully',
-                'data'=>$comment,200
-            ]);
+                'data'=>$comment
+            ], 200);
         }
     else{
         return response()->json([

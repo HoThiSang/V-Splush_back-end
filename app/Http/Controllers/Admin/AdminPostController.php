@@ -22,6 +22,15 @@ class AdminPostController extends Controller
     /**
      * Display a listing of the resource.
      */
+      /**
+     * @OA\Get(
+     *     path="/api/admin-show-all-post",
+     *     summary="Get all posts",
+     *     tags={"Posts"},
+     *     @OA\Response(response="200", description="Success"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
     public function index()
     {
         $posts = $this->posts->getAllPost();
@@ -124,7 +133,7 @@ class AdminPostController extends Controller
     */
     public function update(PostRequest $request, string $id)
     {
-        if ($request->method() === 'PUT') {
+        if ($request->method() === 'POST') {
             $post = $this->posts->getPostById($id);
             if (!empty($post)) {
                 $postData = [
@@ -182,8 +191,7 @@ class AdminPostController extends Controller
             $post = $this->posts->deletePostById($id);
             return response()->json([
                 'status' => 'success',
-                'message' => 'Get one post successfully!',
-                'data' => $post
+                'message' => 'Delete post successfully!',
             ], 200);
         } else {
             return response()->json([

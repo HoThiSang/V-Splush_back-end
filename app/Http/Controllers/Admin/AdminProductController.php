@@ -30,7 +30,17 @@ class AdminProductController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
-     */    public function index()
+     */   
+     /**
+     * @OA\Get(
+     *     path="/api/admin-product",
+     *     summary="Get all products",
+     *     tags={"Product"},
+     *     @OA\Response(response="200", description="Success"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
+     public function index()
 
     {
         $productAll = $this->products->getAllProduct();
@@ -97,7 +107,7 @@ class AdminProductController extends Controller
                             return response()->json([
                                 'status' => 'success',
                                 'message' => 'Add new  product successfully',
-                                'data' => $imageSuccess
+                                'data' => $product_id
                             ], 200);
                         } else {
                             return response()->json([

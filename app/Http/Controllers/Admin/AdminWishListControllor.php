@@ -99,7 +99,6 @@ class AdminWishListControllor extends Controller
                     return response()->json([
                         'status' => 'success',
                         'message' => 'Deleted wish list successfully',
-                        'data' => $wishList
                     ], 200);
                 } else {
                     return response()->json([

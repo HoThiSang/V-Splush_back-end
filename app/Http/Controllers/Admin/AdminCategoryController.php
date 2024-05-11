@@ -33,7 +33,15 @@ class AdminCategoryController extends Controller
      * Display a listing of the resource.
      */
 
-    
+ /**
+     * @OA\Get(
+     *     path="/api/categories",
+     *     summary="Get all categories",
+     *     tags={"Category"},
+     *     @OA\Response(response="200", description="Success"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
 public function index()
 {
     $allCategories = $this->categories->getAllCategories();
@@ -62,6 +70,23 @@ public function index()
 
     /**
      * Store a newly created resource in storage.
+     */
+     /**
+     * @OA\Post(
+     *     path="/api/categories-create",
+     *     summary="Create a new category",
+     *     tags={"Category"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Category data",
+     *         @OA\JsonContent(
+     *             required={"category_name"},
+     *             @OA\Property(property="category_name", type="string", example="New Category")
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="500", description="Internal Server Error")
+     * )
      */
     public function store(CategoryRequest $request)
     {
@@ -124,6 +149,34 @@ public function index()
     /**
      * Update the specified resource in storage.
      */
+      /**
+     * @OA\Put(
+     *     path="/api/categories-update/{id}",
+     *     summary="Update a category by ID",
+     *     tags={"Category"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the category to update",
+     *         @OA\Schema(
+     *             type="string",
+     *             format="uuid"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Category data",
+     *         @OA\JsonContent(
+     *             required={"category_name"},
+     *             @OA\Property(property="category_name", type="string", example="Updated Category")
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="404", description="Category not found"),
+     *     @OA\Response(response="500", description="Internal Server Error")
+     * )
+     */
     public function update(CategoryRequest $request, string $id)
     {
         if ($request->isMethod('put')) {
@@ -164,6 +217,25 @@ public function index()
     /**
      * Remove the specified resource from storage.
      */
+     /**
+     * @OA\Delete(
+     *     path="/api/categories-delete/{id}",
+     *     summary="Delete a category by ID",
+     *     tags={"Category"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the category to delete",
+     *    @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="404", description="Category not found")
+     * )
+     */
     public function destroy(string $id)
     {
         if (!empty($id)) {
@@ -172,7 +244,6 @@ public function index()
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Deleted category successfully',
-                    'data' => $product
                 ], 200);
             } else {
                 return response()->json([

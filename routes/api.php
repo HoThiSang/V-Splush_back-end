@@ -49,7 +49,7 @@ Route::get('/show-detail-comment/{id}', [AdminCommentController::class, 'show'])
 Route::get('/admin-product',[AdminProductController::class,'index'])->name('get-all-product');
 Route::post('/admin-add-product',[AdminProductController::class,'store'])->name('create-product');
 Route::post('/admin-product-update/{id}', [AdminProductController::class, 'update'])->name('admin-product-update');
-Route::get('/admin-product-delete/{id}', [AdminProductController::class, 'destroy'])->name('admin-product-delete');
+Route::delete('/admin-product-delete/{id}', [AdminProductController::class, 'destroy'])->name('admin-product-delete');
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
@@ -64,6 +64,7 @@ Route::get('admin-show-all-post', [AdminPostController::class, 'index'])->name('
 Route::post('/admin-create-post', [AdminPostController::class, 'store'])->name('admin-create-post');
 Route::delete('/admin-delete-post/{id}', [AdminPostController::class, 'destroy'])->name('admin-delete-post');
 Route::get('/admin-show-post/{id}', [AdminPostController::class, 'show'])->name('admin-show-post');
+Route::post('/admin-update-post/{id}', [AdminPostController::class, 'update'])->name('admin-update-post');
 Route::put('/admin-update-post/{id}', [AdminPostController::class, 'update'])->name('admin-update-post');
 Route::get('admin-show-all-banner', [AdminBannerController::class, 'index'])->name('admin-show-all-banner');
 Route::delete('/admin-delete-banner/{id}', [AdminBannerController::class, 'destroy'])->name('admin-delete-banner');

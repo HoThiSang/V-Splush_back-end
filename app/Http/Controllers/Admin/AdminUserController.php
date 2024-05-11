@@ -86,12 +86,12 @@ class AdminUserController extends Controller
         if (!$order) {
             $user->status = 'disabled';
             $user->save();
-            return response()->json(['message' => 'User disabled successfully', 'user' => $user]);
+            return response()->json(['message' => 'User disabled successfully']);// , 'user' => $user
         }
         if ($order->status === 'delivered') {
             $user->status = 'disabled';
             $user->save();
-            return response()->json(['message' => 'User disabled successfully', 'user' => $user]);
+            return response()->json(['message' => 'User disabled successfully']); // , 'user' => $user
         } else {
             return response()->json(['error' => 'Cannot disable user. Order not delivered'], 400);
         }
