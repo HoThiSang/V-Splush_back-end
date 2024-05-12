@@ -14,6 +14,7 @@ use App\Http\Controllers\Mail\UserSendMailController;
 use App\Http\Controllers\Admin\AdminWishListControllor;
 use App\Http\Controllers\Admin\AdminBannerController;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\User\CartController;
 
 use App\Http\Controllers\User\UserCartController;
 use App\Http\Controllers\User\UserCheckoutController;
@@ -94,3 +95,5 @@ Route::delete('/delete-contact/{id}', [AdminContactController::class, 'destroy']
 // Order
 Route::get('/admin-show-all-orders',[AdminOrderController::class,'index'])->name('admin-show-all-order');
 Route::put('/admin-update-status-order/{id}',[AdminOrderController::class,'update'])->name('admin-update-status-order');
+//Cart
+Route::get('/shopping-cart', [CartController::class, 'showCart'])->name('showtocart');
