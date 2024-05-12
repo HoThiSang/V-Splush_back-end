@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Order extends Model
 {
@@ -13,12 +14,32 @@ class Order extends Model
     protected $fillable = [
         'name', 'address', 'phone_number', 'payment_method', 'deleted_at'
     ];
-    
-    public function orderItems(){
-        return $this->hasMany('App\Models\OrderItem', 'order_id','id');
+
+    public function orderItems()
+    {
+        return $this->hasMany('App\Models\OrderItem', 'order_id', 'id');
     }
 
-    public function deliver(){
-        return $this->belongsTo('App\Models\Deliver', 'deliver_id','id');
+    public function deliver()
+    {
+        return $this->belongsTo('App\Models\Deliver', 'deliver_id', 'id');
+    }
+
+    public function getAllOrders()
+    {
+        return DB::table($this->table)->get();
+    }
+
+    public function getOrderById($id)
+    {
+        return DB::table($this->table)
+            ->where('id', $id)
+            ->first();
+    }
+    public function updateStatusOrder($id, $data)
+    {
+        return DB::table($this->table)
+            ->where('id', $id)
+            ->update($data);
     }
 }

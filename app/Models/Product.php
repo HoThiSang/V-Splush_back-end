@@ -43,7 +43,7 @@ class Product extends Model
     {
         return DB::table($this->table)->insertGetId($data);
     }
-    
+
     public function deleteProductById($id)
     {
         $product = $this->findOrFail($id);
@@ -73,5 +73,27 @@ class Product extends Model
     public function wishLists()
     {
         return $this->hasMany('App\Models\Product', 'product_id', 'id');
+    }
+
+    public function subtractQuantity($product_id, $quantityToSubtract)
+    {
+
+        $currentQuantity = DB::table($this->table)->where('id', $product_id)->value('quantity');
+
+        if ($currentQuantity >= $quantityToSubtract) {
+            $newQuantity = $currentQuantity - $quantityToSubtract;
+            DB::table($this->table)->where('id', $product_id)->update(['quantity' => $newQuantity]);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getProductByIDs($id)
+    {
+        return DB::table($this->table)
+            ->where('products.id', $id)
+            ->select('products.*', DB::raw('(products.price * (1 - products.discount/100)) as discounted_price'))
+            ->first();
     }
 }
