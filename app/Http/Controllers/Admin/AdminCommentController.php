@@ -149,7 +149,7 @@ class AdminCommentController extends Controller
             } else {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Show detail comment',
+                    'message' => 'This comment does not exist',
                 ], 500);
             }
         } else {

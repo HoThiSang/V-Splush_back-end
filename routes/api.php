@@ -91,9 +91,6 @@ Route::post('user-send-contact', [UserSendMailController::class, 'sendEmail'])->
 Route::post('/admin-reply-contact/{id}', [UserSendMailController::class, 'replyEmail'])->name('admin-reply-contact');
 Route::put('/update-contact/{id}', [AdminContactController::class, 'update']);
 Route::delete('/delete-contact/{id}', [AdminContactController::class, 'destroy']);
+// Order
 Route::get('/admin-show-all-orders',[AdminOrderController::class,'index'])->name('admin-show-all-order');
 Route::put('/admin-update-status-order/{id}',[AdminOrderController::class,'update'])->name('admin-update-status-order');
-
-Route::post('/user-create-checkout',[UserCheckoutController::class,'checkout']);
-Route::get('/user-is-checkout',[UserCheckoutController::class,'isCheckout']);
-Route::post('/user-add-to-cart',[UserCartController::class,'store']);

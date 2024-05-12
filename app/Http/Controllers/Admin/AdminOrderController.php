@@ -109,7 +109,7 @@ class AdminOrderController extends Controller
                     return response()->json([
                         'status' => 'success',
                         'message' => 'update status order successfully',
-                        'data' => $order, 200
+                        'data' => 200
                     ]);
                 } else {
                     return response()->json([
