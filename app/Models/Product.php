@@ -88,12 +88,4 @@ class Product extends Model
             return false;
         }
     }
-
-    public function getProductByIDs($id)
-    {
-        return DB::table($this->table)
-            ->where('products.id', $id)
-            ->select('products.*', DB::raw('(products.price * (1 - products.discount/100)) as discounted_price'))
-            ->first();
-    }
 }

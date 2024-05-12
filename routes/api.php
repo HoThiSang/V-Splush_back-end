@@ -97,3 +97,4 @@ Route::get('/admin-show-all-orders',[AdminOrderController::class,'index'])->name
 Route::put('/admin-update-status-order/{id}',[AdminOrderController::class,'update'])->name('admin-update-status-order');
 //Cart
 Route::get('/shopping-cart', [CartController::class, 'showCart'])->name('showtocart');
+Route::post('/add-to-cart',[CartController::class,'addToCart'])->name('add-to-cart');
