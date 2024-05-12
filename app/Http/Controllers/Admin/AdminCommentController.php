@@ -15,6 +15,116 @@ class AdminCommentController extends Controller
      *  public function index(){
 
      */
+
+    /**
+     * @OA\Info(
+     *    title="Swagger with Laravel",
+     *    version="1.0.0",
+     * )
+     * @OA\SecurityScheme(
+     *     type="http",
+     *     securityScheme="bearerAuth",
+     *     scheme="bearer",
+     *     bearerFormat="JWT"
+     * )
+
+     */
+
+    /**
+     * @OA\Get(
+     *     path="/api/show-all-comments",
+     *     summary="Get all comments",
+     *     tags={"Comments"},
+     *     @OA\Response(response="200", description="Success"),
+     *
+     * )
+     */
+
+    /**
+     * @OA\Post(
+     *     path="/api/add-comment",
+     *     summary="Create a new comment",
+     *     tags={"Comment"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Comment data",
+     *         @OA\JsonContent(
+     *             required={"content"},
+     *             @OA\Property(property="content", type="string", example="New Comment")
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="500", description="Internal Server Error")
+     * )
+     */
+
+    /**
+     * @OA\Delete(
+     *     path="/api/delete-comment/{id}",
+     *     summary="Delete a comment by ID",
+     *     tags={"Comment"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the comment to delete",
+     *    @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="404", description="Comment not found")
+     * )
+     */
+
+    /**
+     * @OA\Put(
+     *     path="/api/update-comment/{id}",
+     *     summary="Update a comment by ID",
+     *     tags={"Comment"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the comment to update",
+     *         @OA\Schema(
+     *             type="string",
+     *             format="uuid"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Comment data",
+     *         @OA\JsonContent(
+     *             required={"content"},
+     *             @OA\Property(property="content", type="string", example="Updated Comment")
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="404", description="Comment not found"),
+     *     @OA\Response(response="500", description="Internal Server Error")
+     * )
+     */
+
+    /**
+     * @OA\Get(
+     *     path="/api/show-detail-comment/{id}",
+     *     summary="Detail a comment by ID",
+     *     tags={"Comment"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the comment to detail",
+     *    @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="404", description="Comment not found")
+     * )
+     */
+
     protected $comments;
     public function __construct()
     {
