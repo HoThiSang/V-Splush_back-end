@@ -36,5 +36,5 @@ class Cart extends Model
             ->groupBy('carts.id', 'products.product_name', 'carts.total_price', 'products.discount', 'carts.user_id', 'carts.session_id', 'carts.product_id', 'carts.unit_price', 'carts.quantity', 'carts.created_at', 'carts.updated_at')
             ->get();
     }
-    
+
 }
