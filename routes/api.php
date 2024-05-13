@@ -98,3 +98,4 @@ Route::put('/admin-update-status-order/{id}',[AdminOrderController::class,'updat
 //Cart
 Route::get('/shopping-cart', [CartController::class, 'showCart'])->name('showtocart');
 Route::post('/add-to-cart',[CartController::class,'addToCart'])->name('add-to-cart');
+Route::post('/update-cart/{id}', [CartController::class, 'updateCart'])->name('updateCart');
