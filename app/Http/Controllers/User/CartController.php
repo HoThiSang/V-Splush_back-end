@@ -101,33 +101,27 @@ class CartController extends Controller
         // }
 
         $data = $request->all();
-        
         if (isset($data['product_id'])) {
             $cartItem = $this->cart->findItemById($data['product_id'], $user_id);
-            
             if ($cartItem) {
                 $productPrice = $cartItem->unit_price;
                 $newQuantity = $data['quantity'];
                 $newPrice = $productPrice * $newQuantity; 
-                
                 $cartItem->update([
                     'quantity' => $newQuantity,
                     'total_price' => $newPrice,
                 ]);
-    
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Quantity has been updated.',
                     'data' => $cartItem,
                 ]);
             }
-            
             return response()->json([
                 'status' => 'error',
                 'message' => 'Product not found in the cart.',
             ]);
         }
-        
         return response()->json([
             'status' => 'error',
             'message' => 'Missing product ID in the request.',
