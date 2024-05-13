@@ -37,4 +37,11 @@ class Cart extends Model
             ->get();
     }
 
+    public function findItemById($productId, $user_Id)
+    {
+        return Cart::where('product_id', $productId)
+            ->where('user_id', $user_Id)
+            ->first();
+    }
+    
 }
