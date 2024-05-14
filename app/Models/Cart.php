@@ -43,5 +43,17 @@ class Cart extends Model
             ->where('user_id', $user_Id)
             ->first();
     }
-    
+
+    public function deleteByProductId($product_id, $user_id)
+    {
+        $cartItem = self::where('product_id', $product_id)->where('user_id', $user_id)->first();
+        if ($cartItem) {
+            $cartItem->delete();
+            DB::table('images')->where('product_id', $product_id)->delete();
+            return true;
+        }
+        return false;
+    }
+
+
 }

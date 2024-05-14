@@ -90,7 +90,6 @@ class CartController extends Controller
             ]);
         }
     }
-
     public function updateCart(Request $request, $user_id)
     {
         // if (!Auth()->check()) {
@@ -126,5 +125,29 @@ class CartController extends Controller
             'status' => 'error',
             'message' => 'Missing product ID in the request.',
         ]);
+    }
+    public function deleteCart($product_id)
+    {
+        // $user_id = auth()->id();
+        $user_id = 5;
+        $userExists = User::where('id', $user_id)->exists();
+        if (!$userExists) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User not found.'
+            ], 404);
+        }
+        $result = $this->cart->deleteByProductId($product_id, $user_id);
+        if ($result) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Product has been removed from the cart.'
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Product not found in the cart.'
+            ], 404);
+        }
     }
 }
