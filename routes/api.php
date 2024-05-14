@@ -99,4 +99,4 @@ Route::put('/admin-update-status-order/{id}',[AdminOrderController::class,'updat
 Route::get('/shopping-cart', [CartController::class, 'showCart'])->name('showtocart');
 Route::post('/add-to-cart',[CartController::class,'addToCart'])->name('add-to-cart');
 Route::post('/update-cart/{id}', [CartController::class, 'updateCart'])->name('updateCart');
-Route::delete('/delete-cart', [CartController::class, 'deleteCart'])->name('delete-cart');
+Route::delete('/delete-cart/{id}', [CartController::class, 'deleteCart'])->name('delete-cart');

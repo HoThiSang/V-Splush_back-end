@@ -128,12 +128,16 @@ class CartController extends Controller
     }
     public function deleteCart($product_id)
     {
-        // Lấy user_id của người dùng hiện tại
-        $user_id = auth()->id();
-
-        // Gọi phương thức xóa trong Model
-        $result = Cart::deleteByProductId($product_id, $user_id);
-
+        // $user_id = auth()->id();
+        $user_id = 5;
+        $userExists = User::where('id', $user_id)->exists();
+        if (!$userExists) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User not found.'
+            ], 404);
+        }
+        $result = $this->cart->deleteByProductId($product_id, $user_id);
         if ($result) {
             return response()->json([
                 'status' => 'success',
