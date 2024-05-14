@@ -44,4 +44,23 @@ class Cart extends Model
             ->first();
     }
     
+    public static function deleteByProductId($product_id, $user_id)
+    {
+        // Tìm item trong giỏ hàng theo product_id và user_id
+        $cartItem = self::where('product_id', $product_id)->where('user_id', $user_id)->first();
+
+        if ($cartItem) {
+            // Xóa item khỏi giỏ hàng
+            $cartItem->delete();
+
+            // Xóa các dữ liệu liên quan (ví dụ: ảnh sản phẩm)
+            DB::table('images')->where('product_id', $product_id)->delete();
+
+            return true;
+        }
+
+        return false;
+    }
+
+
 }
