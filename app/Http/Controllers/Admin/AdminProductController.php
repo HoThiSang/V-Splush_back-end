@@ -30,8 +30,8 @@ class AdminProductController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
-     */   
-     /**
+     */
+    /**
      * @OA\Get(
      *     path="/api/admin-product",
      *     summary="Get all products",
@@ -40,12 +40,34 @@ class AdminProductController extends Controller
      *     security={{"bearerAuth":{}}}
      * )
      */
-     public function index()
+    public function index()
 
     {
         $productAll = $this->products->getAllProduct();
         return $productAll;
     }
+    public function show($id)
+    {
+        $productDetail = $this->products->getProductById($id);
+        if (!$productDetail) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Product not found'
+            ], 404);
+        }
+
+        $imageAll = $this->image->getAllImageByProductId($id);
+        $category_id = $productDetail->category_id;
+        $category = $this->categories->getCategoryById($category_id);
+
+        return response()->json([
+            'status' => 'success',
+            'productDetail' => $productDetail,
+            'imageAll' => $imageAll,
+            'category' => $category
+        ], 200);
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -172,21 +194,21 @@ class AdminProductController extends Controller
     public function update(ProductRequest $request, $id)
     {
         $product = $this->products->findById($id);
-        
+
         if (empty($product)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Product not found',
             ], 404);
         }
-    
+
         if (!$request->isMethod('post')) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Invalid request method',
             ], 405);
         }
-    
+
         $dataUpdate = [
             'product_name' => $request->product_name,
             'quantity' => $request->quantity,
@@ -199,7 +221,7 @@ class AdminProductController extends Controller
             'updated_at' => now()
         ];
         $updatedProduct = $this->products->updateProduct($id, $dataUpdate);
-    
+
         if (!$updatedProduct) {
             return response()->json([
                 'status' => 'error',
@@ -207,29 +229,29 @@ class AdminProductController extends Controller
             ], 500);
         }
         $uploadedImages = [];
-    
+
         if ($request->hasFile('image_url')) {
             $images = $this->image->getImageByIdProduct($id);
-            
-            $i=0;
+
+            $i = 0;
             foreach ($request->file('image_url') as $file) {
                 $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
                     'folder' => 'upload_image'
                 ])->getSecurePath();
-    
+
                 $publicId = Cloudinary::getPublicId();
-    
+
                 $dataImage = [
                     'image_name' => $request->product_name,
                     'image_url' =>  $uploadedFileUrl,
-                    'product_id' => $id, 
+                    'product_id' => $id,
                     'publicId' => $publicId,
                     'created_at' => now()
                 ];
                 $imageId = $images[$i]->id;
                 $uploadedImages[] = $dataImage;
 
-                $this->image->updateImage($imageId , $dataImage);
+                $this->image->updateImage($imageId, $dataImage);
                 $i++;
             }
             return response()->json([
@@ -242,8 +264,8 @@ class AdminProductController extends Controller
             'message' => 'Product updated successfully',
         ], 200);
     }
-    
-    
+
+
     /**
      * Remove the specified resource from storage.
      *
