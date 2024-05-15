@@ -97,7 +97,7 @@ class AdminOrderController extends Controller
     public function update(Request $request, string $id)
     {
         //
-        if ($request->isMethod('put')) {
+        if ($request->isMethod('post')) {
             $order = $this->orders->getOrderById($id);
             if (!empty($order)) {
                 $dataUpdate = [

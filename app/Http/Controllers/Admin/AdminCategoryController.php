@@ -160,7 +160,7 @@ public function index()
      *         required=true,
      *         description="ID of the category to update",
      *         @OA\Schema(
-     *             type="string",
+     *             type="integer",
      *             format="uuid"
      *         )
      *     ),
@@ -254,18 +254,5 @@ public function index()
         }
     }
 
-  /**
-     * @OA\Get(
-     *     path="/api/test",
-     *     summary="Get all posts",
-     *     tags={"Posts"},
-     *     @OA\Response(response="200", description="Success"),
-     *     security={{"bearerAuth":{}}}
-     * )
-     */
-    public function test()
-    {
-        $data = 'We are CodeQeens team';
-        return response()->json($data);
-    }
+  
 }
