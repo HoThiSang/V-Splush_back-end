@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -169,5 +170,24 @@ class UserController extends Controller
             'message' => 'Logout Success',
             'status' => 'success'
         ], 200);
+    }
+
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword_submitted');
+        $product = new Product();
+        $productSearch = $product->getByKeyWord($keyword);
+        if(!empty($productSearch)){
+            return response()->json([
+                'message' => 'Search product Success',
+                'status' => 'success',
+                'data'=> $productSearch
+            ], 200);
+        }else{
+            return response()->json([
+                'message' => 'Not found product with name '. $keyword,
+                'status' => 'error',
+            ], 200);
+        }
     }
 }

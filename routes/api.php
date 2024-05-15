@@ -107,3 +107,4 @@ Route::get('/shopping-cart', [CartController::class, 'showCart'])->name('showtoc
 Route::post('/add-to-cart',[CartController::class,'addToCart'])->name('add-to-cart');
 Route::post('/update-cart/{id}', [CartController::class, 'updateCart'])->name('updateCart');
 Route::delete('/delete-cart/{id}', [CartController::class, 'deleteCart'])->name('delete-cart');
+Route::get('/search-product/{keyword}', [UserController::class, 'search'])->name('search-product');
