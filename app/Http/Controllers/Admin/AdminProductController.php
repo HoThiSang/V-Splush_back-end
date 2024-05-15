@@ -68,7 +68,6 @@ class AdminProductController extends Controller
         ], 200);
     }
 
-
     /**
      * Show the form for creating a new resource.
      *
@@ -81,6 +80,42 @@ class AdminProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+/**
+ * @OA\Post(
+ *     path="/api/admin-add-product",
+ *     summary="Create a new product",
+ *     tags={"Product"},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         description="Product data",
+ *         @OA\MediaType(
+ *             mediaType="multipart/form-data",
+ *             @OA\Schema(
+ *                 type="object",
+ *                 required={"product_name", "price", "discount", "quantity", "description", "ingredient", "brand", "category_id", "image_url"},
+ *                 @OA\Property(property="product_name", type="string"),
+ *                 @OA\Property(property="price", type="number", format="float"),
+ *                 @OA\Property(property="discount", type="number", format="float"),
+ *                 @OA\Property(property="quantity", type="integer", format="int32"),
+ *                 @OA\Property(property="description", type="string"),
+ *                 @OA\Property(property="ingredient", type="string"),
+ *                 @OA\Property(property="brand", type="string"),
+ *                 @OA\Property(property="category_id", type="integer", format="int32"),
+ *                 @OA\Property(
+ *                     property="image_url",
+ *                     type="array",
+ *                     @OA\Items(type="string", format="binary")
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(response="200", description="Success"),
+ *     @OA\Response(response="500", description="Internal Server Error")
+ * )
+ */
+
+
     public function store(ProductRequest $request)
     {
         if ($request->isMethod('post')) {
@@ -106,6 +141,7 @@ class AdminProductController extends Controller
                     if ($product_id > 0) {
                         $files = $request->file('image_url');
                         $uploadedImages = [];
+                        $imageSuccess = true;
                         foreach ($files as $file) {
                             $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
                                 'folder' => 'upload_image'
@@ -121,7 +157,6 @@ class AdminProductController extends Controller
                                 'publicId' => $publicId,
                                 'created_at' => now()
                             ];
-
                             $imageSuccess = $this->image->createImageByProductId($dataImage);
                         }
                         if ($imageSuccess) {
@@ -271,6 +306,25 @@ class AdminProductController extends Controller
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     */
+    /**
+     * @OA\Delete(
+     *     path="/api/admin-product/{id}",
+     *     summary="Delete a product by ID",
+     *     tags={"Product"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the product to delete",
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int32"
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="404", description="Product not found")
+     * )
      */
     public function destroy($id)
     {
