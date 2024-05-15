@@ -204,37 +204,7 @@ class AdminCommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CommentRequest $request)
-    {
-        //
-        if ($request->isMethod('post')) {
-            $data = [
-                'product_id' => $request->product_id,
-                'user_id' => $request->user_id,
-                'content' => $request->content,
-                'created_at' => now(),
-                'updated_at' => now()
-            ];
-            $comment = $this->comments->createNewComment($data);
-            if ($comment) {
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Add new comment successfully',
-                    'data' => $comment, 200
-                ]);
-            } else {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Failed add new comment',
-                ], 500);
-            }
-        } else {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'The method not post',
-            ], 500);
-        }
-    }
+   
     /**
      * Display the specified resource.
      */

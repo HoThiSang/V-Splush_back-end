@@ -15,6 +15,8 @@ use App\Http\Controllers\Admin\AdminWishListControllor;
 use App\Http\Controllers\Admin\AdminBannerController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\CartController;
+use App\Http\Controllers\User\CommentController;
+
 
 use App\Http\Controllers\User\UserCartController;
 use App\Http\Controllers\User\UserCheckoutController;
@@ -47,7 +49,7 @@ Route::delete('/delete-wish-list/{id}', [AdminWishListControllor::class, 'index'
 // Route::resource('/categories', [AdminCategoryController::class, 'index'])->name('get-all-category');
 // Comments
 Route::get('/show-all-comments', [AdminCommentController::class, 'index']);
-Route::post('/add-comment', [AdminCommentController::class, 'store']);
+Route::post('/add-comment', [CommentController::class, 'store']);
 Route::put('update-comment/{id}', [AdminCommentController::class, 'update']);
 Route::delete('delete-comment/{id}', [AdminCommentController::class, 'destroy']);
 Route::get('/show-detail-comment/{id}', [AdminCommentController::class, 'show']);
