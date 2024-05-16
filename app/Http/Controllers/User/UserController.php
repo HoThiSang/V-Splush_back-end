@@ -171,41 +171,5 @@ class UserController extends Controller
             'status' => 'success'
         ], 200);
     }
- /**
-     * @OA\Get(
-     *     path="/api/search-product/{keyword}",
-     *     summary="Search product by keyword",
-     *     tags={"Products"},
-     *     @OA\Parameter(
-     *         name="keyword",
-     *         in="path",
-     *         required=true,
-     *         description="keyword of the product to search",
-     *    @OA\Schema(
-     *             type="string",
-     *             
-     *         )
-     *     ),
-     *     @OA\Response(response="200", description="Success"),
-     *     @OA\Response(response="404", description="Product not found")
-     * )
-     */
-    public function search(Request $request)
-    {
-        $keyword = $request->input('keyword');
-        $product = new Product();
-        $productSearch = $product->getByKeyWord($keyword);
-        if(!empty($productSearch)){
-            return response()->json([
-                'message' => 'Search product Success',
-                'status' => 'success',
-                'data'=> $productSearch
-            ], 200);
-        }else{
-            return response()->json([
-                'message' => 'Not found product with name '. $keyword,
-                'status' => 'error',
-            ], 200);
-        }
-    }
+
 }

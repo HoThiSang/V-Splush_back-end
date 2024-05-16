@@ -415,6 +415,34 @@
                 ]
             }
         },
+        "/api/search-product/{keyword}": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Search product by keyword",
+                "operationId": "92465db5cfcf0677b6ac7cee7ca013bd",
+                "parameters": [
+                    {
+                        "name": "keyword",
+                        "in": "path",
+                        "description": "keyword of the product to search",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Product not found"
+                    }
+                }
+            }
+        },
         "/api/register": {
             "post": {
                 "tags": [
@@ -651,34 +679,6 @@
                         "bearerAuth": []
                     }
                 ]
-            }
-        },
-        "/api/search-product/{keyword}": {
-            "get": {
-                "tags": [
-                    "Products"
-                ],
-                "summary": "Search product by keyword",
-                "operationId": "67b85465eecebca9c8d03b22cf5b2fcd",
-                "parameters": [
-                    {
-                        "name": "keyword",
-                        "in": "path",
-                        "description": "keyword of the product to search",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Product not found"
-                    }
-                }
             }
         }
     },
