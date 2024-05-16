@@ -15,6 +15,8 @@ use App\Http\Controllers\Admin\AdminWishListControllor;
 use App\Http\Controllers\Admin\AdminBannerController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\CartController;
+use App\Http\Controllers\User\WishListController;
+
 
 use App\Http\Controllers\User\UserCartController;
 use App\Http\Controllers\User\UserCheckoutController;
@@ -42,6 +44,7 @@ Route::put('/categories-update/{id}', [AdminCategoryController::class, 'update']
 Route::delete('/categories-delete/{id}', [AdminCategoryController::class, 'destroy'])->name('update-category');
 Route::get('/show-allwishlist', [AdminWishListControllor::class, 'index'])->name('show-allwishlist');
 Route::delete('/delete-wish-list/{id}', [AdminWishListControllor::class, 'index'])->name('delete-wish-list');
+Route::post('/create-wishlist', [WishListController::class, 'store'])->name('create-wishlist');
 
 
 // Route::resource('/categories', [AdminCategoryController::class, 'index'])->name('get-all-category');

@@ -43,5 +43,22 @@ class WishList extends Model
         $wishList = $this->findOrFail($id);
         return $wishList->softDelete();
     }
+    public function createWishList($userId, $productId)
+    {
+        try {
+            if (empty($userId) || empty($productId)) {
+                throw new \Exception('User ID and Product ID are required');
+            }
+            $success = DB::table($this->table)->insert([
+                'user_id' => $userId,
+                'product_id' => $productId,
+                'deleted_at' => null,
+            ]);
+            return $success;
+        } catch (\Exception $e) {
+            Log::error('Error creating wishlist: ' . $e->getMessage());
+            return false;
+        }
+    }
 
 }
