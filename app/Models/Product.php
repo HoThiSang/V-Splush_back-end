@@ -89,14 +89,42 @@ class Product extends Model
         }
     }
 
+    // public function getByKeyWord($keyword)
+    // {
+    //     return DB::table('products')
+    //     ->join('images', 'products.id', '=', 'images.product_id')
+    //     ->join('categories', 'products.category_id', '=', 'categories.id')
+    //     // ->where('products.product_name', 'like', '%' . $keyword . '%')
+    //     ->whereRaw("products.product_name REGEXP ?", ["[[:<:]]{$keyword}[[:>:]]"])
+    //     ->groupBy('products.id', 'products.product_name', 'products.category_id', 'products.price')
+    //     ->select('products.id', 'products.product_name', 'products.category_id', 'products.price', DB::raw('MAX(images.image_url) as image_url'))
+    //     ->get();
+    //     // }
+    //     public function getByKeyWord($keyword)
+    // {
+    //     return DB::table('products')
+    //         ->join('images', 'products.id', '=', 'images.product_id')
+    //         ->join('categories', 'products.category_id', '=', 'categories.id')
+    //         ->whereRaw("products.product_name REGEXP ?", ["\\b{$keyword}\\b"])
+    //         ->groupBy('products.id', 'products.product_name', 'products.category_id', 'products.price')
+    //         ->select('products.id', 'products.product_name', 'products.category_id', 'products.price', DB::raw('MAX(images.image_url) as image_url'))
+    //         ->get();
+    // }
     public function getByKeyWord($keyword)
     {
-        return DB::table('products')
-        ->join('images', 'products.id', '=', 'images.product_id')
-        ->join('categories', 'products.category_id', '=', 'categories.id')
-        ->where('products.product_name', 'like', '%' . $keyword . '%')
-        ->groupBy('products.id', 'products.product_name', 'products.category_id', 'products.price')
-        ->select('products.id', 'products.product_name', 'products.category_id', 'products.price', DB::raw('MAX(images.image_url) as image_url'))
-        ->get();
+        $products = DB::table('products')
+            ->join('images', 'products.id', '=', 'images.product_id')
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->where('products.product_name', 'like', '%' . $keyword . '%')
+            ->groupBy('products.id', 'products.product_name', 'products.category_id', 'products.price')
+            ->select('products.id', 'products.product_name', 'products.category_id', 'products.price', DB::raw('MAX(images.image_url) as image_url'))
+            ->get();
+
+        // Lọc các kết quả để đảm bảo từ khoá xuất hiện nguyên vẹn trong tên sản phẩm
+        $filteredProducts = $products->filter(function ($product) use ($keyword) {
+            return preg_match("/\b" . preg_quote($keyword, '/') . "\b/i", $product->product_name);
+        });
+
+        return $filteredProducts->values();
     }
 }
