@@ -22,7 +22,7 @@ class AdminPostController extends Controller
     /**
      * Display a listing of the resource.
      */
-      /**
+    /**
      * @OA\Get(
      *     path="/api/admin-show-all-post",
      *     summary="Get all posts",
@@ -53,7 +53,44 @@ class AdminPostController extends Controller
      * Store a newly created resource in storage.
      */
 
-
+    /**
+     * @OA\Post(
+     *     path="/api/admin-create-post",
+     *     summary="Create a new post",
+     *     tags={"Posts"},
+     *     @OA\Parameter(
+     *         name="title",
+     *         in="query",
+     *         description="Title of post",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="content",
+     *         in="query",
+     *         description="Content of post",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="image_url",
+     *                     type="string",
+     *                     format="binary",
+     *                     description="Image of post"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Create new post successfully"),
+     *     @OA\Response(response="422", description="Validation errors")
+     * )
+     */
     public function store(PostRequest $request)
     {
         if ($request->isMethod('POST')) {
@@ -68,7 +105,7 @@ class AdminPostController extends Controller
                 $postData = [
                     'title' => $request->title,
                     'content' => $request->content,
-                    'image_name' => $request->image_name,
+                    'image_name' => $request->title,
                     'image_url' => $uploadedFileUrl,
                     'publicId' => $publicId
                 ];
@@ -103,6 +140,25 @@ class AdminPostController extends Controller
     /**
      * Display the specified resource.
      */
+     /**
+     * @OA\Get(
+     *     path="/api/admin-show-post/{id}",
+     *     summary="Show a post by ID",
+     *     tags={"Posts"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the post to show",
+     *    @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="404", description="Post not found")
+     * )
+     */
     public function show(string $id)
     {
         $post = $this->posts->getPostById($id);
@@ -130,7 +186,57 @@ class AdminPostController extends Controller
     }
     /**
      * Update the specified resource in storage.
-    */
+     */
+    /**
+     * @OA\Post(
+     *     path="/api/admin-update-post/{id}",
+     *     summary="Update a category by ID",
+     *     tags={"Posts"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the post to update",
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="uuid"
+     *         )
+     *     ),
+     *  @OA\Parameter(
+     *         name="title",
+     *         in="query",
+     *         description="Title of post",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="content",
+     *         in="query",
+     *         description="Content of post",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="image_url",
+     *                     type="string",
+     *                     format="binary",
+     *                     description="Image of post"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *   
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="404", description="Category not found"),
+     *     @OA\Response(response="500", description="Internal Server Error")
+     * )
+     */
     public function update(PostRequest $request, string $id)
     {
         if ($request->method() === 'POST') {
@@ -140,21 +246,21 @@ class AdminPostController extends Controller
                     'title' => $request->title,
                     'content' => $request->content,
                 ];
-                         
+
                 if ($request->hasFile('image_url')) {
                     $file = $request->file('image_url');
                     $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
                         'folder' => 'upload_image'
                     ])->getSecurePath();
                     $publicId = Cloudinary::getPublicId();
-                    
+
                     $postData['image_name'] = $request->title;
                     $postData['image_url'] = $uploadedFileUrl;
                     $postData['publicId'] = $publicId;
                 }
-    
+
                 $postInserted = $this->posts->updatePost($id, $postData);
-               
+
                 if ($postInserted) {
                     return response()->json([
                         'status' => 'success',
@@ -180,9 +286,28 @@ class AdminPostController extends Controller
             ], 405);
         }
     }
-    
+
     /**
      * Remove the specified resource from storage.
+     */
+    /**
+     * @OA\Delete(
+     *     path="/api/admin-delete-post/{id}",
+     *     summary="Delete a post by ID",
+     *     tags={"Posts"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the post to delete",
+     *    @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="404", description="Post not found")
+     * )
      */
     public function destroy(string $id)
     {

@@ -75,7 +75,7 @@
                         "description": "ID of the category to update",
                         "required": true,
                         "schema": {
-                            "type": "string",
+                            "type": "integer",
                             "format": "uuid"
                         }
                     }
@@ -142,23 +142,32 @@
                 }
             }
         },
-        "/api/test": {
+        "/api/show-detail-comment/{id}": {
             "get": {
                 "tags": [
-                    "Posts"
+                    "Comment"
                 ],
-                "summary": "Get all posts",
-                "operationId": "d0d176d8bbf6d531b4f89bfc2fad0638",
+                "summary": "Detail a comment by ID",
+                "operationId": "3aeaa5bd7e568bb06b0ceade842782e4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the comment to detail",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success"
+                    },
+                    "404": {
+                        "description": "Comment not found"
                     }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
+                }
             }
         },
         "/api/admin-show-all-post": {
@@ -178,6 +187,185 @@
                         "bearerAuth": []
                     }
                 ]
+            }
+        },
+        "/api/admin-create-post": {
+            "post": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Create a new post",
+                "operationId": "3a8fa4ec3a73ffb4707206d80d534aa3",
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "Title of post",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "content",
+                        "in": "query",
+                        "description": "Content of post",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "image_url": {
+                                        "description": "Image of post",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Create new post successfully"
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    }
+                }
+            }
+        },
+        "/api/admin-show-post/{id}": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Show a post by ID",
+                "operationId": "169f0c83105d2498e7f988c41ea976a3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the post to show",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Post not found"
+                    }
+                }
+            }
+        },
+        "/api/admin-update-post/{id}": {
+            "post": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Update a category by ID",
+                "operationId": "2e23834b44a5ec11f2c7c63a2bb98dff",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the post to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "Title of post",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "content",
+                        "in": "query",
+                        "description": "Content of post",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "image_url": {
+                                        "description": "Image of post",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/admin-delete-post/{id}": {
+            "delete": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Delete a post by ID",
+                "operationId": "ddb94d27f9a2d66e2c4d35cff3212dd8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the post to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Post not found"
+                    }
+                }
             }
         },
         "/api/admin-product": {
@@ -435,179 +623,6 @@
                         "bearerAuth": []
                     }
                 ]
-            }
-        },
-        "/api/show-all-comments": {
-            "get": {
-                "tags": [
-                    "Comment"
-                ],
-                "summary": "Get all comments",
-                "operationId": "show all comment",
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/add-comment": {
-            "post": {
-                "tags": [
-                    "Comment"
-                ],
-                "summary": "Create a new comment",
-                "operationId": "Create a new comment",
-                "requestBody": {
-                    "description": "Comment data",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "product_id",
-                                    "user_id",
-                                    "content"
-                                ],
-                                "properties": {
-                                    "product_id":{
-                                        "type":"int",
-                                        "example":1
-                                    },
-                                    "user_id":{
-                                        "type":"int",
-                                        "example":2
-                                    },
-                                    "content": {
-                                        "type": "string",
-                                        "example": "Create comment successfully"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
-        "/api/delete-comment/{id}": {
-            "delete": {
-                "tags": [
-                    "Comment"
-                ],
-                "summary": "Delete a comment by ID",
-                "operationId": "Delete comment",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of the comment to delete",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Comment not found"
-                    }
-                }
-            }
-        },
-        "/api/update-comment/{id}": {
-            "put": {
-                "tags": [
-                    "Comment"
-                ],
-                "summary": "Update a comment by ID",
-                "operationId": "update comment",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of the comment to update",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "description": "Comment data",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "content"
-                                ],
-                                "properties": {
-                                    "content": {
-                                        "type": "string",
-                                        "example": "Updated Comment Successfully"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Comment not found"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
-        "/api/show-detail-comment/{id}": {
-            "get": {
-                "tags": [
-                    "Comment"
-                ],
-                "summary": "Detail a comment by ID",
-                "operationId": "Detail comment",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of the comment to detail",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Comment not found"
-                    }
-                }
             }
         }
     },
