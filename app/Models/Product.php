@@ -95,8 +95,8 @@ class Product extends Model
         ->join('images', 'products.id', '=', 'images.product_id')
         ->join('categories', 'products.category_id', '=', 'categories.id')
         ->where('products.product_name', 'like', '%' . $keyword . '%')
-        ->groupBy('products.id', 'products.product_name', 'products.category_id', 'products.price', 'products.discounted_price')
-        ->select('products.id', 'products.product_name', 'products.category_id', 'products.price', 'products.discounted_price', DB::raw('MAX(images.image_url) as image_url'))
+        ->groupBy('products.id', 'products.product_name', 'products.category_id', 'products.price')
+        ->select('products.id', 'products.product_name', 'products.category_id', 'products.price', DB::raw('MAX(images.image_url) as image_url'))
         ->get();
     }
 }

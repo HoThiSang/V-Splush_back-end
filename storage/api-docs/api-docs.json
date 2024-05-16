@@ -163,6 +163,34 @@
                 "responses": {
                     "200": {
                         "description": "Success"
+                },
+                    "404": {
+                        "description": "Comment not found"
+                    }
+                }
+            }
+        },
+        "/api/show-detail-comment/{id}": {
+            "get": {
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Detail a comment by ID",
+                "operationId": "3aeaa5bd7e568bb06b0ceade842782e4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the comment to detail",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
                     },
                     "404": {
                         "description": "Comment not found"
@@ -170,7 +198,7 @@
                 }
             }
         },
-        "/api/admin-show-all-post": {
+    "/api/admin-show-all-post": {
             "get": {
                 "tags": [
                     "Posts"
@@ -623,6 +651,34 @@
                         "bearerAuth": []
                     }
                 ]
+            }
+        },
+        "/api/search-product/{keyword}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Search product by keyword",
+                "operationId": "67b85465eecebca9c8d03b22cf5b2fcd",
+                "parameters": [
+                    {
+                        "name": "keyword",
+                        "in": "path",
+                        "description": "keyword of the product to search",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Product not found"
+                    }
+                }
             }
         }
     },
