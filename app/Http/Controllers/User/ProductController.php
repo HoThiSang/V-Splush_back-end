@@ -43,7 +43,7 @@ class ProductController extends Controller
      */
     public function search(Request $request)
     {
-        $keyword = $request->input('keyword');
+        $keyword = $request->input('keyword_submitted');
 
         $productSearch =$this->products->getByKeyWord($keyword);
         if(!empty($productSearch)){
