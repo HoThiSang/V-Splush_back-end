@@ -68,7 +68,7 @@ class CartController extends Controller
                     $cart_item->quantity = $quantity;
                     $cart_item->user_id =  $user_id;
                     //Giá sau khi giảm giá = Giá gốc - (Giá gốc * (Mức giảm giá / 100))
-                    $cart_item->unit_price = $product->price - ($product->price * ($product->discount / 100));
+                    $cart_item->unit_price = $product->price;
                     $cart_item->total_price = $product->price - ($product->price * ($product->discount / 100)) * $cart_item->quantity;
                     $cart_item->save();
                     return response()->json([
@@ -105,7 +105,7 @@ class CartController extends Controller
             if ($cartItem) {
                 $productPrice = $cartItem->unit_price;
                 $newQuantity = $data['quantity'];
-                $newPrice = $productPrice * $newQuantity; 
+                $newPrice = $productPrice * $newQuantity;
                 $cartItem->update([
                     'quantity' => $newQuantity,
                     'total_price' => $newPrice,
