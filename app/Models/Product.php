@@ -92,12 +92,12 @@ class Product extends Model
 
     public function getByKeyword($keyword)
     {
-        return DB::table('products')
-            ->join('images', 'products.id', '=', 'images.product_id')
-            ->join('categories', 'products.category_id', '=', 'categories.id')
-            ->where('products.product_name', 'LIKE', '%' . $keyword . '%')
-            ->select('products.id', 'products.product_name', 'products.category_id', 'products.price', 'products.discount', DB::raw('MAX(images.image_url) as image_url'))
-            ->groupBy('products.id', 'products.product_name', 'products.category_id', 'products.price', 'products.discount')
-            ->get();
+     return   DB::table('products')
+        ->join('images', 'products.id', '=', 'images.product_id')
+        ->where('products.product_name', 'LIKE', '%' . $keyword . '%')
+        ->select('products.id', 'products.product_name',  'products.price', 'products.discount', DB::raw('MAX(images.image_url) as image_url'))
+        ->groupBy('products.id')
+        ->orderBy('products.id')
+        ->get();
     }
 }

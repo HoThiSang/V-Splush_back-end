@@ -41,10 +41,9 @@ class ProductController extends Controller
      *     @OA\Response(response="404", description="Product not found")
      * )
      */
-    public function search(Request $request)
+    public function search(Request $request, $keyword)
     {
-        $keyword = $request->input('keyword_submitted');
-
+    
         $productSearch =$this->products->getByKeyWord($keyword);
         if(!empty($productSearch)){
             return response()->json([
