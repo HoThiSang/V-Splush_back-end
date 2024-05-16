@@ -88,4 +88,16 @@ class Product extends Model
             return false;
         }
     }
+
+
+    public function getByKeyword($keyword)
+    {
+     return   DB::table('products')
+        ->join('images', 'products.id', '=', 'images.product_id')
+        ->where('products.product_name', 'LIKE', '%' . $keyword . '%')
+        ->select('products.id', 'products.product_name',  'products.price', 'products.discount', DB::raw('MAX(images.image_url) as image_url'))
+        ->groupBy('products.id')
+        ->orderBy('products.id')
+        ->get();
+    }
 }

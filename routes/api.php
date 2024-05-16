@@ -22,6 +22,7 @@ use App\Http\Controllers\User\WishListController;
 
 
 
+use App\Http\Controllers\User\ProductController;
 use App\Http\Controllers\User\UserCartController;
 use App\Http\Controllers\User\UserCheckoutController;
 use Cloudinary\Api\Admin\AdminApi;
@@ -107,3 +108,4 @@ Route::get('/shopping-cart', [CartController::class, 'showCart'])->name('showtoc
 Route::post('/add-to-cart',[CartController::class,'addToCart'])->name('add-to-cart');
 Route::post('/update-cart/{id}', [CartController::class, 'updateCart'])->name('updateCart');
 Route::delete('/delete-cart/{id}', [CartController::class, 'deleteCart'])->name('delete-cart');
+Route::get('/search-product/{keyword}', [ProductController::class, 'search'])->name('search-product');
