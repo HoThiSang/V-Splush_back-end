@@ -204,7 +204,7 @@ return [
                  * Examples of Securities
                 */
                 [
-                    /*
+                    /*a
                     'oauth2_security_example' => [
                         'read',
                         'write'
