@@ -23,8 +23,9 @@ class CartController extends Controller
     public function showCart()
     {
         $check = 'error';
-        if (Auth()->check()) {
-            $user_id = Auth::id();
+        $user_id =2;
+        if ($user_id===2) {
+            // $user_id = Auth::id();
             $carts = $this->cart->getAllCarts($user_id);
             $check = 'success';
             return response()->json([
