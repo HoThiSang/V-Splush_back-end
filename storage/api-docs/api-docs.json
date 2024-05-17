@@ -776,8 +776,6 @@
                 ]
             }
         },
-"/api/add-to-cart": {
-            "post": {
         "/api/admin-product-detail/{id}": {
             "get": {
                 "tags": [
