@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class WishList extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     protected $table = 'wish_lists';
 
     protected $fillable = [
@@ -38,10 +40,10 @@ class WishList extends Model
         }
     }
 
-    public function deleteWishListById($id)
+    public function deleteWishList($id)
     {
         $wishList = $this->findOrFail($id);
-        return $wishList->softDelete();
+        return $wishList->delete();
     }
     public function createWishList($userId, $productId)
     {
