@@ -373,6 +373,34 @@
                 }
             }
         },
+        "/api/show-detail-comment/{id}": {
+            "get": {
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Detail a comment by ID",
+                "operationId": "3aeaa5bd7e568bb06b0ceade842782e4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the comment to detail",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Comment not found"
+                    }
+                }
+            }
+        },
         "/api/admin-show-all-post": {
             "get": {
                 "tags": [
@@ -627,6 +655,35 @@
                 }
             }
         },
+        "/api/search-product/{keyword}": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Search product by keyword",
+                "operationId": "92465db5cfcf0677b6ac7cee7ca013bd",
+                "parameters": [
+                    {
+                        "name": "keyword",
+                        "in": "path",
+                        "description": "keyword of the product to search",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Product not found"
+                    }
+                }
+            }
+        },
+
         "/api/register": {
             "post": {
                 "tags": [
