@@ -37,7 +37,7 @@ class CartController extends Controller
             'message' => 'User is not authenticated'
         ], 401);
     }
-
+    
     public function addToCart(Request $request)
     {
         //
