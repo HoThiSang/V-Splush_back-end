@@ -466,6 +466,25 @@
                 }
             }
         },
+        "/api/admin-contact": {
+            "get": {
+                "tags": [
+                    "Contacts"
+                ],
+                "summary": "Get all contacts",
+                "operationId": "b2733d7a96386ade885d5ccd34f0e778",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/admin-show-all-orders": {
             "get": {
                 "tags": [

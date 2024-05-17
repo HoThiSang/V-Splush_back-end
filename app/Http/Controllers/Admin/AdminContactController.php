@@ -14,12 +14,38 @@ class AdminContactController extends Controller
     {
         $this->contact = new Contact();
     }
+    /**
+     * @OA\Get(
+     *     path="/api/admin-contact",
+     *     summary="Get all contacts",
+     *     tags={"Contacts"},
+     *     @OA\Response(response="200", description="Success"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
     public function index()
     {
         $contactAll = $this->contact->getAllContact();
         return $contactAll;
     }
-
+    /**
+     * @OA\Get(
+     *     path="/api/admin-view-contact/{id}",
+     *     summary="Detail a contact by ID",
+     *     tags={"Contacts"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the contact to detail",
+     *    @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="404", description="Comment not found")
+     * )
+     */
     public function show($id)
     {
         if (!empty($id)) {
