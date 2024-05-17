@@ -80,42 +80,90 @@ class AdminProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
-/**
- * @OA\Post(
- *     path="/api/admin-add-product",
- *     summary="Create a new product",
- *     tags={"Product"},
- *     @OA\RequestBody(
- *         required=true,
- *         description="Product data",
- *         @OA\MediaType(
- *             mediaType="multipart/form-data",
- *             @OA\Schema(
- *                 type="object",
- *                 required={"product_name", "price", "discount", "quantity", "description", "ingredient", "brand", "category_id", "image_url"},
- *                 @OA\Property(property="product_name", type="string"),
- *                 @OA\Property(property="price", type="number", format="float"),
- *                 @OA\Property(property="discount", type="number", format="float"),
- *                 @OA\Property(property="quantity", type="integer", format="int32"),
- *                 @OA\Property(property="description", type="string"),
- *                 @OA\Property(property="ingredient", type="string"),
- *                 @OA\Property(property="brand", type="string"),
- *                 @OA\Property(property="category_id", type="integer", format="int32"),
- *                 @OA\Property(
- *                     property="image_url",
- *                     type="array",
- *                     @OA\Items(type="string", format="binary")
- *                 )
- *             )
- *         )
- *     ),
- *     @OA\Response(response="200", description="Success"),
- *     @OA\Response(response="500", description="Internal Server Error")
- * )
- */
-
-
+    /**
+     * @OA\Post(
+     *     path="/api/admin-add-product",
+     *     summary="Create a new product",
+     *     tags={"Product"},
+     *     @OA\Parameter(
+     *         name="product_name",
+     *         in="query",
+     *         description="Name of the product",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="price",
+     *         in="query",
+     *         description="Price of the product",
+     *         required=true,
+     *         @OA\Schema(type="number", format="float")
+     *     ),
+     *     @OA\Parameter(
+     *         name="discount",
+     *         in="query",
+     *         description="Discount on the product",
+     *         required=true,
+     *         @OA\Schema(type="number", format="float")
+     *     ),
+     *     @OA\Parameter(
+     *         name="quantity",
+     *         in="query",
+     *         description="Quantity of the product",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="description",
+     *         in="query",
+     *         description="Description of the product",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="ingredient",
+     *         in="query",
+     *         description="Ingredients of the product",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="brand",
+     *         in="query",
+     *         description="Brand of the product",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="category_id",
+     *         in="query",
+     *         description="Category ID of the product",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="image_url",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         type="string",
+     *                         format="binary",
+     *                         description="Images of prduct"
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Add new product successfully"),
+     *     @OA\Response(response="422", description="Validation errors"),
+     *     @OA\Response(response="500", description="Server error")
+     * )
+     */
     public function store(ProductRequest $request)
     {
         if ($request->isMethod('post')) {
@@ -197,13 +245,13 @@ class AdminProductController extends Controller
         ], 500);
     }
 
-    public function saveImage(ProductRequest $request, $product_id, $url)
-    {
-        $request->validate([
-            'url' => 'required|url',
-        ]);
-        $this->image->url = $request->url;
-    }
+    // public function saveImage(ProductRequest $request, $product_id, $url)
+    // {
+    //     $request->validate([
+    //         'url' => 'required|url',
+    //     ]);
+    //     $this->image->url = $request->url;
+    // }
     /**
      * Display the specified resource.
      *
@@ -309,7 +357,7 @@ class AdminProductController extends Controller
      */
     /**
      * @OA\Delete(
-     *     path="/api/admin-product/{id}",
+     *     path="/api/admin-product-delete/{id}",
      *     summary="Delete a product by ID",
      *     tags={"Product"},
      *     @OA\Parameter(
