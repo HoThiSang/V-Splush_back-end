@@ -19,6 +19,19 @@ class AdminBannerController extends Controller
     {
         $this->banner = new Banner();
     }
+    /**
+     * Display a listing of the resource.
+     */
+    /**
+     * @OA\Get(
+     *     path="/api/admin-show-all-banner",
+     *     summary="Get all banners",
+     *     tags={"Banners"},
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="500", description="Error"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
     public function index()
     {
         $allBanner = $this->banner->getAllBanner();
@@ -44,12 +57,56 @@ class AdminBannerController extends Controller
     }
     /**
      * Store a newly created resource in storage.
+     *
+     * @OA\Post(
+     *     path="/api/admin-create-banner",
+     *     summary="Create a new banner",
+     *     tags={"Banners"},
+     *     @OA\Parameter(
+     *         name="title",
+     *         in="query",
+     *         description="Title of banner",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="content",
+     *         in="query",
+     *         description="Content of banner",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="sub_title",
+     *         in="query",
+     *         description="Subtitle of banner",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="image_url",
+     *                     type="string",
+     *                     format="binary",
+     *                     description="Image of banner"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Banner created successfully"),
+     *     @OA\Response(response="422", description="Validation errors"),
+     *     @OA\Response(response="400", description="Banner creation failed"),
+     *     security={{"bearerAuth":{}}}
+     * )
      */
+
     public function store(BannerRequest $request)
     {
-        // dd($request->all());
-        // return response()->json('hellll');
-        // $banner = $this->banner;
         $banner = [
             'title' => $request->input('title'),
             'content' => $request->input('content'),
@@ -103,12 +160,65 @@ class AdminBannerController extends Controller
     {
         //
     }
-
-
     /**
      * Update the specified resource in storage.
      */
-    
+    /**
+     * @OA\Post(
+     *     path="/api/admin-update-banner/{id}",
+     *     summary="Update a banner by ID",
+     *     tags={"Banners"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the banner to update",
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="uuid"
+     *         )
+     *     ),
+     *  @OA\Parameter(
+     *         name="title",
+     *         in="query",
+     *         description="Title of banner",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="content",
+     *         in="query",
+     *         description="Content of banner",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *      @OA\Parameter(
+     *         name="sub_title",
+     *         in="query",
+     *         description="Subtitle of banner",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="image_url",
+     *                     type="string",
+     *                     format="binary",
+     *                     description="Image of post"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="404", description="Banner not found"),
+     *     @OA\Response(response="422", description="Failed to update banner")
+     * )
+     */
     public function update(BannerRequest $request, $id)
     {
         $banner = $this->banner->getbannerById($id);
@@ -150,8 +260,26 @@ class AdminBannerController extends Controller
     }
     /**
      * Remove the specified resource from storage.
+     *
+     * @OA\Delete(
+     *     path="/api/admin-delete-banner/{id}",
+     *     summary="Delete a banner by ID",
+     *     tags={"Banners"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the banner to delete",
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Banner deleted successfully"),
+     *     @OA\Response(response="404", description="Banner not found"),
+     *     @OA\Response(response="500", description="Failed to delete banner")
+     * )
      */
-    //
     public function destroy(int $id)
     {
         $banner = $this->banner->getBannerById($id);

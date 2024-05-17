@@ -16,6 +16,16 @@ class AdminOrderController extends Controller
     {
         $this->orders = new Order();
     }
+
+       /**
+     * @OA\Get(
+     *     path="/api/admin-show-all-orders",
+     *     summary="Get all orders",
+     *     tags={"Order"},
+     *     @OA\Response(response="200", description="Success"),
+     *
+     * )
+     */
     public function index(Request $request)
     {
         if ($request->isMethod('get')) {
@@ -66,6 +76,26 @@ class AdminOrderController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
+
+
+        /**
+     * @OA\Get(
+     *     path="/api/admin-show-detail-order/{id}",
+     *     summary="Detail a order by ID",
+     *     tags={"Order"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the order to detail",
+     *    @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="404", description="Order not found")
+     * )
+     */
     public function edit(string $id)
     {
         //
@@ -93,6 +123,33 @@ class AdminOrderController extends Controller
 
     /**
      * Update the specified resource in storage.
+     */
+      /**
+     * @OA\Post(
+     *     path="/api/admin-update-status-order/{id}",
+     *     summary="Update a status order by ID",
+     *     tags={"Order"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the order to update",
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="order data",
+     *         @OA\JsonContent(
+     *             required={"order_status"},
+     *             @OA\Property(property="order_status", type="string", example="ordered")
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="404", description="order not found"),
+     *     @OA\Response(response="500", description="Internal Server Error")
+     * )
      */
     public function update(Request $request, string $id)
     {

@@ -5,6 +5,209 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/admin-show-all-banner": {
+            "get": {
+                "tags": [
+                    "Banners"
+                ],
+                "summary": "Get all banners",
+                "operationId": "4fd7be55b3ced94c5800d743b58e573c",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "500": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin-create-banner": {
+            "post": {
+                "tags": [
+                    "Banners"
+                ],
+                "summary": "Create a new banner",
+                "description": "Store a newly created resource in storage.",
+                "operationId": "bdb1c1f00123d0eec681bd5ae7b18b94",
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "Title of banner",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "content",
+                        "in": "query",
+                        "description": "Content of banner",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sub_title",
+                        "in": "query",
+                        "description": "Subtitle of banner",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "image_url": {
+                                        "description": "Image of banner",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Banner created successfully"
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    },
+                    "400": {
+                        "description": "Banner creation failed"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin-update-banner/{id}": {
+            "post": {
+                "tags": [
+                    "Banners"
+                ],
+                "summary": "Update a banner by ID",
+                "operationId": "35568b77f7218a615262e1a172b00a2c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the banner to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "Title of banner",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "content",
+                        "in": "query",
+                        "description": "Content of banner",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sub_title",
+                        "in": "query",
+                        "description": "Subtitle of banner",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "image_url": {
+                                        "description": "Image of post",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Banner not found"
+                    },
+                    "422": {
+                        "description": "Failed to update banner"
+                    }
+                }
+            }
+        },
+        "/api/admin-delete-banner/{id}": {
+            "delete": {
+                "tags": [
+                    "Banners"
+                ],
+                "summary": "Delete a banner by ID",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "ba0b10ad34e35a97413fd27b61ff47f8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the banner to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Banner deleted successfully"
+                    },
+                    "404": {
+                        "description": "Banner not found"
+                    },
+                    "500": {
+                        "description": "Failed to delete banner"
+                    }
+                }
+            }
+        },
         "/api/categories": {
             "get": {
                 "tags": [
@@ -142,18 +345,32 @@
                 }
             }
         },
-        "/api/show-detail-comment/{id}": {
+        "/api/show-all-comments": {
             "get": {
                 "tags": [
                     "Comment"
                 ],
-                "summary": "Detail a comment by ID",
-                "operationId": "3aeaa5bd7e568bb06b0ceade842782e4",
+                "summary": "Get all comments",
+                "operationId": "c31b29eabbe65b71937edf555dd841ca",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/delete-comment/{id}": {
+            "delete": {
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Delete a comment by ID",
+                "operationId": "e6351f06420ce4999e38a4c429db36c3",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID of the comment to detail",
+                        "description": "ID of the comment to delete",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -176,7 +393,7 @@
                     "Comment"
                 ],
                 "summary": "Detail a comment by ID",
-                "operationId": "3aeaa5bd7e568bb06b0ceade842782e4",
+                "operationId": "a2c34b5c03d454c1f6103dddf6d13d6b",
                 "parameters": [
                     {
                         "name": "id",
@@ -194,6 +411,150 @@
                     },
                     "404": {
                         "description": "Comment not found"
+                    }
+                }
+            }
+        },
+        "/api/update-comment/{id}": {
+            "put": {
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Update a comment by ID",
+                "operationId": "31421f5be9a29fd3fe06c11c1bed4d2e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the comment to update",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Comment data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "content"
+                                ],
+                                "properties": {
+                                    "content": {
+                                        "type": "string",
+                                        "example": "Updated Comment"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Comment not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/admin-show-all-orders": {
+            "get": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Get all orders",
+                "operationId": "00233ad633a3089ec10a30dde617a46b",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/admin-show-detail-order/{id}": {
+            "get": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Detail a order by ID",
+                "operationId": "8654127e6d7d298fa3c33cafd71a57b6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the order to detail",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Order not found"
+                    }
+                }
+            }
+        },
+        "/api/admin-update-status-order/{id}": {
+            "post": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Update a status order by ID",
+                "operationId": "43770b848db31c3412ffa4037be003f7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the order to update",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "order data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "order_status"
+                                ],
+                                "properties": {
+                                    "order_status": {
+                                        "type": "string",
+                                        "example": "ordered"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "order not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
                     }
                 }
             }
@@ -415,6 +776,34 @@
                 ]
             }
         },
+        "/api/add-to-cart": {
+            "post": {
+                "tags": [
+                    "Add to cart"
+                ],
+                "summary": "add to cart",
+                "operationId": "9925138f13204f24a25b5cc813a0009b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Product Id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/api/add-comment": {
             "post": {
                 "tags": [
@@ -422,6 +811,26 @@
                 ],
                 "summary": "Create a new comment",
                 "operationId": "cc700dca3d8bb28a66876976f18d5e5e",
+                "parameters": [
+                    {
+                        "name": "product_id",
+                        "in": "query",
+                        "description": "Product Id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "user Id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "description": "Comment data",
                     "required": true,
@@ -480,6 +889,7 @@
                 }
             }
         },
+
         "/api/register": {
             "post": {
                 "tags": [
