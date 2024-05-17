@@ -776,369 +776,7 @@
                 ]
             }
         },
-        "/api/show-allwishlist": {
-            "get": {
-                "tags": [
-                    "Wish list"
-                ],
-                "summary": "Get all wish lists",
-                "operationId": "1273346dc4bbf94b514e68be407e64e8",
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "500": {
-                        "description": "Error"
-                    },
-                    "404": {
-                        "description": "Wish list not found"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/delete-wish-list/{id}": {
-            "delete": {
-                "tags": [
-                    "Wish list"
-                ],
-                "summary": "Delete a wish list by ID",
-                "description": "Remove the specified resource from storage.",
-                "operationId": "e0fdcd1399df7a92f85aaa9e675e1e82",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of the wish list to delete",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int64"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "wish list deleted successfully"
-                    },
-                    "404": {
-                        "description": "wish list not found"
-                    },
-                    "500": {
-                        "description": "Failed to delete wish list"
-                    },
-                    "400": {
-                        "description": "Invalid wish list ID"
-                    }
-                }
-            }
-        },
-        "/api/add-to-cart": {
-            "post": {
-                "tags": [
-                    "Product"
-                ],
-                "summary": "Detail a product by ID",
-                "operationId": "19f5d96187c732ddf8362196d0561e80",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of the product to detail",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Comment not found"
-                    }
-                }
-            }
-        },
-        "/api/admin-add-product": {
-            "post": {
-                "tags": [
-                    "Product"
-                ],
-                "summary": "Create a new product",
-                "operationId": "82d58feb7083d29d7c889a4e9c54ae3a",
-                "parameters": [
-                    {
-                        "name": "product_name",
-                        "in": "query",
-                        "description": "Name of the product",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "price",
-                        "in": "query",
-                        "description": "Price of the product",
-                        "required": true,
-                        "schema": {
-                            "type": "number",
-                            "format": "float"
-                        }
-                    },
-                    {
-                        "name": "discount",
-                        "in": "query",
-                        "description": "Discount on the product",
-                        "required": true,
-                        "schema": {
-                            "type": "number",
-                            "format": "float"
-                        }
-                    },
-                    {
-                        "name": "quantity",
-                        "in": "query",
-                        "description": "Quantity of the product",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "description",
-                        "in": "query",
-                        "description": "Description of the product",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "ingredient",
-                        "in": "query",
-                        "description": "Ingredients of the product",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "brand",
-                        "in": "query",
-                        "description": "Brand of the product",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "category_id",
-                        "in": "query",
-                        "description": "Category ID of the product",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "properties": {
-                                    "image_url[]": {
-                                        "description": "Images of product",
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string",
-                                            "format": "binary"
-                                        }
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Add new product successfully"
-                    },
-                    "422": {
-                        "description": "Validation errors"
-                    },
-                    "500": {
-                        "description": "Server error"
-                    }
-                }
-            }
-        },
-        "/api/admin-product-update/{id}": {
-            "post": {
-                "tags": [
-                    "Product"
-                ],
-                "summary": "Update product",
-                "operationId": "8a6d44697f279a645c2d98e4985a9b9f",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of the product to update",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "product_name",
-                        "in": "query",
-                        "description": "Name of the product",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "price",
-                        "in": "query",
-                        "description": "Price of the product",
-                        "required": true,
-                        "schema": {
-                            "type": "number",
-                            "format": "float"
-                        }
-                    },
-                    {
-                        "name": "discount",
-                        "in": "query",
-                        "description": "Discount on the product",
-                        "required": true,
-                        "schema": {
-                            "type": "number",
-                            "format": "float"
-                        }
-                    },
-                    {
-                        "name": "quantity",
-                        "in": "query",
-                        "description": "Quantity of the product",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "description",
-                        "in": "query",
-                        "description": "Description of the product",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "ingredient",
-                        "in": "query",
-                        "description": "Ingredients of the product",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "brand",
-                        "in": "query",
-                        "description": "Brand of the product",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "category_id",
-                        "in": "query",
-                        "description": "Category ID of the product",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "properties": {
-                                    "image_url[]": {
-                                        "description": "Updated images of the product",
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string",
-                                            "format": "binary"
-                                        }
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Product updated successfully"
-                    },
-                    "404": {
-                        "description": "Product not found"
-                    },
-                    "422": {
-                        "description": "Validation errors"
-                    },
-                    "500": {
-                        "description": "Server error"
-                    }
-                }
-            }
-        },
-        "/api/admin-product-delete/{id}": {
-            "delete": {
-                "tags": [
-                    "Product"
-                ],
-                "summary": "Delete a product by ID",
-                "operationId": "1d6596e1c2a855227ce7fbe5a0b824e9",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of the product to delete",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Product not found"
-                    }
-                }
-            }
-        },
-        "/api/add-to-cart": {
+"/api/add-to-cart": {
             "post": {
         "/api/admin-product-detail/{id}": {
             "get": {
@@ -1433,10 +1071,71 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success"
+                        "description": "Product deleted successfully"
                     },
                     "404": {
                         "description": "Product not found"
+                    }
+                }
+            }
+        },
+        "/api/show-allwishlist": {
+            "get": {
+                "tags": [
+                    "Wish list"
+                ],
+                "summary": "Get all wish lists",
+                "operationId": "1273346dc4bbf94b514e68be407e64e8",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "500": {
+                        "description": "Error"
+                    },
+                    "404": {
+                        "description": "Wish list not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/delete-wish-list/{id}": {
+            "delete": {
+                "tags": [
+                    "Wish list"
+                ],
+                "summary": "Delete a wish list by ID",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "e0fdcd1399df7a92f85aaa9e675e1e82",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the wish list to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "wish list deleted successfully"
+                    },
+                    "404": {
+                        "description": "wish list not found"
+                    },
+                    "500": {
+                        "description": "Failed to delete wish list"
+                    },
+                    "400": {
+                        "description": "Invalid wish list ID"
                     }
                 }
             }
