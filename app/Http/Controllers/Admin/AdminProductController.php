@@ -46,6 +46,24 @@ class AdminProductController extends Controller
         $productAll = $this->products->getAllProduct();
         return $productAll;
     }
+    /**
+     * @OA\Get(
+     *     path="/api/admin-product-detail/{id}",
+     *     summary="Detail a product by ID",
+     *     tags={"Product"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the product to detail",
+     *    @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="404", description="Comment not found")
+     * )
+     */
     public function show($id)
     {
         $productDetail = $this->products->getProductById($id);
@@ -148,13 +166,10 @@ class AdminProductController extends Controller
      *             @OA\Schema(
      *                 type="object",
      *                 @OA\Property(
-     *                     property="image_url",
+     *                     property="image_url[]",
      *                     type="array",
-     *                     @OA\Items(
-     *                         type="string",
-     *                         format="binary",
-     *                         description="Images of prduct"
-     *                     )
+     *                     @OA\Items(type="string", format="binary"),
+     *                     description="Images of product"
      *                 )
      *             )
      *         )
@@ -164,6 +179,7 @@ class AdminProductController extends Controller
      *     @OA\Response(response="500", description="Server error")
      * )
      */
+
     public function store(ProductRequest $request)
     {
         if ($request->isMethod('post')) {
@@ -274,6 +290,96 @@ class AdminProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+    /**
+     * @OA\Post(
+     *     path="/api/admin-product-update/{id}",
+     *     summary="Update product",
+     *     tags={"Product"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the product to update",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="product_name",
+     *         in="query",
+     *         description="Name of the product",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="price",
+     *         in="query",
+     *         description="Price of the product",
+     *         required=true,
+     *         @OA\Schema(type="number", format="float")
+     *     ),
+     *     @OA\Parameter(
+     *         name="discount",
+     *         in="query",
+     *         description="Discount on the product",
+     *         required=true,
+     *         @OA\Schema(type="number", format="float")
+     *     ),
+     *     @OA\Parameter(
+     *         name="quantity",
+     *         in="query",
+     *         description="Quantity of the product",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="description",
+     *         in="query",
+     *         description="Description of the product",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="ingredient",
+     *         in="query",
+     *         description="Ingredients of the product",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="brand",
+     *         in="query",
+     *         description="Brand of the product",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="category_id",
+     *         in="query",
+     *         description="Category ID of the product",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="image_url[]",
+     *                     type="array",
+     *                     @OA\Items(type="string", format="binary"),
+     *                     description="Updated images of the product"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Product updated successfully"),
+     *     @OA\Response(response="404", description="Product not found"),
+     *     @OA\Response(response="422", description="Validation errors"),
+     *     @OA\Response(response="500", description="Server error")
+     * )
+     */
     public function update(ProductRequest $request, $id)
     {
         $product = $this->products->findById($id);
@@ -370,7 +476,7 @@ class AdminProductController extends Controller
      *             format="int32"
      *         )
      *     ),
-     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="200", description="Product deleted successfully"),
      *     @OA\Response(response="404", description="Product not found")
      * )
      */
