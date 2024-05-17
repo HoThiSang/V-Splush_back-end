@@ -18,7 +18,20 @@ class AdminWishListControllor extends Controller
     {
         $this->wishlist = $wishlist;
     }
-
+    /**
+     * Display a listing of the resource.
+     */
+    /**
+     * @OA\Get(
+     *     path="/api/show-allwishlist",
+     *     summary="Get all wish lists",
+     *     tags={"Wish list"},
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="500", description="Error"),
+     *     @OA\Response(response="404", description="Wish list not found"),
+     *     security={{"bearerAuth":{}}}
+     * )
+     */
     public function index()
     {
         try {
@@ -27,7 +40,7 @@ class AdminWishListControllor extends Controller
             if (!empty($allWishList)) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'Wishlists retrieved successfully',
+                    'message' => 'Show all wish lists successfully',
                     'data' => $allWishList
                 ], 200);
             } else {
@@ -37,10 +50,10 @@ class AdminWishListControllor extends Controller
                 ], 404);
             }
         } catch (\Exception $e) {
-            Log::error('Error retrieving wishlists: ' . $e->getMessage());
+            Log::error('Error show wishlists: ' . $e->getMessage());
             return response()->json([
                 'status' => 'error',
-                'message' => 'Failed to retrieve wishlists',
+                'message' => 'Failed show wishlists',
             ], 500);
         }
     }
@@ -87,13 +100,33 @@ class AdminWishListControllor extends Controller
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @OA\Delete(
+     *     path="/api/delete-wish-list/{id}",
+     *     summary="Delete a wish list by ID",
+     *     tags={"Wish list"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the wish list to delete",
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="wish list deleted successfully"),
+     *     @OA\Response(response="404", description="wish list not found"),
+     *     @OA\Response(response="500", description="Failed to delete wish list"),
+     *     @OA\Response(response="400", description="Invalid wish list ID")
+     * )
      */
     public function destroy(string $id)
     {
         if (!empty($id)) {
             $wishList = WishList::find($id);
             if ($wishList) {
-                $deleted = $wishList->deleteWishListById($id);
+                $deleted = $wishList->deleteWishList($id);
 
                 if ($deleted) {
                     return response()->json([

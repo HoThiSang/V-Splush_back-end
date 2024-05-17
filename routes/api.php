@@ -49,7 +49,7 @@ Route::put('/categories-update/{id}', [AdminCategoryController::class, 'update']
 
 Route::delete('/categories-delete/{id}', [AdminCategoryController::class, 'destroy'])->name('update-category');
 Route::get('/show-allwishlist', [AdminWishListControllor::class, 'index'])->name('show-allwishlist');
-Route::delete('/delete-wish-list/{id}', [AdminWishListControllor::class, 'index'])->name('delete-wish-list');
+Route::delete('/delete-wish-list/{id}', [AdminWishListControllor::class, 'destroy'])->name('delete-wish-list');
 Route::post('/create-wishlist', [WishListController::class, 'store'])->name('create-wishlist');
 
 
@@ -64,8 +64,9 @@ Route::get('/show-detail-comment/{id}', [AdminCommentController::class, 'show'])
 Route::get('/admin-product',[AdminProductController::class,'index'])->name('get-all-product');
 Route::post('/admin-add-product',[AdminProductController::class,'store'])->name('create-product');
 Route::get('/admin-product-detail/{id}', [AdminProductController::class, 'show'])->name('product-detail');
-Route::post('/admin-product-update/{id}', [AdminProductController::class, 'update'])->name('admin-product-update');
-Route::delete('/admin-product-delete/{id}', [AdminProductController::class, 'destroy'])->name('admin-product-delete');
+Route::post('/admin-product-update/{id}', [AdminProductController::class, 'update'])->name('admin-product-update');Route::delete('/admin-product-delete/{id}', [AdminProductController::class, 'destroy'])->name('admin-product-delete');// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 //Route user
 Route::get('admin-user', [AdminUserController::class, 'index'])->name('admin-user');
