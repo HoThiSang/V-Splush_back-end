@@ -212,34 +212,6 @@
                 }
             }
         },
-        "/api/show-detail-comment/{id}": {
-            "get": {
-                "tags": [
-                    "Comment"
-                ],
-                "summary": "Detail a comment by ID",
-                "operationId": "3aeaa5bd7e568bb06b0ceade842782e4",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of the comment to detail",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "404": {
-                        "description": "Comment not found"
-                    }
-                }
-            }
-        },
         "/api/update-comment/{id}": {
             "put": {
                 "tags": [
@@ -601,6 +573,34 @@
                 ]
             }
         },
+        "/api/add-to-cart": {
+            "post": {
+                "tags": [
+                    "Add to cart"
+                ],
+                "summary": "add to cart",
+                "operationId": "9925138f13204f24a25b5cc813a0009b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Product Id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/api/add-comment": {
             "post": {
                 "tags": [
@@ -608,6 +608,26 @@
                 ],
                 "summary": "Create a new comment",
                 "operationId": "cc700dca3d8bb28a66876976f18d5e5e",
+                "parameters": [
+                    {
+                        "name": "product_id",
+                        "in": "query",
+                        "description": "Product Id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "user Id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "description": "Comment data",
                     "required": true,
