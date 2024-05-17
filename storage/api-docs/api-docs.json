@@ -5,6 +5,209 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/admin-show-all-banner": {
+            "get": {
+                "tags": [
+                    "Banners"
+                ],
+                "summary": "Get all banners",
+                "operationId": "4fd7be55b3ced94c5800d743b58e573c",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "500": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin-create-banner": {
+            "post": {
+                "tags": [
+                    "Banners"
+                ],
+                "summary": "Create a new banner",
+                "description": "Store a newly created resource in storage.",
+                "operationId": "bdb1c1f00123d0eec681bd5ae7b18b94",
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "Title of banner",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "content",
+                        "in": "query",
+                        "description": "Content of banner",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sub_title",
+                        "in": "query",
+                        "description": "Subtitle of banner",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "image_url": {
+                                        "description": "Image of banner",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Banner created successfully"
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    },
+                    "400": {
+                        "description": "Banner creation failed"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin-update-banner/{id}": {
+            "post": {
+                "tags": [
+                    "Banners"
+                ],
+                "summary": "Update a banner by ID",
+                "operationId": "35568b77f7218a615262e1a172b00a2c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the banner to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "Title of banner",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "content",
+                        "in": "query",
+                        "description": "Content of banner",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sub_title",
+                        "in": "query",
+                        "description": "Subtitle of banner",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "image_url": {
+                                        "description": "Image of post",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Banner not found"
+                    },
+                    "422": {
+                        "description": "Failed to update banner"
+                    }
+                }
+            }
+        },
+        "/api/admin-delete-banner/{id}": {
+            "delete": {
+                "tags": [
+                    "Banners"
+                ],
+                "summary": "Delete a banner by ID",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "ba0b10ad34e35a97413fd27b61ff47f8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the banner to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Banner deleted successfully"
+                    },
+                    "404": {
+                        "description": "Banner not found"
+                    },
+                    "500": {
+                        "description": "Failed to delete banner"
+                    }
+                }
+            }
+        },
         "/api/categories": {
             "get": {
                 "tags": [
@@ -686,6 +889,7 @@
                 }
             }
         },
+
         "/api/register": {
             "post": {
                 "tags": [
