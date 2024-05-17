@@ -37,7 +37,25 @@ class CartController extends Controller
             'message' => 'User is not authenticated'
         ], 401);
     }
-    
+       /**
+     * @OA\Post(
+     *     path="/api/add-to-cart",
+     *     summary="add to cart",
+     *     tags={"Add to cart"},
+     *  @OA\Parameter(
+     *         name="id",
+     *         in="query",
+     *         required=true,
+     *         description="Product Id",
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="500", description="Internal Server Error")
+     * )
+     */
+
     public function addToCart(Request $request)
     {
         //

@@ -40,6 +40,24 @@ class CommentController extends Controller
      *     path="/api/add-comment",
      *     summary="Create a new comment",
      *     tags={"Comment"},
+     *  @OA\Parameter(
+     *         name="product_id",
+     *         in="query",
+     *         required=true,
+     *         description="Product Id",
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *        @OA\Parameter(
+     *         name="user_id",
+     *         in="query",
+     *         required=true,
+     *         description="user Id",
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
      *     @OA\RequestBody(
      *         required=true,
      *         description="Comment data",
@@ -52,7 +70,7 @@ class CommentController extends Controller
      *     @OA\Response(response="500", description="Internal Server Error")
      * )
      */
-    
+
     public function store(CommentRequest $request)
     {
         //

@@ -142,13 +142,55 @@
                 }
             }
         },
+        "/api/show-all-comments": {
+            "get": {
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Get all comments",
+                "operationId": "c31b29eabbe65b71937edf555dd841ca",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/delete-comment/{id}": {
+            "delete": {
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Delete a comment by ID",
+                "operationId": "e6351f06420ce4999e38a4c429db36c3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the comment to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Comment not found"
+                    }
+                }
+            }
+        },
         "/api/show-detail-comment/{id}": {
             "get": {
                 "tags": [
                     "Comment"
                 ],
                 "summary": "Detail a comment by ID",
-                "operationId": "3aeaa5bd7e568bb06b0ceade842782e4",
+                "operationId": "a2c34b5c03d454c1f6103dddf6d13d6b",
                 "parameters": [
                     {
                         "name": "id",
@@ -194,6 +236,150 @@
                     },
                     "404": {
                         "description": "Comment not found"
+                    }
+                }
+            }
+        },
+        "/api/update-comment/{id}": {
+            "put": {
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Update a comment by ID",
+                "operationId": "31421f5be9a29fd3fe06c11c1bed4d2e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the comment to update",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Comment data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "content"
+                                ],
+                                "properties": {
+                                    "content": {
+                                        "type": "string",
+                                        "example": "Updated Comment"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Comment not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/admin-show-all-orders": {
+            "get": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Get all orders",
+                "operationId": "00233ad633a3089ec10a30dde617a46b",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/admin-show-detail-order/{id}": {
+            "get": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Detail a order by ID",
+                "operationId": "8654127e6d7d298fa3c33cafd71a57b6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the order to detail",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Order not found"
+                    }
+                }
+            }
+        },
+        "/api/admin-update-status-order/{id}": {
+            "post": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Update a status order by ID",
+                "operationId": "43770b848db31c3412ffa4037be003f7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the order to update",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "order data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "order_status"
+                                ],
+                                "properties": {
+                                    "order_status": {
+                                        "type": "string",
+                                        "example": "ordered"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "order not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
                     }
                 }
             }
