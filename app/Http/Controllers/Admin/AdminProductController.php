@@ -179,6 +179,7 @@ class AdminProductController extends Controller
      *     @OA\Response(response="500", description="Server error")
      * )
      */
+
     public function store(ProductRequest $request)
     {
         if ($request->isMethod('post')) {

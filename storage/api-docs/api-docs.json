@@ -778,19 +778,21 @@
         },
     "/api/add-to-cart": {
             "post": {
+        "/api/admin-product-detail/{id}": {
+            "get": {
                 "tags": [
-                    "Add to cart"
+                    "Product"
                 ],
-                "summary": "add to cart",
-                "operationId": "9925138f13204f24a25b5cc813a0009b",
+                "summary": "Detail a product by ID",
+                "operationId": "19f5d96187c732ddf8362196d0561e80",
                 "parameters": [
                     {
                         "name": "id",
-                        "in": "query",
-                        "description": "Product Id",
+                        "in": "path",
+                        "description": "ID of the product to detail",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -798,8 +800,8 @@
                     "200": {
                         "description": "Success"
                     },
-                    "500": {
-                        "description": "Internal Server Error"
+                    "404": {
+                        "description": "Comment not found"
                     }
                 }
             }
@@ -811,26 +813,6 @@
                 ],
                 "summary": "Create a new product",
                 "operationId": "82d58feb7083d29d7c889a4e9c54ae3a",
-                "parameters": [
-                    {
-                        "name": "product_id",
-                        "in": "query",
-                        "description": "Product Id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "user_id",
-                        "in": "query",
-                        "description": "user Id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
                 "parameters": [
                     {
                         "name": "product_name",
@@ -913,10 +895,10 @@
                         "multipart/form-data": {
                             "schema": {
                                 "properties": {
-                                    "image_url": {
+                                    "image_url[]": {
+                                        "description": "Images of product",
                                         "type": "array",
                                         "items": {
-                                            "description": "Images of prduct",
                                             "type": "string",
                                             "format": "binary"
                                         }
@@ -930,6 +912,134 @@
                 "responses": {
                     "200": {
                         "description": "Add new product successfully"
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/api/admin-product-update/{id}": {
+            "post": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Update product",
+                "operationId": "8a6d44697f279a645c2d98e4985a9b9f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the product to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "product_name",
+                        "in": "query",
+                        "description": "Name of the product",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "price",
+                        "in": "query",
+                        "description": "Price of the product",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "discount",
+                        "in": "query",
+                        "description": "Discount on the product",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "quantity",
+                        "in": "query",
+                        "description": "Quantity of the product",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "description": "Description of the product",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ingredient",
+                        "in": "query",
+                        "description": "Ingredients of the product",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "brand",
+                        "in": "query",
+                        "description": "Brand of the product",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "description": "Category ID of the product",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "image_url[]": {
+                                        "description": "Updated images of the product",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product updated successfully"
+                    },
+                    "404": {
+                        "description": "Product not found"
                     },
                     "422": {
                         "description": "Validation errors"
@@ -969,6 +1079,34 @@
                 }
             }
         },
+        "/api/add-to-cart": {
+            "post": {
+                "tags": [
+                    "Add to cart"
+                ],
+                "summary": "add to cart",
+                "operationId": "9925138f13204f24a25b5cc813a0009b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Product Id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/api/add-comment": {
             "post": {
                 "tags": [
@@ -976,6 +1114,26 @@
                 ],
                 "summary": "Create a new comment",
                 "operationId": "cc700dca3d8bb28a66876976f18d5e5e",
+                "parameters": [
+                    {
+                        "name": "product_id",
+                        "in": "query",
+                        "description": "Product Id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "user Id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "description": "Comment data",
                     "required": true,
