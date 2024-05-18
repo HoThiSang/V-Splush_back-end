@@ -62,7 +62,7 @@ class UserSendMailController extends Controller
 
     public function replyEmail(Request $request, $id)
     {
-        if(Auth()->user()){
+        // if(Auth()->user()){
         if ($request->isMethod('post')) {
             $cart = $this->contacts->getContactById($id);
             if (!empty($cart)) {
@@ -96,6 +96,10 @@ class UserSendMailController extends Controller
                 ], 200);
             }
         }
-    }
+        return response()->json([
+            'success' => true, 
+            'message' => 'Email sending failed'
+        ], 500);
+    // }
     }
 }

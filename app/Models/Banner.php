@@ -26,8 +26,8 @@ class Banner extends Model
     public function getAllBanner()
     {
         $banners = DB::table($this->table)
-            ->whereNull('deleted_at')
-            ->orWhere('deleted_at', '>', now())
+            // ->whereNull('deleted_at')
+            // ->orWhere('deleted_at', '>', now())
             ->get();
         return $banners;
     }
