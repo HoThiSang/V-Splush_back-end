@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use App\Models\Slide;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Illuminate\Support\Facades\Auth;
 
 class AdminPostController extends Controller
 {
@@ -93,6 +94,8 @@ class AdminPostController extends Controller
      */
     public function store(PostRequest $request)
     {
+        if (Auth()->check()) {
+            $user_id = Auth()->user()->id;
         if ($request->isMethod('POST')) {
             if ($request->hasFile('image_url')) {
                 $file = $request->file('image_url');
@@ -137,6 +140,7 @@ class AdminPostController extends Controller
             'message' => 'Method is not supported',
         ], 405);
     }
+}
     /**
      * Display the specified resource.
      */
