@@ -27,14 +27,14 @@ class AdminReplyMail extends Mailable
      * @return $this
      */
 
-    public function build()
-    {
-        return $this->from(getenv('MAIL_USERNAME'))
-            ->view('mails.admin-contact-reply')
-            ->with([
-                'name' => $this->sendData['name'],
-                'title' => $this->sendData['title'],
-                'message' => $this->sendData['message'],
-            ]);
-    }
+     public function build()
+     {
+         return $this->from(getenv('MAIL_USERNAME'))
+             ->view('Mail.admin-contact-reply')
+             ->with([
+                 'name' => $this->sendData['name'],
+                 'subject' => $this->sendData['subject'],
+                 'message' => $this->sendData['message'],
+             ]);
+     }
 }
