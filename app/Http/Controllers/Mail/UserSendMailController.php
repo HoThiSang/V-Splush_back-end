@@ -17,11 +17,11 @@ use Illuminate\Support\Facades\Auth;
 
 class UserSendMailController extends Controller
 {
-    protected $contacts;
+    protected $contact;
 
     public function __construct()
     {
-        $this->contacts = new Contact();
+        $this->contact = new Contact();
     }
     public function sendEmail(Request $request)
     {
@@ -43,7 +43,7 @@ class UserSendMailController extends Controller
         ];
         try {
             Mail::to(getenv('MAIL_USERNAME'))->send(new UserSendMail($data));
-            $this->contacts->creatNewContact($data);
+            $this->contact->creatNewContact($data);
             return response()->json([
                 'success' => true, 
                 'message' => 'The email has been successfully sent to the system'
@@ -61,45 +61,59 @@ class UserSendMailController extends Controller
     // ], 401);}
 
     public function replyEmail(Request $request, $id)
-    {
-        // if(Auth()->user()){
+{
+    // if (Auth::check()) {
         if ($request->isMethod('post')) {
-            $cart = $this->contacts->getContactById($id);
-            if (!empty($cart)) {
-                $request->validate([
-                    'message' => 'required',
-                ]);
-                $dataSend = [
-                    'email' => $cart->email,
-                    'subject' => $cart->subject,
-                    'name' => $cart->name,
-                    'message'=>$request->message,
-                    'contact_status'=> 'Contacted',
-                    'updated_at'=>now()
-                ];
-                $cartdata= [
-                    'status' => 'Contacted',
-                    'user_id' => Auth()->user()->id,
-                    'updated_at' => now()
-                ];
-                Mail::to($cart->email)->send(new AdminReplyMail($dataSend));
-                if (Mail::failures()) {
-                    return response()->json([
-                        'success' => false, 
-                        'message' => 'Email sending failed'
-                    ], 500);
-                }
-                $this->contacts->updateContact($id, $cartdata);
+            $cart = $this->contact->getContactById($id);
+
+            if (is_null($cart)) {
                 return response()->json([
-                    'success' => true, 
+                    'success' => false,
+                    'message' => 'Contact not found'
+                ], 404);
+            }
+
+            $dataSend = [
+                'email' => $cart->email,
+                'subject' => $cart->subject,
+                'name' => $cart->name,
+                'message' => $request->message,
+                'contact_status' => 'Contacted',
+                'updated_at' => now()
+            ];
+
+            $cartdata = [
+                'contact_status' => 'Contacted',
+                'user_id' => $cart->user_id,
+                'updated_at' => now()
+            ];
+
+            try {
+                Mail::to($cart->email)->send(new AdminReplyMail($dataSend));
+
+                $this->contact->updateContact($id, $cartdata);
+
+                return response()->json([
+                    'success' => true,
                     'message' => 'The email has been successfully sent to the system'
                 ], 200);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'An error occurred: ' . $e->getMessage()
+                ], 500);
             }
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid request method'
+            ], 405);
         }
-        return response()->json([
-            'success' => true, 
-            'message' => 'Email sending failed'
-        ], 500);
+    // } else {
+    //     return response()->json([
+    //         'success' => false,
+    //         'message' => 'Unauthorized'
+    //     ], 403);
     // }
-    }
+}
 }
