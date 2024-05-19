@@ -32,7 +32,7 @@ class AdminContactController extends Controller
      * @OA\Get(
      *     path="/api/admin-view-contact/{id}",
      *     summary="Detail a contact by ID",
-     *     tags={"Contacts"},
+     *     tags={"Product"},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -43,7 +43,7 @@ class AdminContactController extends Controller
      *         )
      *     ),
      *     @OA\Response(response="200", description="Success"),
-     *     @OA\Response(response="404", description="Comment not found")
+     *     @OA\Response(response="404", description="Contact not found")
      * )
      */
     public function show($id)
@@ -59,44 +59,27 @@ class AdminContactController extends Controller
             return response()->json(['status' => 'error', 'message' => 'ID is required'], 400);
         }
     }
-
-    public function update(Request $request, $id)
-    {
-        if (!empty($id)) {
-            $cart = $this->contact->getContactById($id);
-            if (!empty($cart)) {
-                $contactStatus = $request->input('contact_status');
-                if (!is_null($contactStatus)) {
-                    $updateData = ['contact_status' => $contactStatus];
-                    $cartUpdate = $this->contact->updateContact($id, $updateData);
-                    if ($cartUpdate) {
-                        return response()->json([
-                            'status' => 'success',
-                            'message' => 'Updated contact status successfully!'
-                        ], 200);
-                    }
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Failed to update contact status!'
-                    ], 500);
-                } else {
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Contact status cannot be null!'
-                    ], 400);
-                }
-            }
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Not found contact with id : ' . $id
-            ], 404);
-        } else {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'ID is required'
-            ], 400);
-        }
-    }
+    /**
+     * @OA\Delete(
+     *     path="/api/delete-contact/{id}",
+     *     summary="Delete a contact by ID",
+     *     tags={"Contacts"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the contact to delete",
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int32"
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Contact deleted successfully"),
+     *     @OA\Response(response="404", description="Contact not found"),
+     *     @OA\Response(response="400", description="ID is required"),
+     *     @OA\Response(response="500", description="Failed to delete contact")
+     * )
+     */
     public function destroy($id)
     {
         if (!empty($id)) {
