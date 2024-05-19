@@ -32,7 +32,7 @@ class AdminContactController extends Controller
      * @OA\Get(
      *     path="/api/admin-view-contact/{id}",
      *     summary="Detail a contact by ID",
-     *     tags={"Product"},
+     *     tags={"Contacts"},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

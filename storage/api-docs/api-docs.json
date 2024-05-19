@@ -485,6 +485,69 @@
                 ]
             }
         },
+        "/api/admin-view-contact/{id}": {
+            "get": {
+                "tags": [
+                    "Contacts"
+                ],
+                "summary": "Detail a contact by ID",
+                "operationId": "3c975c4121eb3bdd431acd5a707b5bdd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the contact to detail",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Contact not found"
+                    }
+                }
+            }
+        },
+        "/api/delete-contact/{id}": {
+            "delete": {
+                "tags": [
+                    "Contacts"
+                ],
+                "summary": "Delete a contact by ID",
+                "operationId": "52ede4dd3fed7f0d1aedf4c0551ced7c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the contact to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Contact deleted successfully"
+                    },
+                    "404": {
+                        "description": "Contact not found"
+                    },
+                    "400": {
+                        "description": "ID is required"
+                    },
+                    "500": {
+                        "description": "Failed to delete contact"
+                    }
+                }
+            }
+        },
         "/api/admin-show-all-orders": {
             "get": {
                 "tags": [
@@ -1153,6 +1216,129 @@
                     },
                     "400": {
                         "description": "Invalid wish list ID"
+                    }
+                }
+            }
+        },
+        "/api/user-send-contact": {
+            "post": {
+                "tags": [
+                    "Contacts"
+                ],
+                "description": "Send an email",
+                "operationId": "ac2e6760e97c5b09633a302716b60f00",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Sender's name",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "John Doe"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Sender's email address",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "email",
+                            "example": "john@example.com"
+                        }
+                    },
+                    {
+                        "name": "subject",
+                        "in": "query",
+                        "description": "Email subject",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Regarding your inquiry"
+                        }
+                    },
+                    {
+                        "name": "message",
+                        "in": "query",
+                        "description": "Email message content",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Dear Support Team, ..."
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Email sent successfully"
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "500": {
+                        "description": "Failed to send email"
+                    }
+                }
+            }
+        },
+        "/api/admin-reply-contact/{id}": {
+            "post": {
+                "tags": [
+                    "Contacts"
+                ],
+                "summary": "Reply to an email by ID",
+                "description": "Reply to an email by ID with a message",
+                "operationId": "c46b600b92351c588649bb49c8698e83",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the contact to reply to",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Email reply details",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "message"
+                                ],
+                                "properties": {
+                                    "message": {
+                                        "description": "Email reply message content",
+                                        "type": "string",
+                                        "example": "Your message here"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Email reply sent successfully"
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Contact not found"
+                    },
+                    "405": {
+                        "description": "Invalid request method"
+                    },
+                    "500": {
+                        "description": "Failed to send email reply"
                     }
                 }
             }
