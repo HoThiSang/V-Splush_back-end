@@ -23,6 +23,44 @@ class UserSendMailController extends Controller
     {
         $this->contact = new Contact();
     }
+    /**
+     * @OA\Post(
+     *     path="/api/user-send-contact",
+     *     tags={"Contacts"},
+     *     description="Send an email",
+     *     @OA\Parameter(
+     *         name="name",
+     *         in="query",
+     *         required=true,
+     *         description="Sender's name",
+     *         @OA\Schema(type="string", example="John Doe")
+     *     ),
+     *     @OA\Parameter(
+     *         name="email",
+     *         in="query",
+     *         required=true,
+     *         description="Sender's email address",
+     *         @OA\Schema(type="string", format="email", example="john@example.com")
+     *     ),
+     *     @OA\Parameter(
+     *         name="subject",
+     *         in="query",
+     *         required=true,
+     *         description="Email subject",
+     *         @OA\Schema(type="string", example="Regarding your inquiry")
+     *     ),
+     *     @OA\Parameter(
+     *         name="message",
+     *         in="query",
+     *         required=true,
+     *         description="Email message content",
+     *         @OA\Schema(type="string", example="Dear Support Team, ...")
+     *     ),
+     *     @OA\Response(response="200", description="Email sent successfully"),
+     *     @OA\Response(response="400", description="Validation error"),
+     *     @OA\Response(response="500", description="Failed to send email")
+     * )
+     */
     public function sendEmail(Request $request)
     {
         // if(Auth()->check()){
@@ -37,7 +75,7 @@ class UserSendMailController extends Controller
             'subject' => $request->input('subject'),
             'message' => $request->input('message'),
             'name' => $request->input('name'),
-            'user_id'=>2,
+            'user_id' => 2,
             'contact_status' => 'No contact yet',
             'created_at' => now(),
         ];
@@ -45,13 +83,12 @@ class UserSendMailController extends Controller
             Mail::to(getenv('MAIL_USERNAME'))->send(new UserSendMail($data));
             $this->contact->creatNewContact($data);
             return response()->json([
-                'success' => true, 
+                'success' => true,
                 'message' => 'The email has been successfully sent to the system'
             ], 200);
-        } 
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
-                'success' => false, 
+                'success' => false,
                 'message' => 'Send the email failed! ' . $e->getMessage()
             ], 500);
         }
@@ -59,10 +96,40 @@ class UserSendMailController extends Controller
     // return response()->json([
     //     'message' => 'You must to login'
     // ], 401);}
-
+    /**
+     * @OA\Post(
+     *     path="/api/admin-reply-contact/{id}",
+     *     tags={"Contacts"},
+     *     summary="Reply to an email by ID",
+     *     description="Reply to an email by ID with a message",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the contact to reply to",
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int32"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Email reply details",
+     *         @OA\JsonContent(
+     *             required={"message"},
+     *             @OA\Property(property="message", type="string", example="Your message here", description="Email reply message content")
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Email reply sent successfully"),
+     *     @OA\Response(response="400", description="Validation error"),
+     *     @OA\Response(response="404", description="Contact not found"),
+     *     @OA\Response(response="405", description="Invalid request method"),
+     *     @OA\Response(response="500", description="Failed to send email reply")
+     * )
+     */
     public function replyEmail(Request $request, $id)
-{
-    // if (Auth::check()) {
+    {
+        // if (Auth::check()) {
         if ($request->isMethod('post')) {
             $cart = $this->contact->getContactById($id);
 
@@ -109,11 +176,11 @@ class UserSendMailController extends Controller
                 'message' => 'Invalid request method'
             ], 405);
         }
-    // } else {
-    //     return response()->json([
-    //         'success' => false,
-    //         'message' => 'Unauthorized'
-    //     ], 403);
-    // }
-}
+        // } else {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Unauthorized'
+        //     ], 403);
+        // }
+    }
 }
