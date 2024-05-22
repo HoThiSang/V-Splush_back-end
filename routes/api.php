@@ -86,7 +86,7 @@ Route::post('/admin-update-banner/{id}', [AdminBannerController::class, 'update'
 Route::get('/test', [AdminCategoryController::class, 'test']);
 
 Route::get('admin-show-all-post', [AdminPostController::class, 'index'])->name('admin-show-all-post');
-
+Route::post('updateInformation/{id}', [UserController::class, 'updateInformation'])->name('updateInformation');
 Route::post('register', [UserController::class, 'register'])->name('register');
 Route::post('login', [UserController::class, 'login'])->name('login');
 Route::middleware('auth:sanctum')->group( function () {

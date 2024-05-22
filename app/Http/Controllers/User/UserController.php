@@ -7,10 +7,13 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Illuminate\Support\Facades\Validator;
 
 
 class UserController extends Controller
 {
+    protected $image;
 
     /**
      * @OA\Post(
@@ -131,21 +134,43 @@ class UserController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-        $user = User::where('email', $request->email)->first();
-        if ($user && Hash::check($request->password, $user->password)) {
-            $accessToken = $user->createToken($request->email)->plainTextToken;
-            return response()->json([
-                'token' => $accessToken,
-                'message' => 'Login Success',
-                'status' => 'success'
-            ], 200);
-        }
-        return response()->json([
-            'message' => 'Invalid Credentials',
-            'status' => 'failed'
-        ], 401);
-    }
 
+        $user = User::where('email', $request->email)->first();
+
+        if ($user && Hash::check($request->password, $user->password)) {
+            if(auth()->attempt(array('email' => $request->email, 'password' => $request->password))){
+                $role_id = $user->role_id;
+                if ($role_id === 2) {
+                    $accessToken = $user->createToken($request->email)->plainTextToken;
+                    return response()->json([
+                        'token' => $accessToken,
+                        'message' => ' Admin Login Success',
+                        'status' => 'success'
+                    ], 200);
+                } elseif ($role_id === 1) {
+                    $accessToken = $user->createToken($request->email)->plainTextToken;
+                    return response()->json([
+                        'token' => $accessToken,
+                        'message' => ' User Login Success',
+                        'status' => 'success'
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'message' => 'You are not authorized to access this resource',
+                        'status' => 'failed',
+                        'data'=>$user->role_id
+                    ], 403);
+                }
+            }
+    
+            return response()->json([
+                'message' => 'Invalid Credentials',
+                'status' => 'failed'
+            ], 401);
+            }
+
+}        
+    
 
     /**
      * @OA\Post(
@@ -172,4 +197,89 @@ class UserController extends Controller
         ], 200);
     }
 
+    public function updateInformation(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'email',
+            'role_id' => 'integer',
+            'date_of_birth' => 'date',
+            'address' => 'string',
+            'image_name' => 'string',
+            'image_url' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 400);
+        }
+    
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User not found'
+            ], 404);
+        }
+    
+        if ($request->has('name')) {
+            $user->name = $request->input('name');
+        }
+        
+        if ($request->has('phone')) {
+            $user->phone = $request->input('phone');
+        }
+        
+        if ($request->has('email')) {
+            $user->email = $request->input('email');
+        }
+        
+        if ($request->has('password')) {
+            $user->password = $request->input('password');
+        }
+        
+        if ($request->has('date_of_birth')) {
+            $user->date_of_birth = $request->input('date_of_birth');
+        }
+        
+        if ($request->has('address')) {
+            $user->address = $request->input('address');
+        }
+        
+        if ($request->has('role_id')) {
+            $user->role_id = $request->input('role_id');
+        }
+    
+        if ($request->hasFile('image_url')) {
+            $file = $request->file('image_url');
+            $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
+                'folder' => 'upload_image'
+            ])->getSecurePath();
+            $publicId = Cloudinary::getPublicId();
+            
+            $user->image_name = $request->title;
+            $user->image_url = $uploadedFileUrl;
+            $user->publicId = $publicId;
+        }       
+        if ($request->hasFile('image_url')) {
+            $file = $request->file('image_url');
+            $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
+                'folder' => 'upload_image'
+            ])->getSecurePath();
+            $publicId = Cloudinary::getPublicId();
+            
+            $user->image_name = $request->input('name'); 
+            $user->image_url = $uploadedFileUrl;
+            $user->publicId = $publicId;
+        }        
+        $user->save();
+    
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User updated successfully',
+            'user' => $user
+        ], 200);
+}
 }
