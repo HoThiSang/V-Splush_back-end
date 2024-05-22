@@ -31,9 +31,31 @@ class WishList extends Model
     public function getAllWishList()
     {
         try {
-            return $this->whereNull('deleted_at')
-                ->orWhere('deleted_at', '>', now())
+            $wishlists = $this->select(
+                'wish_lists.id',
+                'wish_lists.user_id',
+                'wish_lists.product_id',
+                'wish_lists.created_at',
+                'products.product_name',
+                'products.price',
+                'images.image_url',
+                'categories.category_name'
+            )
+                ->join('products', 'wish_lists.product_id', '=', 'products.id')
+                ->leftJoin('images', 'products.id', '=', 'images.product_id')
+                ->leftJoin('categories', 'products.category_id', '=', 'categories.id')
+                ->whereNull('wish_lists.deleted_at')
+                ->groupBy(
+                    'wish_lists.id',
+                    'wish_lists.user_id',
+                    'wish_lists.product_id',
+                    'images.image_url',
+                    'categories.category_name'
+                )
                 ->get();
+
+            Log::info('Retrieved wishlists: ', ['wishlists' => $wishlists->toArray()]);
+            return $wishlists;
         } catch (\Exception $e) {
             Log::error('Error retrieving wishlists: ' . $e->getMessage());
             return [];
