@@ -55,7 +55,7 @@ class ProductController extends Controller
             return response()->json([
                 'message' => 'Not found product with name '. $keyword,
                 'status' => 'error',
-            ], 200);
+            ], 404);
         }
     }
     /**
@@ -104,6 +104,22 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function getPopularProduct() {
+        $popularProduct = $this->products->getPoplurProduct();
+        if(!empty($popularProduct)){
+            return response()->json([
+                'message' => 'Search product Success',
+                'status' => 'success',
+                'data'=> $popularProduct
+            ], 200);
+        }else{
+            return response()->json([
+                'message' => 'Not found product ',
+                'status' => 'error',
+            ], 404);
+        }
     }
     
 }

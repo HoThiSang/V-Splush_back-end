@@ -100,4 +100,16 @@ class Product extends Model
         ->orderBy('products.id')
         ->get();
     }
+
+    public function getPoplurProduct()
+    {
+        return DB::table('products')
+            ->leftJoin('images', 'products.id', '=', 'images.product_id')
+            ->where('discount', '>', 0)
+            ->whereNull('products.deleted_at')
+            ->select('products.*', 'images.image_url')
+            ->orderBy('created_at', 'desc') // hoặc orderBy('sold_count', 'desc')
+            ->limit(3)
+            ->get();
+    }
 }

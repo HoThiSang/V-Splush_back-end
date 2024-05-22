@@ -148,7 +148,7 @@ class CartController extends Controller
     public function deleteCart($product_id)
     {
         // $user_id = auth()->id();
-        $user_id = 5;
+        $user_id = 2;
         $userExists = User::where('id', $user_id)->exists();
         if (!$userExists) {
             return response()->json([
