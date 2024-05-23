@@ -63,8 +63,7 @@ class CartController extends Controller
         // if (Auth()->check()) {
         if ($request->isMethod('post')) {
             $product_id = $request->input('id');
-            $quantity = 1;
-            // $user_id = Auth()->user()->id;
+            $quantity = $request->input('quantity');
             $user_id = 2;
             $existing_cart_item = Cart::where('product_id', $product_id)
                 ->where('user_id', $user_id)
@@ -76,8 +75,8 @@ class CartController extends Controller
                 return response()->json([
                     "status" => "success",
                     "message" => "The product has been added to cart.",
-                    "data" => $existing_cart_item, 200
-                ]);
+                    "data" => $existing_cart_item
+                ], 200);
             } else {
 
                 $product = $this->product->getProductById($product_id);
@@ -86,7 +85,6 @@ class CartController extends Controller
                     $cart_item->product_id = $product_id;
                     $cart_item->quantity = $quantity;
                     $cart_item->user_id =  $user_id;
-                    //Giá sau khi giảm giá = Giá gốc - (Giá gốc * (Mức giảm giá / 100))
                     $cart_item->unit_price = $product->price;
                     $cart_item->total_price = $product->price - ($product->price * ($product->discount / 100)) * $cart_item->quantity;
                     $cart_item->save();
@@ -109,7 +107,48 @@ class CartController extends Controller
             ]);
         }
     }
-    public function updateCart(Request $request, $user_id)
+   
+    public function updateCart(Request $request)
+{
+    // dd(Auth::user());
+    if (!auth()->check()) {
+        return response()->json([
+            'message' => 'Unauthenticated',
+            'status' => 'error'
+        ], 401);
+    } else {
+        $user_id = auth()->id();
+        $data = $request->all();
+        if (isset($data['product_id'])) {
+            $cartItem = $this->cart->findItemById($data['product_id'], $user_id);
+            if ($cartItem) {
+                $productPrice = $cartItem->unit_price;
+                $productQuantity = $cartItem->quantity;
+                $newQuantity = $data['quantity'] + $productQuantity;
+                $newPrice = $productPrice * $newQuantity;
+                $cartItem->update([
+                    'quantity' => $newQuantity,
+                    'total_price' => $newPrice,
+                ]);
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Quantity has been updated.',
+                    'data' => $cartItem,
+                ]);
+            }
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Product not found in the cart.',
+            ]);
+        }
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Missing product ID in the request.',
+        ]);
+    }
+}
+
+    public function updateCartSubtract(Request $request)
     {
         // if (!Auth()->check()) {
         //     return response()->json([
@@ -117,13 +156,21 @@ class CartController extends Controller
         //         'message' => 'User is not authenticated'
         //     ], 401);
         // }
-
+        $user_id =2;
         $data = $request->all();
         if (isset($data['product_id'])) {
             $cartItem = $this->cart->findItemById($data['product_id'], $user_id);
             if ($cartItem) {
                 $productPrice = $cartItem->unit_price;
-                $newQuantity = $data['quantity'];
+                $productQuantity = $cartItem->quantity;
+                $newQuantity = $productQuantity - $data['quantity'];
+                if($newQuantity===0){
+                    $cartItem->delete();
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Product has been deleted in cart.',
+                    ]);
+                }
                 $newPrice = $productPrice * $newQuantity;
                 $cartItem->update([
                     'quantity' => $newQuantity,

@@ -91,6 +91,8 @@ Route::post('register', [UserController::class, 'register'])->name('register');
 Route::post('login', [UserController::class, 'login'])->name('login');
 Route::middleware('auth:sanctum')->group( function () {
     Route::post('logout', [UserController::class, 'logout'])->name('logout');
+    Route::post('/update-cart/{id}', [CartController::class, 'updateCart'])->name('updateCart');
+    Route::delete('/delete-cart/{id}', [CartController::class, 'deleteCart'])->name('delete-cart');
 });
 Route::get('/admin-contact', [AdminContactController::class, 'index'])->name('admin-contact');
 Route::get('/admin-view-contact/{id}', [AdminContactController::class, 'show'])->name('admin-view-contact');
@@ -104,7 +106,8 @@ Route::get('/admin-show-detail-order/{id}',[AdminOrderController::class,'edit'])
 //Cart
 Route::get('/shopping-cart', [CartController::class, 'showCart'])->name('showtocart');
 Route::post('/add-to-cart',[CartController::class,'addToCart'])->name('add-to-cart');
-Route::post('/update-cart/{id}', [CartController::class, 'updateCart'])->name('updateCart');
-Route::delete('/delete-cart/{id}', [CartController::class, 'deleteCart'])->name('delete-cart');
+
 Route::get('/search-product/{keyword}', [ProductController::class, 'search'])->name('search-product');
 Route::get('/popular-product', [ProductController::class, 'getPopularProduct'])->name('getPopularProduct-product');
+Route::post('/sub-update-cart/{id}',[CartController::class,'updateCartSubtract'])->name('add-to-cart');
+
