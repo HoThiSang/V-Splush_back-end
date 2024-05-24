@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserRequest;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -152,7 +153,7 @@ class UserController extends Controller
                     return response()->json([
                         'token' => $accessToken,
                         'message' => ' User Login Success',
-                        'status' => 'success'
+                        'status' => 'success',
                     ], 200);
                 } else {
                     return response()->json([
@@ -188,24 +189,29 @@ class UserController extends Controller
      *     )
      * )
      */
-    public function logout()
-    {
+    public function logout(Request $request)
+{dd(auth()->user());
+    // Kiểm tra xem người dùng đã đăng nhập chưa
+    dd(auth()->check());
+    if (auth()->check()) {
         auth()->user()->tokens()->delete();
-        return response()->json([
-            'message' => 'Logout Success',
-            'status' => 'success'
-        ], 200);
+    return response()->json([
+        'message' => 'Logout Success',
+        'status' => 'success'
+    ], 200);
     }
+    // Xóa tất cả các token của người dùng
+    
+    return response()->json([
+        'message' => 'Unauthenticated',
+        'status' => 'error'
+    ], 401);
+}
 
-    public function updateInformation(Request $request, $id)
+    public function updateInformation(UserRequest $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'email',
-            'role_id' => 'integer',
-            'date_of_birth' => 'date',
-            'address' => 'string',
-            'image_name' => 'string',
-            'image_url' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+           
         ]);
     
         if ($validator->fails()) {

@@ -226,7 +226,8 @@ class AdminBannerController extends Controller
             $bannerData = [
                 'title' => $request->input('title'),
                 'content' => $request->input('content'),
-                'sub_title' => $request->input('sub_title')
+                'sub_title' => $request->input('sub_title'),
+                'updated_at' => now()
             ];
             if ($request->hasFile('image_url')) {
                 $file = $request->file('image_url');
