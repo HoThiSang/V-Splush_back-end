@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserRequest;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -193,9 +194,6 @@ class UserController extends Controller
     // Kiểm tra xem người dùng đã đăng nhập chưa
     dd(auth()->check());
     if (auth()->check()) {
-        // return response()->json([
-        //    'data'=>auth()->user()
-        // ], 200);
         auth()->user()->tokens()->delete();
     return response()->json([
         'message' => 'Logout Success',
@@ -210,15 +208,10 @@ class UserController extends Controller
     ], 401);
 }
 
-    public function updateInformation(Request $request, $id)
+    public function updateInformation(UserRequest $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'email',
-            'role_id' => 'integer',
-            'date_of_birth' => 'date',
-            'address' => 'string',
-            'image_name' => 'string',
-            'image_url' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+           
         ]);
     
         if ($validator->fails()) {

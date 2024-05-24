@@ -107,17 +107,17 @@ class CartController extends Controller
             ]);
         }
     }
-   
+
     public function updateCart(Request $request)
 {
     // dd(Auth::user());
-    if (!auth()->check()) {
-        return response()->json([
-            'message' => 'Unauthenticated',
-            'status' => 'error'
-        ], 401);
-    } else {
-        $user_id = auth()->id();
+    // if (!auth()->check()) {
+    //     return response()->json([
+    //         'message' => 'Unauthenticated',
+    //         'status' => 'error'
+    //     ], 401);
+    // } else {
+        $user_id = 2;
         $data = $request->all();
         if (isset($data['product_id'])) {
             $cartItem = $this->cart->findItemById($data['product_id'], $user_id);
@@ -145,7 +145,7 @@ class CartController extends Controller
             'status' => 'error',
             'message' => 'Missing product ID in the request.',
         ]);
-    }
+    // }
 }
 
     public function updateCartSubtract(Request $request)
