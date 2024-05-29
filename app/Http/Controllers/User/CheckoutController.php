@@ -34,7 +34,7 @@ class CheckoutController extends Controller
         date_default_timezone_set('Asia/Ho_Chi_Minh');
 
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        $vnp_Returnurl = "http://localhost:3001/products";
+        $vnp_Returnurl = "http://127.0.0.1:8000/api/is-checkout-success";
         $vnp_TmnCode = 'X1WL3I2L';
         $vnp_HashSecret = "SFBDIRUMYOSNUZGWWYKVLQSKEDOSOXWY";
 
@@ -42,7 +42,7 @@ class CheckoutController extends Controller
 
         $vnp_OrderInfo = "Noi dung thanh toan";
         $vnp_OrderType = "billpayment";
-        $vnp_Amount = $request->totalPrice * 100000;
+        $vnp_Amount = $request->totalPrice * 1000;
         $vnp_Locale = "vn";
         $vnp_BankCode = "NCB";
         $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
@@ -117,7 +117,6 @@ class CheckoutController extends Controller
 
     public function isCheckout()
     {
-
         $vnp_SecureHash = $_GET['vnp_SecureHash'];
         $inputData = array();
         foreach ($_GET as $key => $value) {
@@ -150,8 +149,7 @@ class CheckoutController extends Controller
                     'phone_number' => $userInfo->phone,
                     'payment_method' => $inputData['vnp_BankCode'],
                     'order_status' => 'Ordered',
-                    'deliver_id' => 1,
-                    'order_total' => $inputData['vnp_Amount'],
+                    'total_price' => $inputData['vnp_Amount'],
                     'created_at' => now(),
                     'user_id' => $user_id
 
@@ -169,6 +167,8 @@ class CheckoutController extends Controller
                             'unit_price' => $item->price,
                             'order_id' => $order_id,
                             'product_id' => $item->product_id,
+                            'unit_price'=>200,
+                            'total_price' => $inputData['vnp_Amount'],
                             'created_at' => now()
                         ];
 

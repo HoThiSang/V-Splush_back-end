@@ -67,7 +67,7 @@ Route::get('/popular-product', [ProductController::class, 'getPopularProduct'])-
     Route::post('/create-wishlist', [WishListController::class, 'store'])->name('create-wishlist');
     Route::post('updateInformation/{id}', [UserController::class, 'updateInformation'])->name('updateInformation');
     Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
-    Route::post('/is-checkout-success', [CheckoutController::class, 'isCheckout'])->name('is-checkout-success');
+    Route::get('/is-checkout-success', [CheckoutController::class, 'isCheckout'])->name('is-checkout-success');
 // });
 // Admin
 // Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
