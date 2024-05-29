@@ -42,4 +42,10 @@ class Order extends Model
             ->where('id', $id)
             ->update($data);
     }
+
+    public function creatNewOrder($data)
+    {
+        return DB::table($this->table)->insertGetId($data);
+    }
+
 }

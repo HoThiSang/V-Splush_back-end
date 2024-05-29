@@ -27,9 +27,11 @@ class CartController extends Controller
         if ($user_id===2) {
             // $user_id = Auth::id();
             $carts = $this->cart->getAllCarts($user_id);
+            $count =count($carts);
             $check = 'success';
             return response()->json([
                 'status' => $check,
+                'count'=> $count,
                 'carts' => $carts
             ]);
         }

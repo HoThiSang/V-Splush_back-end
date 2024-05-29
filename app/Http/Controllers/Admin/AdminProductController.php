@@ -44,7 +44,19 @@ class AdminProductController extends Controller
 
     {
         $productAll = $this->products->getAllProduct();
-        return $productAll;
+        if($productAll){
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Get all product successfully',
+                'data'=> $productAll
+            ], 200);
+        }else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Product not found'
+            ],404);
+        }
+
     }
     /**
      * @OA\Get(
