@@ -83,12 +83,12 @@ class UserSendMailController extends Controller
             Mail::to(getenv('MAIL_USERNAME'))->send(new UserSendMail($data));
             $this->contact->creatNewContact($data);
             return response()->json([
-                'success' => true,
+                'status' => 'success',
                 'message' => 'The email has been successfully sent to the system'
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
-                'success' => false,
+                'status' => 'error',
                 'message' => 'Send the email failed! ' . $e->getMessage()
             ], 500);
         }

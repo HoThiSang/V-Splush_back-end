@@ -26,15 +26,14 @@ class CheckoutController extends Controller
         $this->products = new Product();
     }
 
-
     public function checkout(Request $request)
 {
-    if ($request->isMethod('post')) {
+    // if ($request->isMethod('post')) {
         error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
         date_default_timezone_set('Asia/Ho_Chi_Minh');
 
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        $vnp_Returnurl = "http://127.0.0.1:8000/api/is-checkout-success";
+        $vnp_Returnurl = "http://127.0.0.1:8000/api/checkout/success";
         $vnp_TmnCode = 'X1WL3I2L';
         $vnp_HashSecret = "SFBDIRUMYOSNUZGWWYKVLQSKEDOSOXWY";
 
@@ -106,17 +105,32 @@ class CheckoutController extends Controller
             $vnpSecureHash =   hash_hmac('sha512', $hashdata, getenv('VNP_HASHSECRET')); //
             $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
         }
-
+        // $user_id =2;
+        // $orderData = [
+        //         'phone_number'=>$request->phone,
+        //         'address'=> $request->address,
+        //         'order_date'=>now(),
+        //         'total_price'=>$vnp_Amount,
+        //         'order_status'=>'Ordered',
+        //         'created_at'=>now(),
+        //         'user_id'=>$user_id,
+        // ];
+        // $order= $this->orders->creatNewOrder($orderData);
         $returnData = array(
-            'code' => '00', 'status' => 'success', 'data' => $vnp_Url
+            'code' => '00', 'status' => 'success', 'data' => $vnp_Url, 'order'=>'hbhj'
         );
 
         return response()->json($returnData);
-    }
+    // }
 }
 
     public function isCheckout()
     {
+
+        // return response()->json(
+        //   [  'status'=> 'success']
+        // );
+
         $vnp_SecureHash = $_GET['vnp_SecureHash'];
         $inputData = array();
         foreach ($_GET as $key => $value) {
@@ -127,6 +141,7 @@ class CheckoutController extends Controller
 
         unset($inputData['vnp_SecureHash']);
         ksort($inputData);
+
         $i = 0;
         $hashData = "";
         foreach ($inputData as $key => $value) {
@@ -137,6 +152,7 @@ class CheckoutController extends Controller
                 $i = 1;
             }
         }
+
 
         $secureHash = hash_hmac('sha512', $hashData, getenv('VNP_HASHSECRET'));
         if ($secureHash == $vnp_SecureHash) {
@@ -175,9 +191,9 @@ class CheckoutController extends Controller
                         $order_item =   $this->order_item->creatNewOrderItem($orderItemData);
                     }
                     Cart::truncate();
-                    $success = 'Successful transaction!';
                     return response()->json([
                         'status'=> "success",
+                        'message'=>'Successful transaction!',
                         'data'=> $order
                     ]);
                 } else {
@@ -188,18 +204,16 @@ class CheckoutController extends Controller
                 }
             } else {
 
-                $error = 'Transaction failed.';
                 return response()->json([
                     'status'=> "error",
-                    'message'=>$error
+                    'message'=>'Transaction failed.'
                 ]);
             }
         } else {
 
-            $error = 'Invalid signature.';
             return response()->json([
                 'status'=> "error",
-                'message'=>$error
+                'message'=> 'Invalid signature.'
             ]);
         }
     }

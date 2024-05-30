@@ -39,9 +39,9 @@ use Cloudinary\Api\Admin\AdminApi;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::middleware('auth:sanctum')->group( function () {
+    Route::post('logout', [UserController::class, 'logout'])->name('logout');
+});
 
 
 
@@ -67,7 +67,8 @@ Route::get('/popular-product', [ProductController::class, 'getPopularProduct'])-
     Route::post('/create-wishlist', [WishListController::class, 'store'])->name('create-wishlist');
     Route::post('updateInformation/{id}', [UserController::class, 'updateInformation'])->name('updateInformation');
     Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
-    Route::get('/is-checkout-success', [CheckoutController::class, 'isCheckout'])->name('is-checkout-success');
+    Route::get('/checkout/success', [CheckoutController::class, 'isCheckout'])->name('is-checkout-success');
+    Route::post('logout', [UserController::class, 'logout'])->name('logout');
 // });
 // Admin
 // Route::prefix('admin')->middleware('auth:sanctum')->group(function () {

@@ -57,7 +57,7 @@ class Cart extends Model
         ->where('carts.user_id', $user_id)
         ->get();
 }
-    
+
 
     public function findItemById($productId, $user_Id)
     {
