@@ -26,16 +26,38 @@ class Cart extends Model
         $cart = DB::table('carts')->where('user_id', $user_id)->get();
         return $cart;
     }
-    public function getAllCarts($user_id)
-    {
-        return DB::table('carts')
-            ->select('carts.id', 'products.product_name', 'carts.total_price', 'products.discount', 'carts.user_id', 'carts.session_id', 'carts.product_id', 'carts.unit_price', 'carts.quantity', 'carts.created_at', 'carts.updated_at', DB::raw('MAX(images.image_url) as image_url'))
-            ->join('products', 'carts.product_id', '=', 'products.id')
-            ->join('images', 'products.id', '=', 'images.product_id')
-            ->where('carts.user_id', $user_id)
-            ->groupBy('carts.id', 'products.product_name', 'carts.total_price', 'products.discount', 'carts.user_id', 'carts.session_id', 'carts.product_id', 'carts.unit_price', 'carts.quantity', 'carts.created_at', 'carts.updated_at')
-            ->get();
-    }
+
+    // public function getAllCarts($user_id)
+    // {
+    //     // return DB::table('carts')
+        //     ->select('carts.id', 'products.product_name', 'carts.total_price', 'products.discount', 'carts.user_id', 'carts.session_id', 'carts.product_id', 'carts.unit_price', 'carts.quantity', 'carts.created_at', 'carts.updated_at', DB::raw('MAX(images.image_url) as image_url'))
+        //     ->join('products', 'carts.product_id', '=', 'products.id')
+        //     ->join('images', 'products.id', '=', 'images.product_id')
+        //     ->where('carts.user_id', $user_id)
+        //     ->groupBy('carts.id', 'products.product_name', 'carts.total_price', 'products.discount', 'carts.user_id', 'carts.session_id', 'carts.product_id', 'carts.unit_price', 'carts.quantity', 'carts.created_at', 'carts.updated_at')
+        //     ->get();
+        public function getAllCarts($user_id)
+{
+    return DB::table('carts')
+        ->select(
+            'carts.id',
+            'products.product_name',
+            'carts.total_price',
+            'products.discount',
+            'carts.user_id',
+            'carts.session_id',
+            'carts.product_id',
+            'carts.unit_price',
+            'carts.quantity',
+            'carts.created_at',
+            'carts.updated_at',
+            DB::raw('COALESCE((SELECT image_url FROM images WHERE images.product_id = carts.product_id ORDER BY id DESC LIMIT 1), "") AS image_url')
+        )
+        ->join('products', 'carts.product_id', '=', 'products.id')
+        ->where('carts.user_id', $user_id)
+        ->get();
+}
+
 
     public function findItemById($productId, $user_Id)
     {

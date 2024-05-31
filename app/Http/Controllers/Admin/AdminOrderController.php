@@ -105,8 +105,8 @@ class AdminOrderController extends Controller
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Show detail order successfully',
-                    'data' => $orderDetail, 200
-                ]);
+                    'data' => $orderDetail
+                ], 200);
             } else {
                 return response()->json([
                     'status' => 'error',

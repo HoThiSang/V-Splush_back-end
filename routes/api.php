@@ -15,9 +15,9 @@ use App\Http\Controllers\Admin\AdminWishListControllor;
 use App\Http\Controllers\Admin\AdminBannerController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\CartController;
-
+use App\Http\Controllers\User\CheckoutController;
 use App\Http\Controllers\User\CommentController;
-
+use App\Http\Controllers\User\OrderController;
 use App\Http\Controllers\User\WishListController;
 
 
@@ -39,9 +39,9 @@ use Cloudinary\Api\Admin\AdminApi;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::middleware('auth:sanctum')->group( function () {
+    Route::post('logout', [UserController::class, 'logout'])->name('logout');
+});
 
 
 
@@ -66,9 +66,13 @@ Route::prefix('user')->middleware('auth:sanctum')->group(function () {
     Route::delete('/delete-wish-list/{id}', [AdminWishListControllor::class, 'destroy'])->name('delete-wish-list');
     Route::post('/create-wishlist', [WishListController::class, 'store'])->name('create-wishlist');
     Route::post('updateInformation/{id}', [UserController::class, 'updateInformation'])->name('updateInformation');
+    Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+    Route::get('/checkout/success', [CheckoutController::class, 'isCheckout'])->name('is-checkout-success');
+    Route::post('logout', [UserController::class, 'logout'])->name('logout');
+    Route::post('/update/order/{order_code}', [OrderController::class, 'update'])->name('update-order');
 });
 // Admin
-Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
+// Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
     // orders
     Route::get('/admin-show-all-orders',[AdminOrderController::class,'index'])->name('admin-show-all-order');
     Route::post('/admin-update-status-order/{id}',[AdminOrderController::class,'update'])->name('admin-update-status-order');
@@ -108,5 +112,5 @@ Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
     Route::post('/categories-create', [AdminCategoryController::class, 'store'])->name('create-category');
     Route::put('/categories-update/{id}', [AdminCategoryController::class, 'update'])->name('update-category');
     Route::delete('/categories-delete/{id}', [AdminCategoryController::class, 'destroy'])->name('update-category');
-});
+// });
 

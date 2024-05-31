@@ -42,4 +42,23 @@ class Order extends Model
             ->where('id', $id)
             ->update($data);
     }
+
+    public function creatNewOrder($data)
+    {
+        return DB::table($this->table)->insertGetId($data);
+    }
+
+    public function getOrderByOrderCode($order_code)
+    {
+        return DB::table($this->table)
+            ->where('order_code', $order_code)
+            ->first();
+    }
+
+    public function updateStatusOrderByOrrderCode($order_code, $data)
+    {
+        return DB::table($this->table)
+            ->where('order_code', $order_code)
+            ->update($data);
+    }
 }
