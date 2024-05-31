@@ -29,7 +29,7 @@ class CheckoutController extends Controller
     public function checkout(Request $request)
     {
         $rules = [
-            'username' => 'required',
+            'name' => 'required',
             'email' => 'required|email|regex:/^.+@.+$/i',
             'phone' => 'required|regex:/^\d{10}$/',
             'address' => 'required',
@@ -67,11 +67,11 @@ class CheckoutController extends Controller
         $vnpAmount1 = $totalPrice*100;
         $vnp_Amount = $vnpAmount1;
         $vnp_Locale = "vn";
-        $vnp_BankCode =$request->payment;
+        $vnp_BankCode ='NCB';
         $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
-        $phone = $request->phone_number;
+        $phone = $request->phone;
         $email = $request->email;
-        $username = $request->username;
+        $username = $request->name;
         $address = $request->address;
         $vnp_Bill_Mobile = $phone;
         $vnp_Bill_Email = $email;
