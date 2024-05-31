@@ -27,13 +27,35 @@ class CheckoutController extends Controller
     }
 
     public function checkout(Request $request)
-{
-    // if ($request->isMethod('post')) {
+    {
+        $rules = [
+            'username' => 'required',
+            'email' => 'required|email|regex:/^.+@.+$/i',
+            'phone' => 'required|regex:/^\d{10}$/',
+            'address' => 'required',
+        ];
+        $messages = [
+            'email.required' => 'The email field is must required',
+            'email.regex' => 'Invalid email format.',
+            'phone.required' => 'The phone field is must required',
+            'phone.regex' => 'Phone number must be 10 digits.',
+            'address.required' => 'The address field is must required'
+        ];
+
+        $validateData = Validator::make($request->all(), $rules, $messages);
+
+        if ($validateData->fails()) {
+            return response()->json([
+                    'status'=>'error',
+                    'message'=>'The data request invalid !'
+                ]
+            );
+        }
         error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
         date_default_timezone_set('Asia/Ho_Chi_Minh');
 
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        $vnp_Returnurl = "http://127.0.0.1:8000/api/checkout/success";
+        $vnp_Returnurl = "http://localhost:3001/checkoutSuccess";
         $vnp_TmnCode = 'X1WL3I2L';
         $vnp_HashSecret = "SFBDIRUMYOSNUZGWWYKVLQSKEDOSOXWY";
 
@@ -41,13 +63,15 @@ class CheckoutController extends Controller
 
         $vnp_OrderInfo = "Noi dung thanh toan";
         $vnp_OrderType = "billpayment";
-        $vnp_Amount = $request->totalPrice * 1000;
+        $totalPrice = $request->totalPrice;
+        $vnpAmount1 = $totalPrice*100;
+        $vnp_Amount = $vnpAmount1;
         $vnp_Locale = "vn";
-        $vnp_BankCode = "NCB";
+        $vnp_BankCode =$request->payment;
         $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
-        $phone = $request->phone;
+        $phone = $request->phone_number;
         $email = $request->email;
-        $username = $request->name;
+        $username = $request->username;
         $address = $request->address;
         $vnp_Bill_Mobile = $phone;
         $vnp_Bill_Email = $email;
@@ -105,117 +129,51 @@ class CheckoutController extends Controller
             $vnpSecureHash =   hash_hmac('sha512', $hashdata, getenv('VNP_HASHSECRET')); //
             $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
         }
-        // $user_id =2;
-        // $orderData = [
-        //         'phone_number'=>$request->phone,
-        //         'address'=> $request->address,
-        //         'order_date'=>now(),
-        //         'total_price'=>$vnp_Amount,
-        //         'order_status'=>'Ordered',
-        //         'created_at'=>now(),
-        //         'user_id'=>$user_id,
-        // ];
-        // $order= $this->orders->creatNewOrder($orderData);
-        $returnData = array(
-            'code' => '00', 'status' => 'success', 'data' => $vnp_Url, 'order'=>'hbhj'
-        );
+        $user_id = auth()->id();
+        $orderData = [
+            'phone_number' => $request->phone,
+            'address' => $request->address,
+            'order_date' => now(),
+            'total_price' => $vnp_Amount,
+            'order_status' => 'Ordered',
+            'created_at' => now(),
+            'user_id' => $user_id,
+            'payment_method' => $vnp_BankCode,
+            'order_code' => $vnp_TxnRef
+        ];
 
-        return response()->json($returnData);
-    // }
-}
-
-    public function isCheckout()
-    {
-
-        // return response()->json(
-        //   [  'status'=> 'success']
-        // );
-
-        $vnp_SecureHash = $_GET['vnp_SecureHash'];
-        $inputData = array();
-        foreach ($_GET as $key => $value) {
-            if (substr($key, 0, 4) == "vnp_") {
-                $inputData[$key] = $value;
+        $order_id = $this->orders->creatNewOrder($orderData);
+        $order = Order::find($order_id);
+        if ($order_id > 0) {
+            $cartAll = Cart::all();
+            foreach ($cartAll as $item) {
+                $product = $this->products->subtractQuantity($item->product_id, $item->quantity);
             }
-        }
-
-        unset($inputData['vnp_SecureHash']);
-        ksort($inputData);
-
-        $i = 0;
-        $hashData = "";
-        foreach ($inputData as $key => $value) {
-            if ($i == 1) {
-                $hashData = $hashData . '&' . urlencode($key) . "=" . urlencode($value);
-            } else {
-                $hashData = $hashData . urlencode($key) . "=" . urlencode($value);
-                $i = 1;
-            }
-        }
-
-
-        $secureHash = hash_hmac('sha512', $hashData, getenv('VNP_HASHSECRET'));
-        if ($secureHash == $vnp_SecureHash) {
-            if ($_GET['vnp_ResponseCode'] == '00') {
-                $user_id = 2;
-                $userInfo = User::find($user_id);
-                $orderData = [
-                    'order_date' => $inputData['vnp_PayDate'],
-                    'address' => $userInfo->address,
-                    'phone_number' => $userInfo->phone,
-                    'payment_method' => $inputData['vnp_BankCode'],
-                    'order_status' => 'Ordered',
+            foreach ($cartAll as $item) {
+                $orderItemData = [
+                    'quantity' => $item->quantity,
+                    'unit_price' => $item->price,
+                    'order_id' => $order_id,
+                    'product_id' => $item->product_id,
+                    'unit_price' => 200,
                     'total_price' => $inputData['vnp_Amount'],
                     'created_at' => now(),
-                    'user_id' => $user_id
-
                 ];
-                $order_id =  $this->orders->creatNewOrder($orderData);
-                $order = Order::find($order_id);
-                if ($order_id > 0) {
-                    $cartAll = Cart::all();
-                    foreach ($cartAll as $item) {
-                        $product = $this->products->subtractQuantity($item->product_id, $item->quantity);
-                    }
-                    foreach ($cartAll as $item) {
-                        $orderItemData = [
-                            'quantity' => $item->quantity,
-                            'unit_price' => $item->price,
-                            'order_id' => $order_id,
-                            'product_id' => $item->product_id,
-                            'unit_price'=>200,
-                            'total_price' => $inputData['vnp_Amount'],
-                            'created_at' => now()
-                        ];
 
-                        $order_item =   $this->order_item->creatNewOrderItem($orderItemData);
-                    }
-                    Cart::truncate();
-                    return response()->json([
-                        'status'=> "success",
-                        'message'=>'Successful transaction!',
-                        'data'=> $order
-                    ]);
-                } else {
-                    $error = 'An error occurred while saving the order.';
-                    return response()->json([
-                        'status'=> "error",
-                    ]);
-                }
-            } else {
-
-                return response()->json([
-                    'status'=> "error",
-                    'message'=>'Transaction failed.'
-                ]);
+                $order_item =   $this->order_item->creatNewOrderItem($orderItemData);
             }
-        } else {
+            Cart::truncate();
+            $returnData = array(
+                'code' => '00', 'status' => 'success', 'data' => $vnp_Url
+            );
 
-            return response()->json([
-                'status'=> "error",
-                'message'=> 'Invalid signature.'
-            ]);
+            return response()->json($returnData);
+        } else {
+            $returnData = array(
+                'code' => '02', 'status' => 'error', 'data' => $vnp_Url
+            );
+
+            return response()->json($returnData);
         }
     }
-
 }

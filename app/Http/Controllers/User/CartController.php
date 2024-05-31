@@ -22,10 +22,11 @@ class CartController extends Controller
     }
     public function showCart()
     {
+        $user = Auth::user();
+        $user_id= $user->id;
         $check = 'error';
-        $user_id =2;
-        if ($user_id===2) {
-            // $user_id = Auth::id();
+        if (auth()->check()) {
+            $user_id = Auth::id();
             $carts = $this->cart->getAllCarts($user_id);
             $count =count($carts);
             $check = 'success';

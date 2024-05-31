@@ -17,7 +17,7 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\CheckoutController;
 use App\Http\Controllers\User\CommentController;
-
+use App\Http\Controllers\User\OrderController;
 use App\Http\Controllers\User\WishListController;
 
 
@@ -54,7 +54,7 @@ Route::get('/search-product/{keyword}', [ProductController::class, 'search'])->n
 Route::get('/popular-product', [ProductController::class, 'getPopularProduct'])->name('getPopularProduct-product');
 // Users
 
-// Route::prefix('user')->middleware('auth:sanctum')->group(function () {
+Route::prefix('user')->middleware('auth:sanctum')->group(function () {
     Route::post('/update-cart/{id}', [CartController::class, 'updateCart'])->name('updateCart');
     Route::get('/shopping-cart', [CartController::class, 'showCart'])->name('showtocart');
     Route::post('/add-to-cart',[CartController::class,'addToCart'])->name('add-to-cart');
@@ -69,7 +69,8 @@ Route::get('/popular-product', [ProductController::class, 'getPopularProduct'])-
     Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
     Route::get('/checkout/success', [CheckoutController::class, 'isCheckout'])->name('is-checkout-success');
     Route::post('logout', [UserController::class, 'logout'])->name('logout');
-// });
+    Route::post('/update/order/{order_code}', [OrderController::class, 'update'])->name('update-order');
+});
 // Admin
 // Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
     // orders
