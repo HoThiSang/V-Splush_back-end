@@ -59,56 +59,62 @@ class CartController extends Controller
      * )
      */
 
-    public function addToCart(Request $request)
-    {
+     public function addToCart(Request $request)
+     {
+         //
+         if (Auth()->check()) {
 
-        if (Auth()->check()) {
-            $product_id = $request->input('id');
-            $quantity = $request->input('quantity');
-            $user = Auth::user();
-            $user_id = auth()->id();
-            $existing_cart_item = Cart::where('product_id', $product_id)
-                ->where('user_id', $user_id)
-                ->first();
-            if ($existing_cart_item) {
-                $existing_cart_item->quantity = $existing_cart_item->quantity + 1;
-                $existing_cart_item->total_price = number_format($existing_cart_item->unit_price * $existing_cart_item->quantity, 2, '.', '');
-                $existing_cart_item->save();
-                return response()->json([
-                    "status" => "success",
-                    "message" => "The product has been added to cart.",
-                    "data" => $existing_cart_item
-                ], 200);
-            } else {
 
-                $product = $this->product->getProductById($product_id);
-                if ($product) {
-                    $cart_item = new Cart();
-                    $cart_item->product_id = $product_id;
-                    $cart_item->quantity = $quantity;
-                    $cart_item->user_id =  $user_id;
-                    $cart_item->unit_price = $product->price;
-                    $cart_item->total_price = $product->price - ($product->price * ($product->discount / 100)) * $cart_item->quantity;
-                    $cart_item->save();
-                    return response()->json([
-                        "status" => "success",
-                        "message" => "The product has been added to cart.",
-                        "data" => $cart_item
-                    ], 200);
-                } else {
-                    return response()->json([
-                        "status" => "error",
-                        "message" => "No product information found.",
-                    ], 500);
-                }
-            }
-        } else {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'User is not authenticated'
-            ], 404);
-        }
-    }
+             if ($request->isMethod('post')) {
+                 $product_id = $request->product_id;
+                 $quantity = $request->quantity;
+                 $user = Auth()->user();
+                 $user_id= $user->id;
+                 $existing_cart_item = Cart::where('product_id', $product_id)
+                     ->where('user_id', $user_id)
+                     ->first();
+                 if ($existing_cart_item) {
+                     $existing_cart_item->quantity = $existing_cart_item->quantity + 1;
+                     $existing_cart_item->total_price = number_format($existing_cart_item->unit_price * $existing_cart_item->quantity, 2, '.', '');
+                     $existing_cart_item->save();
+                     return response()->json([
+                         "status" => "success",
+                         "message" => "The product has been added to cart.",
+                         "data" => $existing_cart_item
+                     ], 200);
+                 } else {
+
+
+                     $product = $this->product->getProductById($product_id);
+                     if ($product) {
+                         $cart_item = new Cart();
+                         $cart_item->product_id = $product_id;
+                         $cart_item->quantity = $quantity;
+                         $cart_item->user_id =  $user_id;
+                         $cart_item->unit_price = $product->price;
+                         $cart_item->total_price = $product->price - ($product->price * ($product->discount / 100)) * $cart_item->quantity;
+                         $cart_item->save();
+                         return response()->json([
+                             "status" => "success",
+                             "message" => "The product has been added to cart.",
+                             "data" => $cart_item
+                         ], 200);
+                     } else {
+                         return response()->json([
+                             "status" => "error",
+                             "message" => "No product information found.",
+                         ], 500);
+                     }
+                 }
+             } else {
+                 return response()->json([
+                     'status' => 'error',
+                     'message' => 'The method not post',
+                 ]);
+             }
+         }
+     }
+
 
     public function updateCart(Request $request)
     {
