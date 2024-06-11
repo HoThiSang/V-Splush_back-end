@@ -28,7 +28,7 @@ class ProductRequest extends FormRequest
             'quantity' => 'required',
             'price' => 'required|numeric|min:0',
             'brand' => 'required|string',
-            'discount' => 'required|numeric|min:0',
+            'discount' => 'numeric|min:0',
             'ingredient' => 'required|string',
             'description' => 'required|string',
             'category_id' => 'required|integer|min:0',

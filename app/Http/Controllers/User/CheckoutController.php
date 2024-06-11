@@ -61,15 +61,23 @@ class CheckoutController extends Controller
             $vnp_TmnCode = 'X1WL3I2L';
             $vnp_HashSecret = "SFBDIRUMYOSNUZGWWYKVLQSKEDOSOXWY";
 
+            $user = Auth()->user();
+            $user_id = $user->id;
+
+            $carts = new Cart();
+            $cart = $carts->getAllCarts($user_id);
+            $totalPrice = 0;
+            foreach ($cart as $item) {
+                $totalPrice = $item->quantity * $item->unit_price;
+            }
             $vnp_TxnRef = rand(00, 9999);
 
             $vnp_OrderInfo = "Noi dung thanh toan";
             $vnp_OrderType = "billpayment";
-            $totalPrice = $request->totalPrice;
-            $exchangeRate = 23000;
-            $vnpAmount1 = $totalPrice * $exchangeRate;
-            $vnp_Amount = $vnpAmount1;
-            $vnp_Locale = "en";
+            // $totalPricePrice = $request->totalPricePrice;
+            // $vnpAmount1 = $totalPricePrice ;
+            $vnp_Amount = $totalPrice*1000;
+            $vnp_Locale = "vn";
             $vnp_BankCode = 'NCB';
             $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
             $phone = $request->phone;
@@ -95,7 +103,7 @@ class CheckoutController extends Controller
                 "vnp_Amount" => $vnp_Amount,
                 "vnp_Command" => "pay",
                 "vnp_CreateDate" => date('YmdHis'),
-                "vnp_CurrCode" => "USD",
+                "vnp_CurrCode" => "VND",
                 "vnp_IpAddr" => $vnp_IpAddr,
                 "vnp_Locale" => $vnp_Locale,
                 "vnp_OrderInfo" => $vnp_OrderInfo,
@@ -153,19 +161,22 @@ class CheckoutController extends Controller
                     $product = $this->products->subtractQuantity($item->product_id, $item->quantity);
                 }
                 foreach ($cartAll as $item) {
+
+            $carts = new Cart();
+            $cart = $carts->getAllCarts($user_id);
                     $orderItemData = [
                         'quantity' => $item->quantity,
                         'unit_price' => $item->price,
                         'order_id' => $order_id,
                         'product_id' => $item->product_id,
-                        'unit_price' => 200,
+                        'unit_price' =>200,
                         'total_price' => $inputData['vnp_Amount'],
                         'created_at' => now(),
                     ];
 
                     $order_item =   $this->order_item->creatNewOrderItem($orderItemData);
                 }
-                Cart::truncate();
+                // Cart::truncate();
                 $returnData = array(
                     'code' => '00', 'status' => 'success', 'data' => $vnp_Url
                 );
@@ -180,11 +191,18 @@ class CheckoutController extends Controller
             }
         } else {
             $user_id = auth()->id();
+
+            $carts = new Cart();
+            $cart = $carts->getAllCarts($user_id);
+            $totalPrice = 0;
+            foreach ($cart as $item) {
+                $totalPrice = $item->quantity * $item->unit_price;
+            }
             $orderData = [
                 'phone_number' => $request->phone,
                 'address' => $request->address,
                 'order_date' => now(),
-                'total_price' => $request->totalPrice,
+                'total_price' => $totalPrice,
                 'order_status' => 'Ordered',
                 'created_at' => now(),
                 'user_id' => $user_id,
@@ -212,12 +230,18 @@ class CheckoutController extends Controller
 
                     $order_item =   $this->order_item->creatNewOrderItem($orderItemData);
                 }
-                Cart::truncate();
+                // Cart::truncate();
 
                 return  response()->json([
-                    'status' => 'success'
+                    'status' => 'success',
+                    'message'=>'Checkout by COD successfully !',
+                    'data'=> $order
                 ]);
             }
+            return  response()->json([
+                'status' => 'error',
+                'message'=>'Checkout by COD failure !',
+            ]);
         }
     }
 }

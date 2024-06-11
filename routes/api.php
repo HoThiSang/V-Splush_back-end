@@ -69,7 +69,8 @@ Route::prefix('user')->middleware('auth:sanctum')->group(function () {
     Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
     Route::get('/checkout/success', [CheckoutController::class, 'isCheckout'])->name('is-checkout-success');
     Route::post('logout', [UserController::class, 'logout'])->name('logout');
-    Route::post('/update/order/{order_code}', [OrderController::class, 'update'])->name('update-order');
+    Route::post('/update-order/{order_code}', [OrderController::class, 'update'])->name('update-order');
+    Route::get('/show-all-order', [OrderController::class, 'index'])->name('show-all');
 });
 // Admin
 // Route::prefix('admin')->middleware('auth:sanctum')->group(function () {

@@ -26,7 +26,18 @@ class AdminContactController extends Controller
     public function index()
     {
         $contactAll = $this->contact->getAllContact();
-        return $contactAll;
+        if ($contactAll) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Get all contact successfully',
+                'data' => $contactAll
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Contact not found'
+            ], 404);
+        }
     }
     /**
      * @OA\Get(
