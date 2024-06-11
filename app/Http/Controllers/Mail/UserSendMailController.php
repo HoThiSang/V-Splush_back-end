@@ -155,7 +155,7 @@ class UserSendMailController extends Controller
             }
 
 
-            $dataSend = [
+            $sendData = [
                 'email' => $cart->email,
                 'subject' => $cart->subject,
                 'name' => $cart->name,
@@ -173,15 +173,16 @@ class UserSendMailController extends Controller
 
 
             try {
-                Mail::to($cart->email)->send(new AdminReplyMail($dataSend));
+                Mail::to($cart->email)->send(new AdminReplyMail($sendData));
 
 
                 $this->contact->updateContact($id, $cartdata);
 
 
                 return response()->json([
-                    'success' => true,
-                    'message' => 'The email has been successfully sent to the system'
+                    'status' => 'success',
+                    'message' => 'The email has been successfully sent to the system',
+                    'data' => $cartdata
                 ], 200);
             } catch (\Exception $e) {
                 return response()->json([

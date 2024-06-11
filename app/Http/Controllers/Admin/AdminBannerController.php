@@ -219,44 +219,56 @@ class AdminBannerController extends Controller
      *     @OA\Response(response="422", description="Failed to update banner")
      * )
      */
-    public function update(BannerRequest $request, $id)
+
+    public function update(BannerRequest $request, string $id)
     {
-        $banner = $this->banner->getbannerById($id);
-        if (!empty($banner)) {
-            $bannerData = [
-                'title' => $request->input('title'),
-                'content' => $request->input('content'),
-                'sub_title' => $request->input('sub_title'),
-                'updated_at' => now()
-            ];
-            if ($request->hasFile('image_url')) {
-                $file = $request->file('image_url');
-                $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
-                    'folder' => 'upload_image'
-                ])->getSecurePath();
-                $publicId = Cloudinary::getPublicId();
-                $bannerData['image_name'] = $request->title;
-                $bannerData['image_url'] = $uploadedFileUrl;
-                $bannerData['publicId'] = $publicId;
-            }
-            $bannerInserted = $this->banner->updateBanner($id, $bannerData);
-            if ($bannerInserted) {
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Update banner successfully',
-                    'data' => $bannerInserted
-                ], 200);
+        if ($request->method() === 'POST') {
+            $banner = $this->banner->getBannerById($id);
+            if (!empty($banner)) {
+                $bannerData = [
+                    'title' => $request->title,
+                    'content' => $request->content,
+                    'sub_title' => $request->sub_title,
+                ];
+
+                if ($request->hasFile('image_url')) {
+                    $file = $request->file('image_url');
+                    $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
+                        'folder' => 'upload_image'
+                    ])->getSecurePath();
+                    $publicId = Cloudinary::getPublicId();
+
+                    $bannerData['image_name'] = $request->title;
+                    $bannerData['image_url'] = $uploadedFileUrl;
+                    $bannerData['publicId'] = $publicId;
+                }
+                unset($bannerData['deleted_at']);
+
+                $bannerUpdated = $this->banner->updateBanner($id, $bannerData);
+
+                if ($bannerUpdated) {
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Banner updated successfully',
+                        'data' => $bannerUpdated
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Failed to update banner',
+                    ], 422);
+                }
             } else {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Failed to update banner',
-                ], 422);
+                    'message' => 'Banner not found',
+                ], 404);
             }
         } else {
             return response()->json([
                 'status' => 'error',
-                'message' => 'banner not found',
-            ], 404);
+                'message' => 'Invalid request method',
+            ], 405);
         }
     }
     /**
@@ -301,6 +313,25 @@ class AdminBannerController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Banner not found with id ' . $id,
+            ], 404);
+        }
+    }
+
+    public function showBannerById($id)
+    {
+
+        $banner = $this->banner->getBannerById($id);
+        if (!empty($banner)) {
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Get one banner successfully!',
+                'data' => $banner
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Not found banner with id !' . $id,
             ], 404);
         }
     }

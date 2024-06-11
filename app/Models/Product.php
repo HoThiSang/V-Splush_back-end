@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
@@ -27,11 +28,19 @@ class Product extends Model
     protected $casts = [
         'deleted_at' => 'datetime',
     ];
+
+    /**
+     * The name of the "deleted at" column.
+     *
+     * @var string
+     */
+    const DELETED_AT = 'deleted_at';
+
     public function images()
     {
         return $this->hasMany('App\Models\Image', 'product_id', 'id');
     }
-    public function getAllProduct()
+    public function getAllProduct($perPage = null)
     {
         $products = DB::table('products')
             ->leftJoin('images', 'products.id', '=', 'images.product_id')

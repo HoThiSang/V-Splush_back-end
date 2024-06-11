@@ -103,7 +103,18 @@ class OrderController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
-    {
-        //
+{
+    $order = $this->orders->findOrFail($id);
+
+    try {
+        $order->delete();
+        return response()->json([
+            'message' => 'Order deleted successfully'
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Failed to delete order'
+        ], 500);
     }
+}
 }

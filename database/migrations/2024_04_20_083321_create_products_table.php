@@ -19,13 +19,12 @@ return new class extends Migration
             $table->longText('ingredient')->nullable();
             $table->longText('description')->nullable();
             $table->string('brand')->nullable();
-            $table->decimal('discount',10, 2);
+            $table->decimal('discount', 10, 2);
             $table->unsignedBigInteger('category_id');
             $table->foreign('category_id')->references('id')->on('categories')->onUpdate('cascade');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->nullable()->default(null)->onUpdate(\Illuminate\Support\Facades\DB::raw('CURRENT_TIMESTAMP'));
-            $table->timestamp('deleted_at')->nullable()->default(null)->onUpdate(\Illuminate\Support\Facades\DB::raw('CURRENT_TIMESTAMP'));
-
+            $table->timestamp('deleted_at')->nullable()->default(null);
         });
     }
 

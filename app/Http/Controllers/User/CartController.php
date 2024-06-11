@@ -25,14 +25,22 @@ class CartController extends Controller
     }
     public function showCart()
     {
+        $user = Auth::user();
+        $user_id = $user->id;
         $check = 'error';
-        if (Auth()->check()) {
-            $user = Auth()->user();
-            $user_id = $user->id;
+        // $total_price = 0;
+        if (auth()->check()) {
+            $user_id = Auth::id();
             $carts = $this->cart->getAllCarts($user_id);
+            // foreach ($carts as $cart) {
+            //     $total_price += $cart->total_price;
+            // }
+            // dd($total_price);
+            $count = count($carts);
             $check = 'success';
             return response()->json([
                 'status' => $check,
+                'count' => $count,
                 'data' => $carts
             ]);
         }
@@ -70,14 +78,17 @@ class CartController extends Controller
             if ($request->isMethod('post')) {
                 $product_id = $request->product_id;
                 $quantity = $request->quantity;
+
                 $user = Auth()->user();
                 $user_id = $user->id;
                 $existing_cart_item = Cart::where('product_id', $product_id)
                     ->where('user_id', $user_id)
                     ->first();
                 if ($existing_cart_item) {
-                    $existing_cart_item->quantity = $existing_cart_item->quantity + 1;
-                    $existing_cart_item->total_price = number_format($existing_cart_item->unit_price * $existing_cart_item->quantity, 2, '.', '');
+                    $existing_cart_item->quantity = $existing_cart_item->quantity +  $request->quantity;
+                    $product = $this->product->getProductById($product_id);
+                    $discounted_price = $product->price - ($product->price * ($product->discount / 100));
+                    $existing_cart_item->total_price = $discounted_price * $existing_cart_item->quantity;
                     $existing_cart_item->save();
                     return response()->json([
                         "status" => "success",
@@ -116,6 +127,7 @@ class CartController extends Controller
             }
         }
     }
+
 
 
     public function updateCart(Request $request)
