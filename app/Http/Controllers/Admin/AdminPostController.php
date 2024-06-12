@@ -94,8 +94,6 @@ class AdminPostController extends Controller
      */
     public function store(PostRequest $request)
     {
-        if (Auth()->check()) {
-            $user_id = Auth()->user()->id;
         if ($request->isMethod('POST')) {
             if ($request->hasFile('image_url')) {
                 $file = $request->file('image_url');
@@ -139,7 +137,7 @@ class AdminPostController extends Controller
             'status' => 'error',
             'message' => 'Method is not supported',
         ], 405);
-    }
+    // }
 }
     /**
      * Display the specified resource.
@@ -235,7 +233,7 @@ class AdminPostController extends Controller
      *             )
      *         )
      *     ),
-     *   
+     *
      *     @OA\Response(response="200", description="Success"),
      *     @OA\Response(response="404", description="Category not found"),
      *     @OA\Response(response="500", description="Internal Server Error")

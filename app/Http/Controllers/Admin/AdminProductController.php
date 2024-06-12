@@ -44,19 +44,18 @@ class AdminProductController extends Controller
 
     {
         $productAll = $this->products->getAllProduct();
-        if($productAll){
+        if ($productAll) {
             return response()->json([
                 'status' => 'success',
                 'message' => 'Get all product successfully',
-                'data'=> $productAll
+                'data' => $productAll
             ], 200);
-        }else {
+        } else {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Product not found'
-            ],404);
+            ], 404);
         }
-
     }
     /**
      * @OA\Get(
@@ -89,12 +88,14 @@ class AdminProductController extends Controller
         $imageAll = $this->image->getAllImageByProductId($id);
         $category_id = $productDetail->category_id;
         $category = $this->categories->getCategoryById($category_id);
+        $categories = $this->categories->getAllCategories();
 
         return response()->json([
             'status' => 'success',
-            'productDetail' => $productDetail,
-            'imageAll' => $imageAll,
-            'category' => $category
+            'productData' => $productDetail,
+            'imageData' => $imageAll,
+            'categoryData' => $category,
+            'categoriesData' => $categories
         ], 200);
     }
 
@@ -255,10 +256,10 @@ class AdminProductController extends Controller
                         ], 500);
                     }
                 } else {
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Missing image fields',
-                    ], 500);
+                    // return response()->json([
+                    //     'status' => 'error',
+                    //     'message' => 'Missing image fields',
+                    // ], 500);
                 }
             } else {
                 return response()->json([
@@ -392,6 +393,82 @@ class AdminProductController extends Controller
      *     @OA\Response(response="500", description="Server error")
      * )
      */
+    // public function update(ProductRequest $request, $id)
+    // {
+    //     $product = $this->products->findById($id);
+
+    //     if (empty($product)) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Product not found',
+    //         ], 404);
+    //     }
+
+    //     if (!$request->isMethod('post')) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Invalid request method',
+    //         ], 405);
+    //     }
+
+    //     $dataUpdate = [
+    //         'product_name' => $request->product_name,
+    //         'quantity' => $request->quantity,
+    //         'price' => $request->price,
+    //         'ingredient' => $request->ingredient,
+    //         'description' => $request->description,
+    //         'brand' => $request->brand,
+    //         'discount' => $request->discount,
+    //         'category_id' => $request->category_id,
+    //         'updated_at' => now()
+    //     ];
+    //     $updatedProduct = $this->products->updateProduct($id, $dataUpdate);
+    //     // return response()->json([
+    //     //     'status' => 'error',
+    //     //     'message' => 'Thành công',
+    //     // ], 200);
+    //     if (!$updatedProduct) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Failed to update product',
+    //         ], 500);
+    //     }
+    //     $uploadedImages = [];
+
+    //     if ($request->hasFile('image_url')) {
+    //         $images = $this->image->getImageByIdProduct($id);
+
+    //         $i = 0;
+    //         foreach ($request->file('image_url') as $file) {
+    //             $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
+    //                 'folder' => 'upload_image'
+    //             ])->getSecurePath();
+
+    //             $publicId = Cloudinary::getPublicId();
+
+    //             $dataImage = [
+    //                 'image_name' => $request->product_name,
+    //                 'image_url' =>  $uploadedFileUrl,
+    //                 'product_id' => $id,
+    //                 'publicId' => $publicId,
+    //                 'created_at' => now()
+    //             ];
+    //             $imageId = $images[$i]->id;
+    //             $uploadedImages[] = $dataImage;
+
+    //             $this->image->updateImage($imageId, $dataImage);
+    //             $i++;
+    //         }
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'message' => 'Product updated successfully',
+    //         ], 200);
+    //     }
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'message' => 'Product updated successfully',
+    //     ], 200);
+    // }
     public function update(ProductRequest $request, $id)
     {
         $product = $this->products->findById($id);
@@ -421,6 +498,7 @@ class AdminProductController extends Controller
             'category_id' => $request->category_id,
             'updated_at' => now()
         ];
+
         $updatedProduct = $this->products->updateProduct($id, $dataUpdate);
 
         if (!$updatedProduct) {
@@ -429,43 +507,63 @@ class AdminProductController extends Controller
                 'message' => 'Failed to update product',
             ], 500);
         }
+
+        $images = $this->image->getImageByIdProduct($id);
         $uploadedImages = [];
 
         if ($request->hasFile('image_url')) {
-            $images = $this->image->getImageByIdProduct($id);
+            if (count($images) > 0) {
+                $i = 0;
+                foreach ($images as $image) {
+                    $uploadedFileUrl = Cloudinary::upload($request->file('image_url')[$i]->getRealPath(), [
+                        'folder' => 'upload_image'
+                    ])->getSecurePath();
 
-            $i = 0;
-            foreach ($request->file('image_url') as $file) {
-                $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
-                    'folder' => 'upload_image'
-                ])->getSecurePath();
+                    $publicId = Cloudinary::getPublicId();
 
-                $publicId = Cloudinary::getPublicId();
+                    $dataImage = [
+                        'image_name' => $request->product_name,
+                        'image_url' =>  $uploadedFileUrl,
+                        'product_id' => $id,
+                        'publicId' => $publicId,
+                        'updated_at' => now()
+                    ];
 
-                $dataImage = [
-                    'image_name' => $request->product_name,
-                    'image_url' =>  $uploadedFileUrl,
-                    'product_id' => $id,
-                    'publicId' => $publicId,
-                    'created_at' => now()
-                ];
-                $imageId = $images[$i]->id;
-                $uploadedImages[] = $dataImage;
+                    $this->image->updateImage($image->id, $dataImage);
+                    $uploadedImages[] = $dataImage;
+                    $i++;
+                }
+            } else {
+                foreach ($request->file('image_url') as $file) {
+                    $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
+                        'folder' => 'upload_image'
+                    ])->getSecurePath();
 
-                $this->image->updateImage($imageId, $dataImage);
-                $i++;
+                    $publicId = Cloudinary::getPublicId();
+
+                    $dataImage = [
+                        'image_name' => $request->product_name,
+                        'image_url' =>  $uploadedFileUrl,
+                        'product_id' => $id,
+                        'publicId' => $publicId,
+                        'created_at' => now()
+                    ];
+
+                    $imageId = $this->image->createImageByProductId($dataImage, $id);
+                    $uploadedImages[] = $dataImage;
+                }
             }
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Product updated successfully',
-            ], 200);
         }
+
         return response()->json([
             'status' => 'success',
             'message' => 'Product updated successfully',
+            'data' => [
+                'product' => $updatedProduct,
+                'images' => $uploadedImages
+            ]
         ], 200);
     }
-
 
     /**
      * Remove the specified resource from storage.

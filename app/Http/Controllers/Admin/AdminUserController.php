@@ -11,7 +11,7 @@ class AdminUserController extends Controller
 {
     protected $users;
 
-    
+
     public function __construct()
     {
         $this->users = new User();
@@ -29,14 +29,14 @@ class AdminUserController extends Controller
 
         if (!empty($allUsers)) {
             return response()->json([
-               'status' =>'success',
-               'message' => 'Users retrieved successfully',
+                'status' => 'success',
+                'message' => 'Users retrieved successfully',
                 'data' => $allUsers
             ], 200);
         } else {
             return response()->json([
-               'status' => 'error',
-               'message' => 'Failed to retrieve users',
+                'status' => 'error',
+                'message' => 'Failed to retrieve users',
             ], 500);
         }
     }
@@ -82,18 +82,28 @@ class AdminUserController extends Controller
         if (!$user) {
             return response()->json(['error' => 'User not found'], 404);
         }
-        $order = Order::where('user_id', $user->id)->first();
-        if (!$order) {
-            $user->status = 'disabled';
-            $user->save();
-            return response()->json(['message' => 'User disabled successfully']);// , 'user' => $user
-        }
-        if ($order->status === 'delivered') {
-            $user->status = 'disabled';
-            $user->save();
-            return response()->json(['message' => 'User disabled successfully']); // , 'user' => $user
+
+        $newStatus = $user->status === 'Enabled' ? 'Disabled' : 'Enabled';
+
+        if ($newStatus === 'Disabled') {
+            $order = Order::where('user_id', $user->id)->first();
+            if (!$order || $order->status === 'delivered') {
+                $user->status = 'Disabled';
+                $user->save();
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'User disabled successfully'
+                ]);
+            } else {
+                return response()->json(['error' => 'Cannot disable user. Order not delivered'], 400);
+            }
         } else {
-            return response()->json(['error' => 'Cannot disable user. Order not delivered'], 400);
+            $user->status = 'Enabled';
+            $user->save();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User enabled successfully'
+            ]);
         }
     }
 

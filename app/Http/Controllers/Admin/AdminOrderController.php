@@ -17,7 +17,7 @@ class AdminOrderController extends Controller
         $this->orders = new Order();
     }
 
-       /**
+    /**
      * @OA\Get(
      *     path="/api/admin-show-all-orders",
      *     summary="Get all orders",
@@ -78,7 +78,7 @@ class AdminOrderController extends Controller
      */
 
 
-        /**
+    /**
      * @OA\Get(
      *     path="/api/admin-show-detail-order/{id}",
      *     summary="Detail a order by ID",
@@ -124,7 +124,7 @@ class AdminOrderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-      /**
+    /**
      * @OA\Post(
      *     path="/api/admin-update-status-order/{id}",
      *     summary="Update a status order by ID",
@@ -166,8 +166,8 @@ class AdminOrderController extends Controller
                     return response()->json([
                         'status' => 'success',
                         'message' => 'update status order successfully',
-                        'data' => 200
-                    ]);
+                        'data' => $order
+                    ], 200);
                 } else {
                     return response()->json([
                         'status' => 'error',

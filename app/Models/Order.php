@@ -36,6 +36,7 @@ class Order extends Model
             ->where('id', $id)
             ->first();
     }
+
     public function updateStatusOrder($id, $data)
     {
         return DB::table($this->table)
@@ -60,5 +61,21 @@ class Order extends Model
         return DB::table($this->table)
             ->where('order_code', $order_code)
             ->update($data);
+    }
+
+    public function getAllOrder()
+    {
+        return Order::join('users', 'users.id', '=', 'orders.user_id')
+            ->whereNull('orders.deleted_at')
+            ->select('orders.id', 'orders.address', 'orders.phone_number', 'orders.order_status', 'orders.total_price', 'orders.payment_method', 'orders.created_at', 'users.name', 'users.phone')
+            ->get();
+    }
+    public function getAllOrderByUserId($user_id)
+    {
+        return Order::join('users', 'users.id', '=', 'orders.user_id')
+            ->where('user_id', $user_id)
+            ->whereNull('orders.deleted_at')
+            ->select('orders.id', 'orders.address', 'orders.phone_number', 'orders.order_status', 'orders.total_price', 'orders.payment_method', 'orders.created_at', 'users.name', 'users.phone')
+            ->get();
     }
 }

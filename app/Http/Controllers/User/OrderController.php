@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -18,7 +19,19 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        if(auth()->check()){
+            $user = Auth()->user();
+            $user_id= $user->id;
+            $orders = $this->orders->getAllOrderByUserId($user_id);
+            return response()->json([
+                'status'=>'success',
+                'data'=>$orders
+            ]);
+        }
+        return response()->json([
+            'status'=>'error',
+        ]);
+
     }
 
     /**
@@ -90,7 +103,18 @@ class OrderController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
-    {
-        //
+{
+    $order = $this->orders->findOrFail($id);
+
+    try {
+        $order->delete();
+        return response()->json([
+            'message' => 'Order deleted successfully'
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Failed to delete order'
+        ], 500);
     }
+}
 }

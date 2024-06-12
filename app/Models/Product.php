@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
@@ -14,24 +15,48 @@ class Product extends Model
     protected $fillable = [
         'product_name',
         'description',
-        'deleted_at',
         'quantity',
         'price',
         'discount',
         'quantity'
     ];
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'deleted_at' => 'datetime',
+    ];
+
+    /**
+     * The name of the "deleted at" column.
+     *
+     * @var string
+     */
+    const DELETED_AT = 'deleted_at';
+
     public function images()
     {
         return $this->hasMany('App\Models\Image', 'product_id', 'id');
     }
-    public function getAllProduct()
+    public function getAllProduct($perPage = null)
     {
         $products = DB::table('products')
             ->leftJoin('images', 'products.id', '=', 'images.product_id')
             ->whereNull('products.deleted_at')
-            ->select('products.*', 'images.image_url')
+            ->select('products.*', DB::raw('GROUP_CONCAT(images.image_url) AS image_urls'))
+            ->groupBy('products.id')
+            ->orderBy('products.id')
             ->get();
-        return $products;
+
+        $productsWithFirstImage = $products->map(function ($product) {
+            $imageUrls = explode(',', $product->image_urls);
+            $product->image_url = $imageUrls[0] ?? null;
+            return $product;
+        });
+
+        return $productsWithFirstImage;
     }
     public function getProductById($id)
     {
@@ -92,13 +117,13 @@ class Product extends Model
 
     public function getByKeyword($keyword)
     {
-     return   DB::table('products')
-        ->join('images', 'products.id', '=', 'images.product_id')
-        ->where('products.product_name', 'LIKE', '%' . $keyword . '%')
-        ->select('products.id', 'products.product_name',  'products.price', 'products.discount', DB::raw('MAX(images.image_url) as image_url'))
-        ->groupBy('products.id')
-        ->orderBy('products.id')
-        ->get();
+        return   DB::table('products')
+            ->join('images', 'products.id', '=', 'images.product_id')
+            ->where('products.product_name', 'LIKE', '%' . $keyword . '%')
+            ->select('products.id', 'products.product_name',  'products.price', 'products.discount', DB::raw('MAX(images.image_url) as image_url'))
+            ->groupBy('products.id')
+            ->orderBy('products.id')
+            ->get();
     }
 
     public function getPoplurProduct()
