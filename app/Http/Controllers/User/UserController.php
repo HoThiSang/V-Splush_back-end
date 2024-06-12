@@ -129,49 +129,67 @@ class UserController extends Controller
      * )
      */
 
-    public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+     public function login(Request $request)
+     {
 
-        $user = User::where('email', $request->email)->first();
+         $validator = Validator::make($request->all(), [
+             'email' => 'required|email',
+             'password' => 'required',
+         ]);
 
-        if ($user && Hash::check($request->password, $user->password)) {
-            if (auth()->attempt(array('email' => $request->email, 'password' => $request->password))) {
-                $role_id = $user->role_id;
-                if ($role_id === 2) {
-                    $accessToken = $user->createToken($request->email)->plainTextToken;
-                    return response()->json([
-                        'token' => $accessToken,
-                        'message' => ' Admin Login Success',
-                        'status' => 'success',
-                        'user' => $user
-                    ], 200);
-                } elseif ($role_id === 1) {
-                    $accessToken = $user->createToken($request->email)->plainTextToken;
-                    return response()->json([
-                        'token' => $accessToken,
-                        'message' => ' User Login Success',
-                        'status' => 'success',
-                        'user' => $user
-                    ], 200);
-                } else {
-                    return response()->json([
-                        'message' => 'You are not authorized to access this resource',
-                        'status' => 'failed',
-                    ], 403);
-                }
-            }
+         if ($validator->fails()) {
+             return response()->json([
+                 'errors' => $validator->errors()->all(),
+                 'status' => 'failed'
+             ], 422);
+         }
 
-            return response()->json([
-                'message' => 'Invalid Credentials',
-                'status' => 'failed'
-            ], 401);
-        }
-    }
+         $user = User::where('email', $request->email)->first();
 
+         if (!$user) {
+             return response()->json([
+                 'message' => 'Email does not exist',
+                 'status' => 'failed'
+             ], 404);
+         }
+         if (!Hash::check($request->password, $user->password)) {
+             return response()->json([
+                 'message' => 'Incorrect password',
+                 'status' => 'failed'
+             ], 401);
+         }
+
+         if (auth()->attempt(['email' => $request->email, 'password' => $request->password])) {
+             $role_id = $user->role_id;
+             $accessToken = $user->createToken($request->email)->plainTextToken;
+
+             if ($role_id === 2) {
+                 return response()->json([
+                     'token' => $accessToken,
+                     'message' => 'Admin Login Success',
+                     'status' => 'success',
+                     'user' => $user
+                 ], 200);
+             } elseif ($role_id === 1) {
+                 return response()->json([
+                     'token' => $accessToken,
+                     'message' => 'User Login Success',
+                     'status' => 'success',
+                     'user' => $user
+                 ], 200);
+             } else {
+                 return response()->json([
+                     'message' => 'You are not authorized to access this resource',
+                     'status' => 'failed',
+                 ], 403);
+             }
+         }
+
+         return response()->json([
+             'message' => 'Invalid Credentials',
+             'status' => 'failed'
+         ], 401);
+     }
     /**
      * @OA\Post(
      *     path="/api/logout",

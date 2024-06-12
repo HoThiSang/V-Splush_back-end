@@ -115,4 +115,9 @@ Route::get('/categories/{id}', [AdminCategoryController::class, 'edit'])->name('
 Route::post('/categories-create', [AdminCategoryController::class, 'store'])->name('create-category');
 Route::put('/categories-update/{id}', [AdminCategoryController::class, 'update'])->name('update-category');
 Route::delete('/categories-delete/{id}', [AdminCategoryController::class, 'destroy'])->name('update-category');
+
+// User
+Route::get('show-all-users', [AdminUserController::class, 'index']);
+Route::post('update-user-status/{id}', [AdminUserController::class, 'update']);
+Route::get('/admin-home-page', [AdminController::class, 'index']);
 // });

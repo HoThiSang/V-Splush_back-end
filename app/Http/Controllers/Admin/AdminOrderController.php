@@ -29,7 +29,7 @@ class AdminOrderController extends Controller
     public function index(Request $request)
     {
         if ($request->isMethod('get')) {
-            $orders = $this->orders->getAllOrder();
+            $orders = $this->orders->getAllOrders();
             if ($orders) {
                 return response()->json([
                     'status' => 'success',
@@ -166,8 +166,8 @@ class AdminOrderController extends Controller
                     return response()->json([
                         'status' => 'success',
                         'message' => 'update status order successfully',
-                        'data' => 200
-                    ]);
+                        'data' => $order
+                    ], 200);
                 } else {
                     return response()->json([
                         'status' => 'error',

@@ -132,13 +132,7 @@ class CartController extends Controller
 
     public function updateCart(Request $request)
     {
-        // dd(Auth::user());
-        // if (!auth()->check()) {
-        //     return response()->json([
-        //         'message' => 'Unauthenticated',
-        //         'status' => 'error'
-        //     ], 401);
-        // } else {
+
         $user = Auth()->user();
         $user_id = $user->id;
         $data = $request->all();
@@ -174,17 +168,12 @@ class CartController extends Controller
 
     public function updateCartSubtract(Request $request)
     {
-        // if (!Auth()->check()) {
-        //     return response()->json([
-        //         'status' => 'error',
-        //         'message' => 'User is not authenticated'
-        //     ], 401);
-        // }
         $user = Auth()->user();
         $user_id = $user->id;
         $data = $request->all();
+        $productId = (int) $data['product_id'];
         if (isset($data['product_id'])) {
-            $cartItem = $this->cart->findItemById($data['product_id'], $user_id);
+            $cartItem = $this->cart->findItemById($productId, $user_id);
             if ($cartItem) {
                 $productPrice = $cartItem->unit_price;
                 $productQuantity = $cartItem->quantity;
