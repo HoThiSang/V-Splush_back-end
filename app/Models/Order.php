@@ -75,7 +75,7 @@ class Order extends Model
         return Order::join('users', 'users.id', '=', 'orders.user_id')
             ->where('user_id', $user_id)
             ->whereNull('orders.deleted_at')
-            ->select('orders.id', 'orders.address', 'orders.phone_number', 'orders.order_status', 'orders.total_price', 'orders.payment_method', 'orders.created_at', 'users.name', 'users.phone')
+            ->select('orders.id', 'orders.address', 'orders.phone_number', 'orders.order_status','orders.order_code',  'orders.total_price', 'orders.payment_method', 'orders.created_at', 'users.name', 'users.phone')
             ->get();
     }
 }

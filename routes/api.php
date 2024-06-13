@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\Mail\UserSendMailController;
 use App\Http\Controllers\Admin\AdminWishListControllor;
 use App\Http\Controllers\Admin\AdminBannerController;
+use App\Http\Controllers\User\PostController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\CheckoutController;
@@ -51,7 +52,8 @@ Route::get('/test', [AdminCategoryController::class, 'test']);
 Route::post('register', [UserController::class, 'register'])->name('register');
 Route::post('login', [UserController::class, 'login'])->name('login');
 Route::get('/search-product/{keyword}', [ProductController::class, 'search'])->name('search-product');
-Route::get('/popular-product', [ProductController::class, 'getPopularProduct'])->name('getPopularProduct-product');
+Route::get('/popular-product', [ProductController::class, 'index'])->name('getPopularProduct-product');
+Route::get('/popular-post', [PostController::class, 'index'])->name('get-post');
 // Users
 
 Route::prefix('user')->middleware('auth:sanctum')->group(function () {
@@ -71,7 +73,7 @@ Route::prefix('user')->middleware('auth:sanctum')->group(function () {
     Route::post('logout', [UserController::class, 'logout'])->name('logout');
     Route::post('/update-order/{order_code}', [OrderController::class, 'update'])->name('update-order');
     Route::get('/show-all-order', [OrderController::class, 'index'])->name('show-all');
-    Route::get('/delete-order/{id}', [OrderController::class, 'destroy'])->name('delete-order');
+    Route::delete('/delete-order/{id}', [OrderController::class, 'destroy'])->name('delete-order');
 });
 // Admin
 // Route::prefix('admin')->middleware('auth:sanctum')->group(function () {

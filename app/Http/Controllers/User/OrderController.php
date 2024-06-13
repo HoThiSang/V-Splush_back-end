@@ -19,19 +19,18 @@ class OrderController extends Controller
      */
     public function index()
     {
-        if(auth()->check()){
+        if (auth()->check()) {
             $user = Auth()->user();
-            $user_id= $user->id;
+            $user_id = $user->id;
             $orders = $this->orders->getAllOrderByUserId($user_id);
             return response()->json([
-                'status'=>'success',
-                'data'=>$orders
+                'status' => 'success',
+                'data' => $orders
             ]);
         }
         return response()->json([
-            'status'=>'error',
+            'status' => 'error',
         ]);
-
     }
 
     /**
@@ -71,50 +70,72 @@ class OrderController extends Controller
      */
     public function update(Request $request, string $order_code)
     {
-            $order = $this->orders->getOrderById($order_code);
-            if (!empty($order)) {
-                $dataUpdate = [
-                    'order_status' =>'Cancel',
-                    'updated_at' => now()
-                ];
-                $order = $this->orders->updateStatusOrderByOrrderCode($order_code, $dataUpdate);
-                if ($order) {
-                    return response()->json([
-                        'status' => 'success',
-                        'message' => 'update status order successfully',
-                        'data' => 200
-                    ]);
-                } else {
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Update status prder not successfully',
-                    ], 500);
-                }
+        $order = $this->orders->getOrderById($order_code);
+        if (!empty($order)) {
+            $dataUpdate = [
+                'order_status' => 'Cancel',
+                'updated_at' => now()
+            ];
+            $order = $this->orders->updateStatusOrderByOrrderCode($order_code, $dataUpdate);
+            if ($order) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'update status order successfully',
+                    'data' => 200
+                ]);
             } else {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'This order does not exist'
-                ]);
+                    'message' => 'Update status prder not successfully',
+                ], 500);
             }
-
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'This order does not exist'
+            ]);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-{
-    $order = $this->orders->findOrFail($id);
+    // public function destroy(string $id)
+    // {
+    //     $order = $this->orders->findOrFail($id);
 
-    try {
-        $order->delete();
-        return response()->json([
-            'message' => 'Order deleted successfully'
-        ], 200);
-    } catch (\Exception $e) {
-        return response()->json([
-            'message' => 'Failed to delete order'
-        ], 500);
+    //     try {
+    //         $order->order_status = 'Cancelled';
+    //         $order->save();
+    //         return response()->json([
+    //             'message' => 'Order status updated to Cancelled'
+    //         ], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'message' => 'Failed to update order status'
+    //         ], 500);
+    //     }
+    // }
+    public function destroy(string $id)
+    {
+        $order = $this->orders->find($id);
+
+        if (!$order) {
+            return response()->json([
+                'message' => 'Order not found'
+            ], 404);
+        }
+
+        try {
+            $order->order_status = 'Cancelled';
+            $order->save();
+            return response()->json([
+                'message' => 'Order status updated to Cancelled'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update order status'
+            ], 500);
+        }
     }
-}
 }
