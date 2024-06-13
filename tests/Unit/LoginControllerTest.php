@@ -25,7 +25,7 @@ class LoginControllerTest extends TestCase
         $user = Mockery::mock(User::class)->makePartial();
         $user->id = 1;
         $user->email = 'thisang@gmail.com';
-        $user->role_id = 1; 
+        $user->role_id = 1;
         $user->password = Hash::make('correctpassword');
 
         $request = Request::create('/api/user/login', 'POST', [
@@ -108,13 +108,13 @@ class LoginControllerTest extends TestCase
     public function testCorrectEmailWrongPassword()
     {
         $user = User::factory()->create([
-            'email' => 'user@example.com',
+            'email' => 'thisang@gmail.com',
             'password' => Hash::make('correctpassword'),
         ]);
 
         $request = Request::create('/api/user/login', 'POST', [
             'email' => $user->email,
-            'password' => 'wrong-password',
+            'password' => 'wrongpassword',
         ]);
 
         $controller = new UserController();
