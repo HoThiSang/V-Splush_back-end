@@ -19,17 +19,18 @@ class LoginControllerTest extends TestCase
      */
     use RefreshDatabase;
 
+
     public function testSuccessfulLogin()
     {
         $user = Mockery::mock(User::class)->makePartial();
         $user->id = 1;
         $user->email = 'thisang@gmail.com';
-        $user->role_id = 1;
-        $user->password = Hash::make('sang123@');
+        $user->role_id = 1; 
+        $user->password = Hash::make('correctpassword');
 
         $request = Request::create('/api/user/login', 'POST', [
             'email' => $user->email,
-            'password' => 'sang123@',
+            'password' => 'correctpassword',
         ]);
 
         Validator::shouldReceive('make')
@@ -51,7 +52,7 @@ class LoginControllerTest extends TestCase
             ->once()
             ->with([
                 'email' => $user->email,
-                'password' => 'sang123@',
+                'password' => 'correctpassword',
             ])
             ->andReturn(true);
 
@@ -85,7 +86,7 @@ class LoginControllerTest extends TestCase
 
     public function testEmptyEmailAndPassword()
     {
-        $request = Request::create('/login', 'POST', [
+        $request = Request::create('/api/user/login', 'POST', [
             'email' => '',
             'password' => '',
         ]);
@@ -108,12 +109,12 @@ class LoginControllerTest extends TestCase
     {
         $user = User::factory()->create([
             'email' => 'user@example.com',
-            'password' => Hash::make('sang123@'),
+            'password' => Hash::make('correctpassword'),
         ]);
 
-        $request = Request::create('/login', 'POST', [
+        $request = Request::create('/api/user/login', 'POST', [
             'email' => $user->email,
-            'password' => 'sang123',
+            'password' => 'wrong-password',
         ]);
 
         $controller = new UserController();
@@ -129,7 +130,45 @@ class LoginControllerTest extends TestCase
         $this->assertEquals('Incorrect password', $responseData['message']);
     }
 
-    
+    public function testWrongEmailCorrectPassword()
+    {
+        $request = Request::create('/api/user/login', 'POST', [
+            'email' => 'wrong@example.com',
+            'password' => 'correctpassword',
+        ]);
+
+        $controller = new UserController();
+        $response = $controller->login($request);
+
+        $this->assertEquals(404, $response->status());
+
+        $responseData = json_decode($response->getContent(), true);
+
+        $this->assertArrayHasKey('status', $responseData);
+        $this->assertArrayHasKey('message', $responseData);
+        $this->assertEquals('failed', $responseData['status']);
+        $this->assertEquals('Email does not exist', $responseData['message']);
+    }
+
+    public function testWrongEmailAndPassword()
+    {
+        $request = Request::create('/api/user/login', 'POST', [
+            'email' => 'wrong@example.com',
+            'password' => 'wrong-password',
+        ]);
+
+        $controller = new UserController();
+        $response = $controller->login($request);
+
+        $this->assertEquals(404, $response->status());
+
+        $responseData = json_decode($response->getContent(), true);
+
+        $this->assertArrayHasKey('status', $responseData);
+        $this->assertArrayHasKey('message', $responseData);
+        $this->assertEquals('failed', $responseData['status']);
+        $this->assertEquals('Email does not exist', $responseData['message']);
+    }
 
     protected function tearDown(): void
     {
