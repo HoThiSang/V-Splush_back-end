@@ -29,6 +29,16 @@ class Cart extends Model
         $cart = DB::table('carts')->where('user_id', $user_id)->get();
         return $cart;
     }
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    // // Định nghĩa relationship với User
+    // public function user()
+    // {
+    //     return $this->belongsTo(User::class);
+    // }
 
     public function getAllCarts($user_id)
     {
