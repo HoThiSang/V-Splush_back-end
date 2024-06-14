@@ -31,7 +31,7 @@ class Post extends Model
         }
         return null;
     }
-
+ 
 
     public function getPostById($id)
     {
@@ -51,14 +51,4 @@ class Post extends Model
             ->where('id', $id)
             ->update($data);
     }
-
-    public function getAllPosts($limit = 3)
-{
-    $posts = DB::table($this->table)
-        ->take($limit) 
-        ->get();
-
-    return $posts;
-}
-
 }

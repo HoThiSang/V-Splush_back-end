@@ -19,19 +19,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $productAll = $this->products->getTopDiscountedProducts();
-        if ($productAll) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Get all product successfully',
-                'data' => $productAll
-            ], 200);
-        } else {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Product not found'
-            ], 404);
-        }
+        //
     }
 
      /**
@@ -46,7 +34,7 @@ class ProductController extends Controller
      *         description="keyword of the product to search",
      *    @OA\Schema(
      *             type="string",
-     *
+     *             
      *         )
      *     ),
      *     @OA\Response(response="200", description="Success"),
@@ -55,7 +43,7 @@ class ProductController extends Controller
      */
     public function search(Request $request, $keyword)
     {
-
+    
         $productSearch =$this->products->getByKeyWord($keyword);
         if(!empty($productSearch)){
             return response()->json([
@@ -133,5 +121,5 @@ class ProductController extends Controller
             ], 404);
         }
     }
-
+    
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace Tests\Feature;
 
 use Mockery;
@@ -22,14 +21,12 @@ class AdminCategoryControllerTest extends TestCase
     {
         $categoryId = 1;
 
-        // Mock CategoryService
         $mockCategoryService = Mockery::mock(CategoryService::class);
         $mockCategoryService->shouldReceive('deleteCategory')
             ->once()
             ->with($categoryId)
             ->andReturn(true);
 
-        // Inject mock service into controller
         $controller = new AdminCategoryControllerMock($mockCategoryService);
 
         $response = $controller->destroy($categoryId);
@@ -46,32 +43,25 @@ class AdminCategoryControllerTest extends TestCase
      */
     public function testGetAllCategories()
     {
-        // Mock Category model
         $mockCategoryModel = Mockery::mock(Category::class);
 
-        // Mock data for categories
         $categoryData = [
             new Category(['id' => 1, 'category_name' => 'Category 1']),
             new Category(['id' => 2, 'category_name' => 'Category 2']),
             new Category(['id' => 3, 'category_name' => 'Category 3']),
         ];
 
-        // Expect the 'all' method to be called once and return the mock data
         $mockCategoryModel->shouldReceive('all')
             ->once()
             ->andReturn(new Collection($categoryData));
 
-        // Create an instance of CategoryService with the mocked Category model
         $categoryService = new CategoryService($mockCategoryModel);
 
-        // Call getAllCategories() method
         $result = $categoryService->getAllCategories();
 
-        // Assertions
         $this->assertInstanceOf(Collection::class, $result);
         $this->assertEquals(count($categoryData), $result->count());
 
-        // Assert individual category attributes
         foreach ($categoryData as $key => $category) {
             $this->assertEquals($category->id, $result[$key]->id);
             $this->assertEquals($category->category_name, $result[$key]->category_name);
@@ -88,16 +78,14 @@ class AdminCategoryControllerTest extends TestCase
     public function testGetCategoryById()
     {
         $categoryId = 1;
-        $categoryData = ['category_name' => 'Test Category']; // Adjusted to match the expected structure
+        $categoryData = ['category_name' => 'Test Category'];
 
-        // Mock CategoryService
         $mockCategoryService = Mockery::mock(CategoryService::class);
         $mockCategoryService->shouldReceive('getCategoryById')
             ->once()
             ->with($categoryId)
             ->andReturn(new Category(['id' => $categoryId, 'category_name' => $categoryData['category_name']])); // Ensure the mock returns both id and category_name
 
-        // Inject mock service into controller
         $controller = new AdminCategoryControllerMock($mockCategoryService);
 
         $response = $controller->show($categoryId);
@@ -125,9 +113,8 @@ class AdminCategoryControllerTest extends TestCase
         $mockCategoryService->shouldReceive('getCategoryById')
             ->once()
             ->with($categoryId)
-            ->andReturn(null); // Simulate not found scenario
+            ->andReturn(null);
 
-        // Inject mock service into controller
         $controller = new AdminCategoryControllerMock($mockCategoryService);
 
         $response = $controller->show($categoryId);

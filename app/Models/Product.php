@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Schema;
 
 class Product extends Model
 {
@@ -135,35 +133,8 @@ class Product extends Model
             ->where('discount', '>', 0)
             ->whereNull('products.deleted_at')
             ->select('products.*', 'images.image_url')
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'desc') // hoặc orderBy('sold_count', 'desc')
             ->limit(3)
             ->get();
-    }
-
-    public function getTopDiscountedProducts($limit = 5)
-    {
-        $products = DB::table('products')
-            ->leftJoin('images', 'products.id', '=', 'images.product_id')
-            ->whereNull('products.deleted_at')
-            ->select('products.*', DB::raw('GROUP_CONCAT(images.image_url) AS image_urls'))
-            ->groupBy('products.id');
-
-        if (Schema::hasColumn('products', 'discount')) {
-            $products = $products->orderBy('discount', 'DESC'); // Order by discount (descending)
-        } else {
-            Log::info('Discount column not found in products table.');
-            return [];
-        }
-
-        $productsWithFirstImage = $products
-            ->take($limit) // Limit to the desired number of products
-            ->get()
-            ->map(function ($product) {
-                $imageUrls = explode(',', $product->image_urls);
-                $product->image_url = $imageUrls[0] ?? null;
-                return $product;
-            });
-
-        return $productsWithFirstImage;
     }
 }
