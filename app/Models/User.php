@@ -19,7 +19,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $table = 'users';
-    
+
     protected $fillable = [
         'name',
         'email',
@@ -54,23 +54,25 @@ class User extends Authenticatable
         $users = DB::table('users')->get();
         return $users;
     }
-    
-    public function cart(){
-        return $this->hasOne('App\Models\Cart', 'user_id','id');
+
+    public function cart()
+    {
+        return $this->hasOne('App\Models\Cart', 'user_id', 'id');
     }
 
-    public function role(){
-        return $this->belongsTo('App\Models\Role', 'role_id','id');
+    public function role()
+    {
+        return $this->belongsTo('App\Models\Role', 'role_id', 'id');
     }
 
-    public function wishLists(){
-        return $this->hasMany('App\Models\WishList', 'user_id','id');
+    public function wishLists()
+    {
+        return $this->hasMany('App\Models\WishList', 'user_id', 'id');
     }
 
-    
-    public function comments(){
-        return $this->hasMany('App\Models\Comment', 'user_id','id');
+
+    public function comments()
+    {
+        return $this->hasMany('App\Models\Comment', 'user_id', 'id');
     }
-    
 }
-

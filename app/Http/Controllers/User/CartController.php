@@ -138,7 +138,7 @@ class CartController extends Controller
         $data = $request->all();
         if (isset($data['product_id'])) {
             $cartItem = $this->cart->findItemById($data['product_id'], $user_id);
-            if ($cartItem) {
+            if ($cartItem !==null) {
                 $productPrice = $cartItem->unit_price;
                 $productQuantity = $cartItem->quantity;
                 $newQuantity = $data['quantity'] + $productQuantity;
@@ -156,6 +156,7 @@ class CartController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Product not found in the cart.',
+                'data' => $cartItem
             ]);
         }
         return response()->json([
