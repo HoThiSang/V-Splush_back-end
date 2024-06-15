@@ -18,6 +18,7 @@ use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\CheckoutController;
 use App\Http\Controllers\User\CommentController;
 use App\Http\Controllers\User\OrderController;
+use App\Http\Controllers\User\PostController;
 use App\Http\Controllers\User\WishListController;
 
 
@@ -51,8 +52,8 @@ Route::get('/test', [AdminCategoryController::class, 'test']);
 Route::post('register', [UserController::class, 'register'])->name('register');
 Route::post('login', [UserController::class, 'login'])->name('login');
 Route::get('/search-product/{keyword}', [ProductController::class, 'search'])->name('search-product');
-Route::get('/popular-product', [ProductController::class, 'getPopularProduct'])->name('getPopularProduct-product');
-// Users
+Route::get('/popular-product', [ProductController::class, 'index'])->name('getPopularProduct-product');
+Route::get('/popular-post', [PostController::class, 'index'])->name('get-post');
 
 Route::prefix('user')->middleware('auth:sanctum')->group(function () {
     Route::post('/update-cart/{id}', [CartController::class, 'updateCart'])->name('updateCart');

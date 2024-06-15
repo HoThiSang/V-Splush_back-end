@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 
 class Cart extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $table = 'carts';
 
@@ -34,11 +34,6 @@ class Cart extends Model
         return $this->belongsTo(Product::class);
     }
 
-    // // Định nghĩa relationship với User
-    // public function user()
-    // {
-    //     return $this->belongsTo(User::class);
-    // }
 
     public function getAllCarts($user_id)
     {
@@ -62,18 +57,38 @@ class Cart extends Model
 
     public function findItemById($productId, $user_Id)
     {
-        return Cart::where('product_id', $productId)
+        Log::debug('findItemById called with: ', ['productId' => $productId, 'user_Id' => $user_Id]);
+
+        $cartItem = Cart::where('product_id', $productId)
             ->where('user_id', $user_Id)
             ->first();
+
+        // Ghi nhật ký truy vấn SQL
+        Log::debug('Executed query: ', [
+            'query' => Cart::where('product_id', $productId)
+                ->where('user_id', $user_Id)
+                ->toSql()
+        ]);
+
+        // Ghi nhật ký kết quả truy vấn
+        if ($cartItem) {
+            Log::debug('Cart item found: ', ['cartItem' => $cartItem]);
+        } else {
+            Log::debug('No cart item found for product_id: ' . $productId . ' and user_id: ' . $user_Id);
+        }
+
+        return $cartItem;
     }
 
     public function deleteByProductId($product_id, $user_id)
     {
-        $cartItem = self::where('product_id', $product_id)->where('user_id', $user_id)->first();
+        $cartItem = Cart::where('product_id', $product_id)
+            ->where('user_id', $user_id)
+            ->first();
         if ($cartItem) {
             $cartItem->delete();
-            return true;
+            return $cartItem;
         }
-        return false;
+        return $cartItem;
     }
 }
