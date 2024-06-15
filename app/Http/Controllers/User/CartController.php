@@ -133,103 +133,111 @@ class CartController extends Controller
     public function updateCart(Request $request)
     {
 
-        $user = Auth()->user();
-        $user_id = $user->id;
-        $data = $request->all();
-        if (isset($data['product_id'])) {
-            $cartItem = $this->cart->findItemById($data['product_id'], $user_id);
-            if ($cartItem !==null) {
-                $productPrice = $cartItem->unit_price;
-                $productQuantity = $cartItem->quantity;
-                $newQuantity = $data['quantity'] + $productQuantity;
-                $newPrice = $productPrice * $newQuantity;
-                $cartItem->update([
-                    'quantity' => $newQuantity,
-                    'total_price' => $newPrice,
-                ]);
+        if (Auth()->check()) {
+            $user = Auth::user();
+            $user_id = auth()->id();
+            $quantity = $request->quantity;
+            $product_id = $request->product_id;
+            if ($product_id) {
+                $cartItem = $this->cart->findItemById($product_id, $user_id);
+                if ($cartItem) {
+                    $productPrice = $cartItem->unit_price;
+                    $productQuantity = $cartItem->quantity;
+                    $newQuantity = $quantity + $productQuantity;
+                    $newPrice = $productPrice * $newQuantity;
+                    $cartItem->update([
+                        'quantity' => $newQuantity,
+                        'total_price' => $newPrice,
+                    ]);
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Quantity has been updated.',
+                        'data' => $cartItem,
+                    ]);
+                }
                 return response()->json([
-                    'status' => 'success',
-                    'message' => 'Quantity has been updated.',
-                    'data' => $cartItem,
+                    'status' => 'error',
+                    'message' => 'Product not found in the cart.',
                 ]);
             }
             return response()->json([
                 'status' => 'error',
-                'message' => 'Product not found in the cart.',
-                'data' => $cartItem
+                'message' => 'Missing product ID in the request.',
             ]);
         }
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Missing product ID in the request.',
-        ]);
-        // }
     }
-
 
     public function updateCartSubtract(Request $request)
     {
-        $user = Auth()->user();
-        $user_id = $user->id;
-        $data = $request->all();
-        $productId = (int) $data['product_id'];
-        if (isset($data['product_id'])) {
-            $cartItem = $this->cart->findItemById($productId, $user_id);
-            if ($cartItem) {
-                $productPrice = $cartItem->unit_price;
-                $productQuantity = $cartItem->quantity;
-                $newQuantity = $productQuantity - $data['quantity'];
-                if ($newQuantity === 0) {
-                    $cartItem->delete();
+
+        if (Auth()->check()) {
+            $user = Auth::user();
+            $user_id = $user->id;
+            $quantity = $request->quantity;
+            $product_id = $request->product_id;
+            if ($product_id) {
+                $cartItem = $this->cart->findItemById($product_id, $user_id);
+                if ($cartItem) {
+                    $productPrice = $cartItem->unit_price;
+                    $productQuantity = $cartItem->quantity;
+                    $newQuantity = $productQuantity -  $quantity;
+                    if ($newQuantity === 0) {
+                        $cartItem->delete();
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => 'Product has been deleted in cart.',
+                        ]);
+                    }
+                    $newPrice = $productPrice * $newQuantity;
+                    $cartItem->update([
+                        'quantity' => $newQuantity,
+                        'total_price' => $newPrice,
+                    ]);
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'Product has been deleted in cart.',
+                        'message' => 'Quantity has been updated.',
+                        'data' => $cartItem,
                     ]);
                 }
-                $newPrice = $productPrice * $newQuantity;
-                $cartItem->update([
-                    'quantity' => $newQuantity,
-                    'total_price' => $newPrice,
-                ]);
                 return response()->json([
-                    'status' => 'success',
-                    'message' => 'Quantity has been updated.',
-                    'data' => $cartItem,
+                    'status' => 'error',
+                    'message' => 'Product not found in the cart.',
                 ]);
             }
+
             return response()->json([
                 'status' => 'error',
-                'message' => 'Product not found in the cart.',
+                'message' => 'Missing product ID in the request.',
             ]);
         }
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Missing product ID in the request.',
-        ]);
     }
+
     public function deleteCart($product_id)
     {
-        // $user_id = auth()->id();
-        $user = Auth()->user();
-        $user_id = $user->id;
-        $userExists = User::where('id', $user_id)->exists();
-        if (!$userExists) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'User not found.'
-            ], 404);
-        }
-        $result = $this->cart->deleteByProductId($product_id, $user_id);
-        if ($result) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Product has been removed from the cart.'
-            ], 200);
-        } else {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Product not found in the cart.'
-            ], 404);
+        if (Auth()->check()) {
+            $user = Auth::user();
+            $user_id = $user->id;
+            $userExists = User::where('id', $user_id)->exists();
+            if (!$userExists) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'User not found.'
+                ], 404);
+            }
+            $result = $this->cart->deleteByProductId($product_id, $user_id);
+            if ($result) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Product has been removed from the cart.',
+                    'data' => $result
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Product not found in the cart.',
+                    'data' => $result
+                ], 404);
+            }
         }
     }
 }
